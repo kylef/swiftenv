@@ -116,6 +116,10 @@ Swift installations can either be placed in a directory using the correct
 version number at `~/.swiftenv/versions/VERSION`, or can be symbolic
 linked into the version directory.
 
+It is expected that all dependencies are already installed for running Swift,
+please consult the [Swift website](https://swift.org/download/) for more
+information.
+
 **NOTE**: *After manually installing a version of Swift, it's recommended that
 you run `swiftenv rehash` to update the shims.*
 
