@@ -12,6 +12,10 @@ fi
 VERSION=$(swiftenv-version-name)
 COMMAND_PATH="$SWIFTENV_ROOT/versions/$VERSION/usr/bin/$COMMAND"
 
+if [ "$VERSION" == "system" ]; then
+  COMMAND_PATH=$(which $COMMAND)
+fi
+
 if [ -x "$COMMAND_PATH" ]; then
   echo $COMMAND_PATH
 else

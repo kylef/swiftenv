@@ -10,10 +10,15 @@ version_exists() {
 
 if [ -z "$SWIFT_VERSION" ]; then
   SWIFT_VERSION_FILE=$(swiftenv-version-file)
+  if [ "$SWIFT_VERSION_FILE" == "$SWIFTENV_ROOT/version" ] && ! [[ -f "$SWIFT_VERSION_FILE" ]]; then
+    echo "system"
+    exit
+  fi
+
   SWIFT_VERSION=$(cat "$SWIFT_VERSION_FILE")
 fi
 
-if version_exists "$SWIFT_VERSION"; then
+if version_exists "$SWIFT_VERSION" || [ "$SWIFT_VERSION" == "system" ]; then
   echo $SWIFT_VERSION
 else
   echo "swiftenv: version \`$SWIFT_VERSION' is not installed"

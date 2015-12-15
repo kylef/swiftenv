@@ -15,6 +15,10 @@ print_version() {
 
 VERSIONS_DIR="$SWIFTENV_ROOT/versions"
 
+if [ "$CURRENT_VERSION" == "system" ]; then
+  echo "* system"
+fi
+
 for path in "$VERSIONS_DIR"/*; do
   if [ -d "$path" ]; then
     print_version "${path##*/}"

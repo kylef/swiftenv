@@ -19,10 +19,8 @@ if [ -z "$VERSION" ]; then
     echo "swiftenv: version is not set"
     exit 1
   fi
+elif version_exists "$VERSION" || [ "$VERSION" == "system" ]; then
+  echo "$VERSION" > "$VERSION_FILE"
 else
-  if version_exists "$VERSION"; then
-    echo "$VERSION" > "$VERSION_FILE"
-  else
-    echo "swiftenv: version \`$VERSION' is not installed"
-  fi
+  echo "swiftenv: version \`$VERSION' is not installed"
 fi
