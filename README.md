@@ -4,6 +4,8 @@ swiftenv allows you to easily install, and switch between multiple versions of S
 
 This project was heavily inspired by [pyenv](https://github.com/yyuu/pyenv).
 
+![swiftenv screenshot](share/swiftenv.png)
+
 swiftenv allows you to:
 
 - Change the **global Swift version**, per user.
