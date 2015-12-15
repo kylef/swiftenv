@@ -8,8 +8,7 @@ VERSION_FILE=".swift-version"
 
 version_exists() {
   local version="$1"
-  local path="$SWIFTENV_ROOT/versions/$version"
-  [ -d "$path" ]
+  [ -d "$SWIFTENV_ROOT/versions/$version" ] || [ -d "/Library/Developer/Toolchains/$version.xctoolchain" ]
 }
 
 if [ "$VERSION" = "--unset" ]; then

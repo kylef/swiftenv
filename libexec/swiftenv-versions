@@ -19,6 +19,16 @@ if [ "$CURRENT_VERSION" == "system" ]; then
   echo "* system"
 fi
 
+TOOLCHAIN_DIR="/Library/Developer/Toolchains"
+if [ -d "$TOOLCHAIN_DIR" ]; then
+  for path in "$TOOLCHAIN_DIR"/*; do
+    if [[ "$path" == *".xctoolchain" ]] && [ -d "$path" ]; then
+      version="$(basename ${path##*/} .xctoolchain)"
+      print_version "$version"
+    fi
+  done
+fi
+
 for path in "$VERSIONS_DIR"/*; do
   if [ -d "$path" ]; then
     print_version "${path##*/}"

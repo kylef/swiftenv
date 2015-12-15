@@ -9,17 +9,27 @@ mkdir -p "$SHIM_PATH"
 
 # List all basenames of executables for every installed Swift version
 list_executable_names() {
-  for version in "$SWIFT_ROOT/versions/*/usr/bin/"*; do
-    VERSIONS_DIR="$SWIFTENV_ROOT/versions"
+  VERSIONS_DIR="$SWIFTENV_ROOT/versions/$version"
 
-    for path in "$VERSIONS_DIR"/*; do
+  for path in "$VERSIONS_DIR"/*; do
+    if [ -d "$path" ]; then
+      for file in "$path/usr/bin/"*; do
+        echo "${file##*/}"
+      done
+    fi
+  done
+
+  if [ -d "/Library/Developer/Toolchains" ]; then
+    VERSIONS_DIR="/Library/Developer/Toolchains"
+
+    for path in "$VERSIONS_DIR"/*.xctoolchain; do
       if [ -d "$path" ]; then
         for file in "$path/usr/bin/"*; do
           echo "${file##*/}"
         done
       fi
     done
-  done
+  fi
 }
 
 remove_stale_shims() {
