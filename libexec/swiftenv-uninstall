@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+
+VERSION=$1
+if [ -z "$VERSION" ] ; then
+  echo "Usage: swiftenv uninstall <version>"
+  exit 1
+fi
+
+if ! [ -d "$SWIFTENV_ROOT/versions/$VERSION" ]; then
+  echo "$VERSION is not installed."
+  exit 1
+fi
+
+rm -fr "$SWIFTENV_ROOT/versions/$VERSION"
