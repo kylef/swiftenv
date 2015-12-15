@@ -14,14 +14,31 @@ find_libexec_path() {
 }
 export PATH="$(find_libexec_path):$PATH"
 
+usage() {
+  echo "Usage: swiftenv [--version] <command>"
+  echo
+  echo "  version   Displays the current active Swift version"
+  echo "  versions  Lists all installed Swift versions"
+  echo "  global    Sets the global version of Swift"
+  echo "  local     Sets the local application-specific version fo Swift"
+  echo "  install   Installs a version of Swift"
+  echo "  uninstall Uninstalls a specific Swift version"
+  echo "  rehash    Installs shims for Swift binaries"
+  echo
+  echo "Visit https://github.com/kylef/swiftenv for more info."
+}
+
 command="$1"
 case "$command" in
 "" )
-  echo "Usage: swiftenv <command>"
+  usage
   exit 1
   ;;
 -v | --version )
   exec swiftenv---version
+  ;;
+-h | --help )
+  usage
   ;;
 * )
   command_path="$(command -v "swiftenv-$command" || true)"
