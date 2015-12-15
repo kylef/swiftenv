@@ -13,5 +13,9 @@ COMMAND_PATH="$(swiftenv-which $COMMAND)"
 COMMAND_BIN_PATH="${COMMAND_PATH%/*}"
 
 shift 1
-export PATH="$COMMAND_BIN_PATH:$PATH"
+
+VERSION=$(swiftenv-version-name)
+if [ "$VERSION" != "system" ]; then
+  export PATH="$COMMAND_BIN_PATH:$PATH"
+fi
 exec -a "$COMMAND" "$COMMAND_PATH" "$@"
