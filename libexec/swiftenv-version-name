@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -e
+
+version_exists() {
+  local version="$1"
+  local path="$SWIFTENV_ROOT/versions/$version"
+  [ -d "$path" ]
+}
+
+if [ -z "$SWIFT_VERSION" ]; then
+  SWIFT_VERSION_FILE=$(swiftenv-version-file)
+  SWIFT_VERSION=$(cat "$SWIFT_VERSION_FILE")
+fi
+
+if version_exists "$SWIFT_VERSION"; then
+  echo $SWIFT_VERSION
+else
+  echo "swiftenv: version \`$SWIFT_VERSION' is not installed"
+  exit 1
+fi

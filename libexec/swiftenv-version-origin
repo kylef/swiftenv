@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Find the reason the current swift version is set (either filename or environ)
+
+set -e
+
+if [ -n "$SWIFT_VERSION" ]; then
+  echo "SWIFT_VERSION environment variable"
+else
+  swiftenv-version-file
+fi

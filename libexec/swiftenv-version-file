@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Find the file that sets the current swift version
+
+find_local_version_file() {
+  local root="$1"
+  while true; do
+    [[ "$root" =~ ^//[^/]*$ ]] && break
+    if [ -e "${root}/.swift-version" ]; then
+      echo "${root}/.swift-version"
+      exit
+    fi
+    [ -n "$root" ] || break
+    root="${root%/*}"
+  done
+}
+
+find_local_version_file "$PWD"
+echo "$SWIFTENV_ROOT/version"

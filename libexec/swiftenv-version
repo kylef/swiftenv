@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Show the current selected Swift version and how it was selected.
+
+set -e
+
+VERSION="$(swiftenv-version-name)"
+ORIGIN="$(swiftenv-version-origin)"
+
+echo "$VERSION (set by $ORIGIN)"
