@@ -7,6 +7,8 @@ if [ -z "$SWIFTENV_ROOT" ]; then
 fi
 export SWIFTENV_ROOT
 
+export PATH="$SWIFTENV_ROOT/libexec:$PATH"
+
 command="$1"
 case "$command" in
 "" )
