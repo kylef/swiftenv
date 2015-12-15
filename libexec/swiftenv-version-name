@@ -2,6 +2,12 @@
 
 set -e
 
+# Don't check if it is installed
+DONT_CHECK=false
+if [ "$1" == "--dont-check" ]; then
+  DONT_CHECK=true
+fi
+
 version_exists() {
   local version="$1"
   local path="$SWIFTENV_ROOT/versions/$version"
@@ -18,9 +24,9 @@ if [ -z "$SWIFT_VERSION" ]; then
   SWIFT_VERSION=$(cat "$SWIFT_VERSION_FILE")
 fi
 
-if version_exists "$SWIFT_VERSION" || [ "$SWIFT_VERSION" == "system" ]; then
+if $DONT_CHECK || version_exists "$SWIFT_VERSION" || [ "$SWIFT_VERSION" == "system" ]; then
   echo $SWIFT_VERSION
 else
-  echo "swiftenv: version \`$SWIFT_VERSION' is not installed"
+  >&2 echo "swiftenv: version \`$SWIFT_VERSION' is not installed"
   exit 1
 fi

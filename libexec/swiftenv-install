@@ -4,8 +4,11 @@ set -e
 
 VERSION=$1
 if [ -z "$VERSION" ] ; then
-  echo "Usage: swiftenv install <version>"
-  exit 1
+  VERSION="$(swiftenv-version-name --dont-check)"
+  if [ "$VERSION" == "system" ]; then
+    echo "Usage: swiftenv install <version>"
+    exit 1
+  fi
 fi
 
 if [ -z "$TMPDIR" ] ; then
@@ -33,7 +36,7 @@ case $(uname) in
 'Linux' )
   ;;
 'Darwin' )
-  echo "swiftenv install does not support OS X. Please follow the instructions at http://swift.org/download/"
+  echo "swiftenv install does not support OS X. Please follow the instructions at https://swift.org/download/"
   exit 1
   ;;
 * )
