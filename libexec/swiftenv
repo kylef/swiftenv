@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ -z "$SWIFTENV_ROOT" ]; then
+  SWIFTENV_ROOT=$HOME/.swiftenv
+fi
+export SWIFTENV_ROOT
+
+command="$1"
+case "$command" in
+"" )
+  echo "Usage: swiftenv <command>"
+  exit 1
+  ;;
+-v | --version )
+  exec swiftenv---version
+  ;;
+* )
+  command_path="$(command -v "swiftenv-$command" || true)"
+  if ! [ -n "$command_path" ]; then
+    echo "no such command \`$command'"
+    exit 1
+  fi
+
+  shift 1
+  exec "$command_path" "$@"
+  ;;
+esac
