@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+COMMAND=$1
+
+if [ -z "$COMMAND" ] ; then
+  echo "Usage: swiftenv which <command>"
+  exit 1
+fi
+
+VERSION=$(swiftenv-version-name)
+COMMAND_PATH="$SWIFTENV_ROOT/versions/$VERSION/usr/bin/$COMMAND"
+
+if [ -x "$COMMAND_PATH" ]; then
+  echo $COMMAND_PATH
+else
+  exit 127
+fi
