@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Rehash pyenv shims
+
+set -e
+
+SHIM_PATH=$SWIFTENV_ROOT/shims
+
+mkdir -p "$SHIM_PATH"
+
+# List all basenames of executables for every installed Swift version
+list_executable_names() {
+  for version in "$SWIFT_ROOT/versions/*/usr/bin/"*; do
+    VERSIONS_DIR="$SWIFTENV_ROOT/versions"
+
+    for path in "$VERSIONS_DIR"/*; do
+      if [ -d "$path" ]; then
+        for file in "$path/usr/bin/"*; do
+          echo "${file##*/}"
+        done
+      fi
+    done
+  done
+}
+
+remove_stale_shims() {
+  local shim
+  for shim in "$SHIM_PATH"/*; do
+    if [[ "$registered_shims" != *" ${shim##*/} "* ]]; then
+      rm -f "$shim"
+    fi
+  done
+}
+
+create_shims() {
+  local shim
+  for shim in $registered_shims; do
+    create_shim "$shim"
+  done
+}
+
+create_shim() {
+  cat > "$SHIM_PATH/$1" <<SH
+#!/usr/bin/env bash
+set -e
+swiftenv-exec "$1" "\$@"
+SH
+  chmod +x "$SHIM_PATH/$1"
+}
+
+registered_shims=" $(list_executable_names | sort -u) "
+remove_stale_shims
+create_shims
