@@ -7,7 +7,12 @@ if [ -z "$SWIFTENV_ROOT" ]; then
 fi
 export SWIFTENV_ROOT
 
-export PATH="$SWIFTENV_ROOT/libexec:$PATH"
+find_libexec_path() {
+  cd "$(dirname "${BASH_SOURCE[0]}")"
+  cd "$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
+  echo "$PWD/../libexec"
+}
+export PATH="$(find_libexec_path):$PATH"
 
 command="$1"
 case "$command" in
