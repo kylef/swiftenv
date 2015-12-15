@@ -60,7 +60,7 @@ You can install swiftenv using the [Homebrew](http://brew.sh/) package manager
 on OS X.
 
 ```shell
-$ brew install --HEAD kylef/formulae/swiftenv
+$ brew install kylef/formulae/swiftenv
 ```
 
 ## Usage
