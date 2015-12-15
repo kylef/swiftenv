@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Set or show the global Swift version
+
+set -e
+
+VERSION=$1
+VERSION_FILE="$SWIFTENV_ROOT/version"
+
+version_exists() {
+  local version="$1"
+  local path="$SWIFTENV_ROOT/versions/$version"
+  [ -d "$path" ]
+}
+
+if [ -z "$VERSION" ]; then
+  if [ -f "$VERSION_FILE" ]; then
+    cat "$VERSION_FILE"
+  else
+    echo "swiftenv: version is not set"
+    exit 1
+  fi
+else
+  if version_exists "$VERSION"; then
+    echo "$VERSION" > "$VERSION_FILE"
+  else
+    echo "swiftenv: version \`$VERSION' is not installed"
+  fi
+fi
