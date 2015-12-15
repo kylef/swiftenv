@@ -8,9 +8,19 @@ if [ -z "$VERSION" ] ; then
   exit 1
 fi
 
+if [ "$VERSION" == "system" ]; then
+  echo "$VERSION is uninstallable."
+  exit 1
+fi
+
 if ! [ -d "$SWIFTENV_ROOT/versions/$VERSION" ]; then
   echo "$VERSION is not installed."
   exit 1
+fi
+
+CURRENT_VERSION=$(cat "$SWIFTENV_ROOT/version")
+if [ "$VERSION" == "$CURRENT_VERSION" ]; then
+  rm -f "$SWIFTENV_ROOT/version"
 fi
 
 rm -fr "$SWIFTENV_ROOT/versions/$VERSION"
