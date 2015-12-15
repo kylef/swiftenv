@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+set -e
+
+VERSION=$1
+if [ -z "$VERSION" ] ; then
+  echo "Usage: swiftenv install <version>"
+  exit 1
+fi
+
+if [ -z "$TMPDIR" ] ; then
+  export TMPDIR=/tmp
+fi
+
+if [ -d "$SWIFTENV_ROOT/versions/$VERSION" ]; then
+  echo "$VERSION is already installed."
+  exit 1
+fi
+
+unsupported_binary_platform() {
+  echo "Apple does not provide binary releases for $(lsb_release -ds)."
+  echo
+  echo "You may manually install Swift and place it into:"
+  echo "  $SWIFTENV_ROOT/versions/$VERSION"
+  echo
+  echo "Alternatively, you can force using a Ubuntu binaries by using the following:"
+  echo "  $ env UBUNTU_VERSION=ubuntu15.10 swiftenv install $VERSION"
+  echo
+  exit 1
+}
+
+case $(uname) in
+'Linux' )
+  ;;
+'Darwin' )
+  echo "swiftenv install does not support OS X. Please follow the instructions at http://swift.org/download/"
+  exit 1
+  ;;
+* )
+  echo "There are no binary releases of Swift for $(uname). Please manually install Swift into $SWIFTENV_ROOT/versions/$VERSION"
+  exit 1
+  ;;
+esac
+
+if [ -z "$UBUNTU_VERSION" ]; then
+  if command -v "lsb_release" >/dev/null 2>&1; then
+    if [ $(lsb_release -is) = "Ubuntu" ]; then
+      UBUNTU_VERSION="ubuntu$(lsb_release -rs)"
+      if [ "$UBUNTU_VERSION" != "ubuntu15.10" ] && [ "$UBUNTU_VERSION" != "ubuntu14.04" ]; then
+        unsupported_binary_platform
+      fi
+    else
+      unsupported_binary_platform
+    fi
+  else
+    echo "Unknown Platform"
+    exit 1
+  fi
+fi
+
+URL="https://swift.org/builds/${UBUNTU_VERSION//./}/$VERSION/$VERSION-$UBUNTU_VERSION.tar.gz"
+
+mkdir -p "$SWIFTENV_ROOT/versions"
+mkdir -p "$TMPDIR/swiftenv-$VERSION"
+
+echo "Downloading $VERSION from $URL"
+curl "$URL" -s | tar xz -C "$TMPDIR/swiftenv-$VERSION"
+
+mv "$TMPDIR/swiftenv-$VERSION/$VERSION-$UBUNTU_VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
+swiftenv-rehash
+swiftenv-global "$VERSION"
