@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+
+COMMAND=$1
+
+if [ -z "$COMMAND" ] ; then
+  echo "Usage: swiftenv exec <command>"
+  exit 1
+fi
+
+COMMAND_PATH="$(swiftenv-which $COMMAND)"
+COMMAND_BIN_PATH="${COMMAND_PATH%/*}"
+
+shift 1
+export PATH="$COMMAND_BIN_PATH:$PATH"
+exec -a "$COMMAND" "$COMMAND_PATH" "$@"
