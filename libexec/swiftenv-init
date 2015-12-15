@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+set -e
+
+print=""
+no_rehash=""
+for args in "$@"
+do
+  if [ "$args" = "-" ]; then
+    print=1
+    shift
+  fi
+
+  if [ "$args" = "--no-rehash" ]; then
+    no_rehash=1
+    shift
+  fi
+done
+
+shell="$1"
+if [ -z "$shell" ]; then
+  shell="$(ps c -p "$PPID" -o 'ucomm=' 2>/dev/null || true)"
+  shell="${shell##-}"
+  shell="${shell%% *}"
+  shell="${shell:-$SHELL}"
+  shell="${shell##*/}"
+fi
+
+if [ -z "$print" ]; then
+  case "$shell" in
+  bash )
+    if [ -f "${HOME}/.bashrc" ] && [ ! -f "${HOME}/.bash_profile" ]; then
+      profile='~/.bashrc'
+    else
+      profile='~/.bash_profile'
+    fi
+    ;;
+  zsh )
+    profile='~/.zshrc'
+    ;;
+  fish )
+    profile='~/.config/fish/config.fish'
+    ;;
+  * )
+    profile='your profile'
+  esac
+
+  {
+    echo "# Load swiftenv automatically by appending"
+    echo "# the following to your $profile:"
+    echo
+
+    case "$shell" in
+    fish )
+      echo 'status --is-interactive; and . (swiftenv init -|psub)'
+      ;;
+    * )
+      echo 'eval "$(swiftenv init -)"'
+      ;;
+    esac
+    echo
+
+    exit 1
+  } >&2
+
+  exit 1
+fi
+
+mkdir -p "$SWIFTENV_ROOT/"{shims,versions}
+case "$shell" in
+fish )
+  echo "setenv PATH '${SWIFTENV_ROOT}/shims' \$PATH"
+  ;;
+* )
+  echo 'export PATH="'${SWIFTENV_ROOT}'/shims:${PATH}"'
+  ;;
+esac
+
+if [ -z "$no_rehash" ]; then
+  echo 'command swiftenv rehash 2>/dev/null'
+fi
