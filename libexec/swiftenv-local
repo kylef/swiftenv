@@ -6,11 +6,6 @@ set -e
 VERSION=$1
 VERSION_FILE=".swift-version"
 
-version_exists() {
-  local version="$1"
-  [ -d "$SWIFTENV_ROOT/versions/$version" ] || [ -d "/Library/Developer/Toolchains/$version.xctoolchain" ]
-}
-
 if [ "$VERSION" = "--unset" ]; then
   rm -f $VERSION_FILE
 elif [ -z "$VERSION" ]; then
@@ -20,7 +15,7 @@ elif [ -z "$VERSION" ]; then
     echo "swiftenv: version is not set"
     exit 1
   fi
-elif version_exists "$VERSION" || [ "$VERSION" == "system" ]; then
+elif swiftenv-prefix "$VERSION" >/dev/null || [ "$VERSION" == "system" ]; then
   echo "$VERSION" > "$VERSION_FILE"
 else
   echo "swiftenv: version \`$VERSION' is not installed"

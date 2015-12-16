@@ -117,7 +117,8 @@ swift-2.2-SNAPSHOT-2015-12-10-a
 
 Installs a version of Swift. Currently this is only supported on Linux, for OS
 X you can follow the instructions on [the Swift
-website](https://swift.org/download/#apple-platforms).
+website](https://swift.org/download/#apple-platforms), or install a version of
+Xcode.
 
 **NOTE**: *Currently installation uses the Ubuntu binaries provided by Apple*
 

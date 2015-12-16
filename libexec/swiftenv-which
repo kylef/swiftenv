@@ -9,18 +9,14 @@ if [ -z "$COMMAND" ] ; then
   exit 1
 fi
 
-VERSION=$(swiftenv-version-name)
-COMMAND_PATH="$SWIFTENV_ROOT/versions/$VERSION/usr/bin/$COMMAND"
-TOOLCHAIN_COMMAND_PATH="/Library/Developer/Toolchains/$VERSION.xctoolchain/usr/bin/$COMMAND"
+COMMAND_PATH="$(swiftenv-prefix)/usr/bin"
 
 if [ "$VERSION" == "system" ]; then
   COMMAND_PATH=$(which $COMMAND)
 fi
 
-if [ -x "$COMMAND_PATH" ]; then
-  echo "$COMMAND_PATH"
-elif [ -x "$TOOLCHAIN_COMMAND_PATH" ]; then
-  echo "$TOOLCHAIN_COMMAND_PATH"
+if [ -x "$COMMAND_PATH/$COMMAND" ]; then
+  echo "$COMMAND_PATH/$COMMAND"
 else
   exit 127
 fi

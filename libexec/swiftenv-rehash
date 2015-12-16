@@ -19,12 +19,26 @@ list_executable_names() {
     fi
   done
 
+  # OS X Swift Toolchains
   if [ -d "/Library/Developer/Toolchains" ]; then
     VERSIONS_DIR="/Library/Developer/Toolchains"
 
     for path in "$VERSIONS_DIR"/*.xctoolchain; do
       if [ -d "$path" ]; then
         for file in "$path/usr/bin/"*; do
+          echo "${file##*/}"
+        done
+      fi
+    done
+  fi
+
+  # Xcode installs
+  if command -v "mdfind" >/dev/null 2>&1; then
+    XCODES="$(mdfind "kMDItemCFBundleIdentifier == 'com.apple.dt.Xcode'" 2>/dev/null)"
+    for xcode in $XCODES; do
+      TOOLCHAIN_DIR="$xcode/Contents/Developer/Toolchains/XcodeDefault.xctoolchain"
+      if [ -d "$TOOLCHAIN_DIR" ]; then
+        for file in "$TOOLCHAIN_DIR/usr/bin/"*; do
           echo "${file##*/}"
         done
       fi

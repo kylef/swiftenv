@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Display the path for a Swift version
+
+set -e
+
+if [ -z "$1" ]; then
+  SWIFT_VERSION="$(swiftenv-version-name)"
+else
+  SWIFT_VERSION="$1"
+fi
+
+if [ "$SWIFT_VERSION" == "system" ]; then
+  exit 1
+fi
+
+if [ -d "$SWIFTENV_ROOT/versions/$SWIFT_VERSION" ]; then
+  echo "$SWIFTENV_ROOT/versions/$SWIFT_VERSION"
+  exit
+fi
+
+# OS X Swift Toolchain
+TOOLCHAIN_DIR="/Library/Developer/Toolchains"
+if [ -d "$TOOLCHAIN_DIR/$SWIFT_VERSION.xctoolchain" ]; then
+  echo "$TOOLCHAIN_DIR/$SWIFT_VERSION.xctoolchain"
+  exit
+fi
+
+# OS X Xcode Swift's
+if command -v "mdfind" >/dev/null 2>&1; then
+  XCODES="$(mdfind "kMDItemCFBundleIdentifier == 'com.apple.dt.Xcode'" 2>/dev/null)"
+  for xcode in $XCODES; do
+    if [ -d "$xcode" ]; then
+      version_line="$(env DEVELOPER_DIR="$xcode" xcrun swift --version | head -n1)"
+      version="swift-$(echo "$version_line" | cut -d " " -f 4)"
+      if [ "$version" == "$SWIFT_VERSION" ]; then
+        echo "$xcode/Contents/Developer/Toolchains/XcodeDefault.xctoolchain"
+        exit
+      fi
+    fi
+  done
+fi
+
+echo "$SWIFT_VERSION is not installed"
+exit 1
