@@ -15,7 +15,8 @@ if [ -z "$TMPDIR" ] ; then
   export TMPDIR=/tmp
 fi
 
-if [ -d "$SWIFTENV_ROOT/versions/$VERSION" ]; then
+PREFIX="$(swiftenv-prefix "$VERSION" || true)"
+if [ -d "$PREFIX" ]; then
   echo "$VERSION is already installed."
   exit 1
 fi
@@ -30,6 +31,19 @@ unsupported_binary_platform() {
   echo "  $ env UBUNTU_VERSION=ubuntu15.10 swiftenv install $VERSION"
   echo
   exit 1
+}
+
+check_url() {
+  status_code=$(curl -o /dev/null --silent --head --write-out '%{http_code}' "$1")
+  if [ "$status_code" = "404" ]; then
+    echo "$VERSION was not found on swift.org."
+    echo "  $1"
+    exit 1
+  elif [ "$status_code" != "200" ]; then
+    echo "There was a network problem retreiving $VERSION, server returned $status_code."
+    echo "  $1"
+    exit 1
+  fi
 }
 
 install_ubuntu_binary() {
@@ -49,6 +63,7 @@ install_ubuntu_binary() {
   fi
 
   URL="https://swift.org/builds/${UBUNTU_VERSION//./}/$VERSION/$VERSION-$UBUNTU_VERSION.tar.gz"
+  check_url "$URL"
 
   mkdir -p "$TMPDIR/swiftenv-$VERSION"
 
@@ -60,7 +75,11 @@ install_ubuntu_binary() {
 }
 
 install_osx_binary() {
-  curl -sLo "$TMPDIR/swiftenv-$VERSION.pkg" https://swift.org/builds/xcode/$VERSION/$VERSION-osx.pkg
+  URL="https://swift.org/builds/xcode/$VERSION/$VERSION-osx.pkg"
+  check_url "$URL"
+
+  echo "Downloading $VERSION from $URL"
+  curl -sLo "$TMPDIR/swiftenv-$VERSION.pkg" "$URL"
   sudo installer -pkg "$TMPDIR/swiftenv-$VERSION.pkg" -target /
 }
 
