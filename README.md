@@ -1,5 +1,7 @@
 # Swift Version Manager
 
+[![Build Status](https://travis-ci.org/kylef/swiftenv.svg?branch=master)](https://travis-ci.org/kylef/swiftenv)
+
 swiftenv allows you to easily install, and switch between multiple versions of Swift.
 
 This project was heavily inspired by [pyenv](https://github.com/yyuu/pyenv).

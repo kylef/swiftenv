@@ -1,0 +1,3 @@
+os:
+- linux
+script: make test
