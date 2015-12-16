@@ -10,7 +10,8 @@ else
 fi
 
 if [ "$SWIFT_VERSION" == "system" ]; then
-  exit 1
+  echo "/usr/bin"
+  exit
 fi
 
 if [ -d "$SWIFTENV_ROOT/versions/$SWIFT_VERSION" ]; then
