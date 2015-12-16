@@ -3,7 +3,13 @@
 set -e
 
 print=""
-no_rehash=""
+
+if [ -r "$SWIFTENV_ROOT/shims" ]; then
+  rehash=false
+else
+  rehash=true
+fi
+
 for args in "$@"
 do
   if [ "$args" = "-" ]; then
@@ -11,8 +17,13 @@ do
     shift
   fi
 
+  if [ "$args" = "--rehash" ]; then
+    rehash=true
+    shift
+  fi
+
   if [ "$args" = "--no-rehash" ]; then
-    no_rehash=1
+    rehash=false
     shift
   fi
 done
@@ -76,6 +87,6 @@ fish )
   ;;
 esac
 
-if [ -z "$no_rehash" ]; then
+if $rehash; then
   echo 'command swiftenv rehash 2>/dev/null'
 fi
