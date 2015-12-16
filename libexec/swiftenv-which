@@ -9,10 +9,11 @@ if [ -z "$COMMAND" ] ; then
   exit 1
 fi
 
-COMMAND_PATH="$(swiftenv-prefix)/usr/bin"
-
-if [ "$VERSION" == "system" ]; then
-  COMMAND_PATH=$(which $COMMAND)
+if [ "$(swiftenv-version-name)" == "system" ]; then
+  env PATH=/usr/bin:/bin which $COMMAND
+  exit
+else
+  COMMAND_PATH="$(swiftenv-prefix)/usr/bin"
 fi
 
 if [ -x "$COMMAND_PATH/$COMMAND" ]; then
