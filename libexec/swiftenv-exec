@@ -2,6 +2,12 @@
 
 set -e
 
+SHIM=""
+if [ "$1" = "--shim" ]; then
+  SHIM="--shim"
+  shift 1
+fi
+
 COMMAND=$1
 
 if [ -z "$COMMAND" ] ; then
@@ -9,7 +15,7 @@ if [ -z "$COMMAND" ] ; then
   exit 1
 fi
 
-COMMAND_PATH="$(swiftenv-which $COMMAND)"
+COMMAND_PATH="$(swiftenv-which $SHIM $COMMAND)"
 COMMAND_BIN_PATH="${COMMAND_PATH%/*}"
 
 shift 1

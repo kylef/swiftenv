@@ -2,6 +2,12 @@
 
 set -e
 
+SHIM=false
+if [ "$1" = "--shim" ]; then
+  SHIM=true
+  shift
+fi
+
 COMMAND=$1
 
 if [ -z "$COMMAND" ] ; then
@@ -19,5 +25,9 @@ fi
 if [ -x "$COMMAND_PATH/$COMMAND" ]; then
   echo "$COMMAND_PATH/$COMMAND"
 else
-  exit 127
+  if $SHIM; then
+    env PATH=/usr/bin:/bin which $COMMAND
+  else
+    exit 127
+  fi
 fi
