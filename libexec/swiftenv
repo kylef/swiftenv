@@ -5,6 +5,9 @@ set -e
 if [ -z "$SWIFTENV_ROOT" ]; then
   SWIFTENV_ROOT=$HOME/.swiftenv
 fi
+if [ ! -d "$SWIFTENV_ROOT" ]; then
+  mkdir "$SWIFTENV_ROOT"
+fi
 export SWIFTENV_ROOT
 
 find_libexec_path() {
