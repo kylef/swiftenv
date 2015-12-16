@@ -117,12 +117,9 @@ swift-2.2-SNAPSHOT-2015-12-10-a
 
 ##### `install`
 
-Installs a version of Swift. Currently this is only supported on Linux, for OS
-X you can follow the instructions on [the Swift
-website](https://swift.org/download/#apple-platforms), or install a version of
-Xcode.
-
-**NOTE**: *Currently installation uses the Ubuntu binaries provided by Apple*
+Installs a version of Swift. Currently this will download the Swift binaries
+from apple for Ubuntu or OS X. You may also install Swift on OS X via the
+guides on [the Swift website](https://swift.org/downloads/) or from Xcode.
 
 ```shell
 $ swiftenv install swift-2.2-SNAPSHOT-2015-12-10-a

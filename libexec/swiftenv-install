@@ -32,44 +32,51 @@ unsupported_binary_platform() {
   exit 1
 }
 
+install_ubuntu_binary() {
+  if [ -z "$UBUNTU_VERSION" ]; then
+    if command -v "lsb_release" >/dev/null 2>&1; then
+      if [ $(lsb_release -is) = "Ubuntu" ]; then
+        UBUNTU_VERSION="ubuntu$(lsb_release -rs)"
+        if [ "$UBUNTU_VERSION" != "ubuntu15.10" ] && [ "$UBUNTU_VERSION" != "ubuntu14.04" ]; then
+          unsupported_binary_platform $UBUNTU_VERSION
+        fi
+      else
+        unsupported_binary_platform "$(lsb_release -ds)"
+      fi
+    else
+      unsupported_binary_platform "your distribution"
+    fi
+  fi
+
+  URL="https://swift.org/builds/${UBUNTU_VERSION//./}/$VERSION/$VERSION-$UBUNTU_VERSION.tar.gz"
+
+  mkdir -p "$TMPDIR/swiftenv-$VERSION"
+
+  echo "Downloading $VERSION from $URL"
+  curl "$URL" -s | tar xz -C "$TMPDIR/swiftenv-$VERSION"
+
+  DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
+  mv "$TMPDIR/swiftenv-$VERSION/$VERSION-$UBUNTU_VERSION" "$DESTINATION"
+}
+
+install_osx_binary() {
+  curl -sLo "$TMPDIR/swiftenv-$VERSION.pkg" https://swift.org/builds/xcode/$VERSION/$VERSION-osx.pkg
+  sudo installer -pkg "$TMPDIR/swiftenv-$VERSION.pkg" -target /
+}
+
+mkdir -p "$SWIFTENV_ROOT/versions"
 case $(uname) in
 'Linux' )
+  install_ubuntu_binary
   ;;
 'Darwin' )
-  echo "swiftenv install does not support OS X. Please follow the instructions at https://swift.org/download/"
-  exit 1
+  install_osx_binary
   ;;
 * )
   echo "There are no binary releases of Swift for $(uname). Please manually install Swift into $SWIFTENV_ROOT/versions/$VERSION"
   exit 1
   ;;
 esac
-
-if [ -z "$UBUNTU_VERSION" ]; then
-  if command -v "lsb_release" >/dev/null 2>&1; then
-    if [ $(lsb_release -is) = "Ubuntu" ]; then
-      UBUNTU_VERSION="ubuntu$(lsb_release -rs)"
-      if [ "$UBUNTU_VERSION" != "ubuntu15.10" ] && [ "$UBUNTU_VERSION" != "ubuntu14.04" ]; then
-        unsupported_binary_platform $UBUNTU_VERSION
-      fi
-    else
-      unsupported_binary_platform "$(lsb_release -ds)"
-    fi
-  else
-    unsupported_binary_platform "your distribution"
-  fi
-fi
-
-URL="https://swift.org/builds/${UBUNTU_VERSION//./}/$VERSION/$VERSION-$UBUNTU_VERSION.tar.gz"
-
-mkdir -p "$SWIFTENV_ROOT/versions"
-mkdir -p "$TMPDIR/swiftenv-$VERSION"
-
-echo "Downloading $VERSION from $URL"
-curl "$URL" -s | tar xz -C "$TMPDIR/swiftenv-$VERSION"
-
-DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
-mv "$TMPDIR/swiftenv-$VERSION/$VERSION-$UBUNTU_VERSION" "$DESTINATION"
 
 swiftenv-rehash
 swiftenv-global "$VERSION"
