@@ -22,4 +22,5 @@ elif swiftenv-prefix "$VERSION" >/dev/null || [ "$VERSION" == "system" ]; then
   echo "$VERSION" > "$VERSION_FILE"
 else
   echo "swiftenv: version \`$VERSION' is not installed"
+  exit 1
 fi
