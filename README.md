@@ -106,7 +106,7 @@ swift-2.2-SNAPSHOT-2015-12-10-a
 
 Sets the local application-specific Swift version by writing the version to a
 `.swift-version` file in the current directory. This version overrides the
-global version and can also be overridden by th `SWIFTENV_VERSION` environment
+global version and can also be overridden by th `SWIFT_VERSION` environment
 variable.
 
 ```shell
