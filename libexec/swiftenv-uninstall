@@ -19,7 +19,11 @@ if [ "$VERSION" == "system" ]; then
   exit 1
 fi
 
-if ! [ -d "$SWIFTENV_ROOT/versions/$VERSION" ]; then
+if [ -d "$SWIFTENV_ROOT/versions/$VERSION" ]; then
+  VERSION_DIRECTORY="$SWIFTENV_ROOT/versions/$VERSION"
+elif [ -d "$SWIFTENV_ROOT/versions/swift-$VERSION" ]; then
+  VERSION_DIRECTORY="$SWIFTENV_ROOT/versions/swift-$VERSION"
+else
   echo "$VERSION is not installed."
   exit 1
 fi
@@ -29,4 +33,4 @@ if [ "$VERSION" == "$CURRENT_VERSION" ]; then
   rm -f "$SWIFTENV_ROOT/version"
 fi
 
-rm -fr "$SWIFTENV_ROOT/versions/$VERSION"
+rm -fr "$VERSION_DIRECTORY"
