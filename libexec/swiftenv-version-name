@@ -13,7 +13,7 @@ if [ -z "$SWIFT_VERSION" ]; then
 fi
 
 if $DONT_CHECK || swiftenv-prefix "$SWIFT_VERSION" >/dev/null  || [ "$SWIFT_VERSION" == "system" ]; then
-  echo $SWIFT_VERSION
+  echo "${SWIFT_VERSION##swift-}"
 else
   >&2 echo "swiftenv: version \`$SWIFT_VERSION' is not installed"
   exit 1

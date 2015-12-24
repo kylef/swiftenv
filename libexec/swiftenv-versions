@@ -16,12 +16,14 @@ printed=" "
 print_version() {
   # Don't print if we've already printed it
   if [[ "$printed" != *" $1 "* ]]; then
+    local version
+    version="${1##swift-}"
     if [ -n "$bare" ]; then
-      echo "$1"
-    elif [ "$1" == "$CURRENT_VERSION" ]; then
-      echo "* $1 (set by $(swiftenv-version-origin))"
+      echo "$version"
+    elif [ "$version" == "$CURRENT_VERSION" ]; then
+      echo "* $version (set by $(swiftenv-version-origin))"
     else
-      echo "  $1"
+      echo "  $version"
     fi
 
     printed="$printed$1 "

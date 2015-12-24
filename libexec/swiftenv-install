@@ -21,6 +21,10 @@ if [ -d "$PREFIX" ]; then
   exit 1
 fi
 
+if [[ "$VERSION" != "swift-"* ]]; then
+  VERSION="swift-$VERSION"
+fi
+
 unsupported_binary_platform() {
   echo "Apple does not provide binary releases for $1."
   echo
@@ -98,4 +102,4 @@ case $(uname) in
 esac
 
 swiftenv-rehash
-swiftenv-global "$VERSION"
+swiftenv-global "${VERSION##swift-}"

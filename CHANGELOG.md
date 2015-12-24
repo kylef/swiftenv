@@ -2,6 +2,10 @@
 
 ## Master
 
+##### Enhancements
+
+- The `swift-` prefix for versions is now optional.
+
 ##### Bug Fixes
 
 - Fixes an issue where using shims would suppress error messages when the

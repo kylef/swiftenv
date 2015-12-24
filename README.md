@@ -75,7 +75,7 @@ Displays the current active Swift version and why it was chosen.
 
 ```shell
 $ swiftenv version
-swift-2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
+2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
 ```
 
 ##### `versions`
@@ -85,8 +85,8 @@ active version.
 
 ```shell
 $ swiftenv versions
-  swift-2.2-SNAPSHOT-2015-12-01-b
-* swift-2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
+  2.2-SNAPSHOT-2015-12-01-b
+* 2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
 ```
 
 ##### `global`
@@ -97,9 +97,9 @@ application-specific `.swift-version` file, or by setting the `SWIFT_VERSION`
 environment variable.
 
 ```shell
-$ swiftenv global swift-2.2-SNAPSHOT-2015-12-10-a
+$ swiftenv global 2.2-SNAPSHOT-2015-12-10-a
 $ swiftenv global
-swift-2.2-SNAPSHOT-2015-12-10-a
+2.2-SNAPSHOT-2015-12-10-a
 ```
 
 ##### `local`
@@ -110,9 +110,9 @@ global version and can also be overridden by th `SWIFT_VERSION` environment
 variable.
 
 ```shell
-$ swiftenv local swift-2.2-SNAPSHOT-2015-12-10-a
+$ swiftenv local 2.2-SNAPSHOT-2015-12-10-a
 $ swiftenv local
-swift-2.2-SNAPSHOT-2015-12-10-a
+2.2-SNAPSHOT-2015-12-10-a
 ```
 
 ##### `install`
@@ -122,8 +122,8 @@ from apple for Ubuntu or OS X. You may also install Swift on OS X via the
 guides on [the Swift website](https://swift.org/download/) or from Xcode.
 
 ```shell
-$ swiftenv install swift-2.2-SNAPSHOT-2015-12-10-a
-Downloading swift-2.2-SNAPSHOT-2015-12-10-a from https://swift.org/builds/ubuntu1510/swift-2.2-SNAPSHOT-2015-12-10-a/swift-2.2-SNAPSHOT-2015-12-10-a-ubuntu15.10.tar.gz
+$ swiftenv install 2.2-SNAPSHOT-2015-12-10-a
+Downloading 2.2-SNAPSHOT-2015-12-10-a from https://swift.org/builds/ubuntu1510/swift-2.2-SNAPSHOT-2015-12-10-a/swift-2.2-SNAPSHOT-2015-12-10-a-ubuntu15.10.tar.gz
 ```
 
 You may also manually install Swift and make it accessible to swiftenv. Custom
@@ -143,7 +143,7 @@ you run `swiftenv rehash` to update the shims.*
 Uninstalls a specific Swift version.
 
 ```shell
-$ swiftenv uninstall swift-2.2-SNAPSHOT-2015-12-10-a
+$ swiftenv uninstall 2.2-SNAPSHOT-2015-12-10-a
 ```
 
 ##### `rehash`

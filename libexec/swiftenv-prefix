@@ -19,10 +19,20 @@ if [ -d "$SWIFTENV_ROOT/versions/$SWIFT_VERSION" ]; then
   exit
 fi
 
+if [ -d "$SWIFTENV_ROOT/versions/swift-$SWIFT_VERSION" ]; then
+  echo "$SWIFTENV_ROOT/versions/swift-$SWIFT_VERSION"
+  exit
+fi
+
 # OS X Swift Toolchain
 TOOLCHAIN_DIR="/Library/Developer/Toolchains"
 if [ -d "$TOOLCHAIN_DIR/$SWIFT_VERSION.xctoolchain" ]; then
   echo "$TOOLCHAIN_DIR/$SWIFT_VERSION.xctoolchain"
+  exit
+fi
+
+if [ -d "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain" ]; then
+  echo "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain"
   exit
 fi
 
@@ -33,7 +43,7 @@ if command -v "mdfind" >/dev/null 2>&1; then
     if [ -d "$xcode" ]; then
       version_line="$(env DEVELOPER_DIR="$xcode" xcrun swift --version | head -n1)"
       version="swift-$(echo "$version_line" | cut -d " " -f 4)"
-      if [ "$version" == "$SWIFT_VERSION" ]; then
+      if [ "$version" == "$SWIFT_VERSION" ] || [ "$version" == "swift-$SWIFT_VERSION" ]; then
         echo "$xcode/Contents/Developer/Toolchains/XcodeDefault.xctoolchain"
         exit
       fi
