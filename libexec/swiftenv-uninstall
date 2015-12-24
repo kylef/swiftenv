@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
+# Uninstalls a Swift version
+# completes
 
 set -e
+
+if [ "$1" = "--complete" ]; then
+  exec swiftenv-versions --bare
+fi
 
 VERSION=$1
 if [ -z "$VERSION" ] ; then
