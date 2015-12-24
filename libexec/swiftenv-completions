@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+COMMAND="$1"
+if [ -z "$COMMAND" ]; then
+  echo "Usage: swiftenv completions <command> <args...>" >&2
+  exit 1
+fi
+
+if [ "$COMMAND" = "--complete" ]; then
+  exec swiftenv-commands
+fi
+
+COMMAND_PATH="$(command -v "swiftenv-$COMMAND")"
+if grep -iE "^(# completes)$" "$COMMAND_PATH" >/dev/null; then
+  shift
+  exec "$COMMAND_PATH" --complete "$@"
+fi
