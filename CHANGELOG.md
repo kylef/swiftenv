@@ -1,5 +1,12 @@
 # Changelog
 
+## Master
+
+##### Bug Fixes
+
+- Fixes an issue where using shims would suppress error messages when the
+  configured version was not installed.
+
 ## 0.4.0
 
 ##### Enhancements

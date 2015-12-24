@@ -15,11 +15,15 @@ if [ -z "$COMMAND" ] ; then
   exit 1
 fi
 
-if [ "$(swiftenv-version-name)" == "system" ]; then
+VERSION="$(swiftenv-version-name)"
+if [ "$VERSION" == "system" ]; then
   env PATH=/usr/bin:/bin which $COMMAND
   exit
-else
+elif swiftenv-prefix "$VERSION" >/dev/null; then
   COMMAND_PATH="$(swiftenv-prefix)/usr/bin"
+else
+  >&2 echo "swiftenv: version \`$VERSION' (set by $(swiftenv-version-origin)) is not installed"
+  exit 1
 fi
 
 if [ -x "$COMMAND_PATH/$COMMAND" ]; then
