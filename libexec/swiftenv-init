@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
+# completes
 
 set -e
+
+if [ "$1" = "--complete" ]; then
+  echo "-"
+  echo "--no-rehash"
+  echo "--rehash"
+  echo "bash"
+  echo "zsh"
+  echo "fish"
+  exit
+fi
 
 print=""
 
