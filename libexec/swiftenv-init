@@ -90,3 +90,11 @@ esac
 if $rehash; then
   echo 'command swiftenv rehash 2>/dev/null'
 fi
+
+completion="$SWIFTENV_ROOT/completions/swiftenv.${shell}"
+if [ -r "$completion" ]; then
+  case "$shell" in
+  fish ) echo ". '$completion'" ;;
+  *    ) echo "source '$completion'" ;;
+  esac
+fi
