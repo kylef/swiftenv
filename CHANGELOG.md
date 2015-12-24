@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+##### Enhancements
+
+- Adds support for command and argument completions.
+
 ## 0.3.2
 
 ##### Bug Fixes
