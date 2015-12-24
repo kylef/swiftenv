@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 # Set or show the global Swift version
+# completes
 
 set -e
+
+if [ "$1" = "--complete" ]; then
+  echo "system"
+  exec swiftenv-versions --bare
+fi
 
 VERSION=$1
 VERSION_FILE="$SWIFTENV_ROOT/version"
