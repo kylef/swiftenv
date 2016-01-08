@@ -30,7 +30,7 @@ load helpers
   mkdir -p "$SWIFTENV_ROOT/shims"
   run swiftenv init - bash
   [ "$status" -eq 0 ]
-  [ "${lines[1]}" = "" ]
+  [ "${lines[2]}" = "" ]
 }
 
 @test "adds rehash when you pass --rehash" {
