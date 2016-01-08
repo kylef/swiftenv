@@ -10,6 +10,7 @@
 
 - Fixes an issue where using shims would suppress error messages when the
   configured version was not installed.
+- Allows the completion to work when using swiftenv installed from Homebrew.
 
 ## 0.4.0
 
