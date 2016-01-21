@@ -9,16 +9,6 @@ exec 3<&2 # preserve original stderr at fd 3
 package=$1
 destination=$2
 
-if [ -z "$destination" ]; then
-  echo "Usage: swiftenv build <package> <destination>"
-  exit 1
-fi
-
-if [ -d "$destination" ]; then
-  echo "$destination already exists."
-  exit 1
-fi
-
 # Determines the number of CPU cores
 num_cpu_cores() {
   local num
@@ -72,6 +62,30 @@ build_failed() {
   } >&2
   exit 1
 }
+
+list_definitions() {
+  ls "$SWIFTENV_SOURCE_PATH/share/swiftenv-build" | sort_versions | uniq
+}
+
+sort_versions() {
+  sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' | \
+    LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
+}
+
+if [ "$package" == "--definitions" ]; then
+  list_definitions
+  exit 0
+fi
+
+if [ -z "$destination" ]; then
+  echo "Usage: swiftenv build <package> <destination>"
+  exit 1
+fi
+
+if [ -d "$destination" ]; then
+  echo "$destination already exists."
+  exit 1
+fi
 
 PACKAGE_DEFINITION="$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$package"
 if ! [ -r "$PACKAGE_DEFINITION" ]; then

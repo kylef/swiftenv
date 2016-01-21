@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# completes
 
 set -e
 
@@ -9,6 +10,11 @@ if [ -z "$VERSION" ] ; then
     echo "Usage: swiftenv install <version>"
     exit 1
   fi
+fi
+
+if [ "$VERSION" == "--list" ] || [ "$VERSION" == "--complete" ]; then
+  swiftenv-build --definitions
+  exit
 fi
 
 if [ -z "$TMPDIR" ] ; then
