@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# Build swift from source
+# Usage: swiftenv-build <package> <destination>
+
+set -e
+
+package=$1
+destination=$2
+
+if [ -z "$destination" ]; then
+  echo "Usage: swiftenv build <package> <destination>"
+  exit 1
+fi
+
+if [ -d "$destination" ]; then
+  echo "$destination already exists."
+  exit 1
+fi
+
+# Determines the number of CPU cores
+num_cpu_cores() {
+  local num
+  case "$(uname -s)" in
+  Darwin | *BSD )
+    num="$(sysctl -n hw.ncpu 2>/dev/null || true)"
+    ;;
+  * )
+    num="$(grep ^processor /proc/cpuinfo 2>/dev/null | wc -l | xargs)"
+    num="${num#0}"
+    ;;
+  esac
+  echo "${num:-2}"
+}
+
+# Usage: fetch_git repository-name branch [destination]
+fetch_git() {
+  if ! type git &>/dev/null; then
+    echo "error: please install \`git\` and try again." >& 2
+    exit 1
+  fi
+
+  echo "Downloading $1 ($2) from git"
+  git clone --depth 1 --branch "$2" "https://github.com/apple/$1.git" "$3" >&4 2>&1
+}
+
+build_swift() {
+  cd swift
+  echo "Building Swift"
+  echo "This may take a very long time"
+
+  jobs="$(num_cpu_cores)"
+  ./utils/build-script -R -- --install-prefix="$destination" --build-args="-j$jobs" --build-jobs="$jobs" >&4 2>&1
+--build-jobs=
+}
+
+build_failed() {
+  { echo "Building Swift failed"
+    echo "Check out the logfile for more information: $LOG_PATH"
+    echo "You can inspect or delete the working tree at: $TMP"
+    rm -fr "$destination"
+  } >&3
+  exit 1
+}
+
+PACKAGE_DEFINITION="$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$package"
+if ! [ -r "$PACKAGE_DEFINITION" ]; then
+  echo "Package definition not found for $package"
+  exit 1
+fi
+
+exec 4<> "$LOG_PATH" # open the log file at fd 4
+if [ -n "$VERBOSE" ]; then
+  tail -f "$LOG_PATH" &
+  TAIL_PID=$!
+  trap "kill $TAIL_PID" SIGINT SIGTERM EXIT
+fi
+
+# Swift build takes up a lot of room and unfortunately
+# had issues where I've ran out of space in /tmp whild building
+TMP="$SWIFTENV_ROOT/tmp/swiftenv-build-$package"
+
+mkdir -p "$TMP"
+cd "$TMP"
+
+mkdir -p "$destination"
+
+trap build_failed ERR
+source "$PACKAGE_DEFINITION"
+rm -fr $TMP

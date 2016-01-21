@@ -10,12 +10,14 @@ if [ ! -d "$SWIFTENV_ROOT" ]; then
 fi
 export SWIFTENV_ROOT
 
-find_libexec_path() {
+find_source_path() {
   cd "$(dirname "${BASH_SOURCE[0]}")"
   cd "$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
-  echo "$PWD/../libexec"
+  echo "$PWD/.."
 }
-export PATH="$(find_libexec_path):$PATH"
+
+export SWIFTENV_SOURCE_PATH="$(find_source_path)"
+export PATH="$SWIFTENV_SOURCE_PATH/libexec:$PATH"
 
 usage() {
   echo "Usage: swiftenv [--version] <command>"
