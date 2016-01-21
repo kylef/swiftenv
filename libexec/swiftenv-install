@@ -21,10 +21,6 @@ if [ -d "$PREFIX" ]; then
   exit 1
 fi
 
-if [[ "$VERSION" != "swift-"* ]]; then
-  VERSION="swift-$VERSION"
-fi
-
 unsupported_binary_platform() {
   echo "Apple does not provide binary releases for $1."
   echo
@@ -88,6 +84,18 @@ install_osx_binary() {
 }
 
 mkdir -p "$SWIFTENV_ROOT/versions"
+
+if [ "$VERSION" == "2.2-dev" ]; then
+  swiftenv-build "$VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
+  swiftenv-rehash
+  swiftenv-global "${VERSION##swift-}"
+  exit 0
+fi
+
+if [[ "$VERSION" != "swift-"* ]]; then
+  VERSION="swift-$VERSION"
+fi
+
 case $(uname) in
 'Linux' )
   install_ubuntu_binary
