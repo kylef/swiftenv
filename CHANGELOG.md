@@ -5,6 +5,13 @@
 ### Enhancements
 
 - The `swift-` prefix for versions is now optional.
+- `swiftenv install` now has a `--list` option:
+
+    ```shell
+    $ swiftenv install --list
+    ```
+
+- `swiftenv install` is capable of building Swift `2.2-dev` from source.
 
 ### Bug Fixes
 
