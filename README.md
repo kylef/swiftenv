@@ -119,13 +119,20 @@ $ swiftenv local
 
 ##### `install`
 
-Installs a version of Swift. Currently this will download the Swift binaries
-from apple for Ubuntu or OS X. You may also install Swift on OS X via the
-guides on [the Swift website](https://swift.org/download/) or from Xcode.
+Installs a version of Swift. This supports any binary release provides by
+Apple. For example, a 2.2 snapshots such as `2.2-SNAPSHOT-2016-01-11-a`.
+
+You may also specify `2.2-dev` to build Swift from source, this will require
+all of the dependencies mention on
+[Swift system
+requirements](https://github.com/apple/swift#system-requirements). It is
+important to note that the Swift Package Manager will not be installed with
+`2.2-dev` as Swift Package Manager is still in early development and it won't
+be included in 2.2, however it is available in the binary snapshots.
 
 ```shell
-$ swiftenv install 2.2-SNAPSHOT-2015-12-10-a
-Downloading 2.2-SNAPSHOT-2015-12-10-a from https://swift.org/builds/ubuntu1510/swift-2.2-SNAPSHOT-2015-12-10-a/swift-2.2-SNAPSHOT-2015-12-10-a-ubuntu15.10.tar.gz
+$ swiftenv install 2.2-SNAPSHOT-2016-01-11-a
+Downloading 2.2-SNAPSHOT-2016-01-11-a from https://swift.org/builds/ubuntu1510/swift-2.2-SNAPSHOT-2016-01-11-a/swift-2.2-SNAPSHOT-2016-01-11-a-ubuntu15.10.tar.gz
 ```
 
 You may also manually install Swift and make it accessible to swiftenv. Custom
