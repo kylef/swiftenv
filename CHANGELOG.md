@@ -1,5 +1,13 @@
 # Changelog
 
+## Master
+
+### Bug Fixes
+
+- Swift toolchains 'latest' version is no longer shown in `swiftenv versions`
+  on OS X.
+
+
 ## 0.5.0
 
 ### Enhancements

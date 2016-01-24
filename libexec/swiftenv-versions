@@ -49,7 +49,9 @@ if [ -d "$TOOLCHAIN_DIR" ]; then
   for path in "$TOOLCHAIN_DIR"/*; do
     if [[ "$path" == *".xctoolchain" ]] && [ -d "$path" ]; then
       version="$(basename ${path##*/} .xctoolchain)"
-      print_version "$version"
+      if [ "$version" != "swift-latest" ]; then
+        print_version "$version"
+      fi
     fi
   done
 fi
