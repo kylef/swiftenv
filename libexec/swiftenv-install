@@ -29,8 +29,8 @@ check_url() {
 }
 
 install_linux_binary() {
-  $VERSION="$1"
-  $URL="$2"
+  VERSION="$1"
+  URL="$2"
 
   if [ -z "$URL" ]; then
     if [ -z "$UBUNTU_VERSION" ]; then
@@ -64,7 +64,7 @@ install_linux_binary() {
   curl "$URL" -s | tar xz -C "$TMPDIR/swiftenv-$VERSION"
 
   DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
-  mv "$TMPDIR/swiftenv-$VERSION/$VERSION-$UBUNTU_VERSION" "$DESTINATION"
+  mv "$TMPDIR/swiftenv-$VERSION/swift-$VERSION"* "$DESTINATION"
 }
 
 # Installs an OS X binary from the supplied URL
@@ -165,5 +165,6 @@ case $(uname) in
   ;;
 esac
 
+echo "$VERSION has been installed."
 swiftenv-rehash
 swiftenv-global "$VERSION"
