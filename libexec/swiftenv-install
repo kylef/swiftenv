@@ -145,7 +145,7 @@ if [ -d "$PREFIX" ]; then
   exit 1
 fi
 
-if [ -z "$URL" ] && [ "$VERSION" == "2.2-dev" ]; then
+if [ -z "$URL" ] && [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
   install_source "$VERSION"
   swiftenv-rehash
   swiftenv-global "${VERSION##swift-}"
