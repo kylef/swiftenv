@@ -48,7 +48,7 @@ install_linux_binary() {
       fi
     fi
 
-    URL="https://swift.org/$RELEASE/${UBUNTU_VERSION//./}/swift-$VERSION/swift-$VERSION-$UBUNTU_VERSION.tar.gz"
+    URL="https://swift.org/builds/$RELEASE/${UBUNTU_VERSION//./}/swift-$VERSION/swift-$VERSION-$UBUNTU_VERSION.tar.gz"
   fi
 
   if [[ "$URL" != *".tar.gz" ]]; then

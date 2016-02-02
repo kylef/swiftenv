@@ -6,6 +6,8 @@
 
 - Swift toolchains 'latest' version is no longer shown in `swiftenv versions`
   on OS X.
+- Fixes a problem where `swiftenv install` on Linux will incorrectly
+  determine URL for the Swift binaries.
 
 
 ## 0.5.0
