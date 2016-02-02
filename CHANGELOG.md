@@ -13,6 +13,7 @@
 
 - `swiftenv install` is capable of building Swift `2.2-dev` from source.
 - `swiftenv install` now takes URLs to a Swift binary package.
+- `swiftenv install` was updated to use the new binary swift.org release URLs.
 
 ### Bug Fixes
 

@@ -48,7 +48,7 @@ install_linux_binary() {
       fi
     fi
 
-    URL="https://swift.org/builds/${UBUNTU_VERSION//./}/swift-$VERSION/swift-$VERSION-$UBUNTU_VERSION.tar.gz"
+    URL="https://swift.org/$RELEASE/${UBUNTU_VERSION//./}/swift-$VERSION/swift-$VERSION-$UBUNTU_VERSION.tar.gz"
   fi
 
   if [[ "$URL" != *".tar.gz" ]]; then
@@ -73,7 +73,7 @@ install_osx_binary() {
   URL="$2"
 
   if [ -z "$URL" ]; then
-    URL="https://swift.org/builds/xcode/swift-$VERSION/swift-$VERSION-osx.pkg"
+    URL="https://swift.org/builds/$RELEASE/xcode/swift-$VERSION/swift-$VERSION-osx.pkg"
   fi
 
   if [[ "$URL" != *"-osx.pkg" ]]; then
@@ -143,6 +143,12 @@ PREFIX="$(swiftenv-prefix "$VERSION" || true)"
 if [ -d "$PREFIX" ]; then
   echo "$VERSION is already installed."
   exit 1
+fi
+
+if [[ "$VERSION" == "DEVELOPMENT"* ]]; then
+  RELEASE="development"
+else
+  RELEASE="swift-${VERSION%%-*}-branch"
 fi
 
 if [ -z "$URL" ] && [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
