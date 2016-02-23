@@ -1,77 +1,6 @@
-# Swift Version Manager
+# Command Reference
 
-[![Build Status](https://travis-ci.org/kylef/swiftenv.svg?branch=master)](https://travis-ci.org/kylef/swiftenv)
-
-swiftenv allows you to easily install, and switch between multiple versions of Swift.
-
-This project was heavily inspired by [pyenv](https://github.com/yyuu/pyenv).
-
-![swiftenv screenshot](docs/_static/swiftenv.png)
-
-swiftenv allows you to:
-
-- Change the **global Swift version**, per user.
-- Set a **per-project Swift version**.
-- Allows you to **override the Swift version** with an environmental variable.
-
-## Installation
-
-**NOTE**: If you're on OS X, consider [installing with Homebrew](#via-homebrew).
-
-### Via a Git clone
-
-1. Check out swiftenv, we recommend `~/.swiftenv` (but it can be installed elsewhere as long as you set `SWIFTENV_ROOT`).
-
-    ```shell
-    $ git clone https://github.com/kylef/swiftenv.git ~/.swiftenv
-    ```
-
-2. Configure environment.
-
-    For Bash:
-
-    ```shell
-    $ echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> ~/.bash_profile
-    $ echo 'export PATH="$SWIFTENV_ROOT/bin:$PATH"' >> ~/.bash_profile
-    $ echo 'eval "$(swiftenv init -)"' >> ~/.bash_profile
-    ```
-
-    **NOTE**: *On some platforms, you may need to modify `~/.bashrc` instead of `~/.bash_profile`.*
-
-    For ZSH:
-
-    ```shell
-    $ echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> ~/.zshenv
-    $ echo 'export PATH="$SWIFTENV_ROOT/bin:$PATH"' >> ~/.zshenv
-    $ echo 'eval "$(swiftenv init -)"' >> ~/.zshenv
-    ```
-
-    For Fish:
-
-    ```shell
-    $ echo 'setenv SWIFTENV_ROOT "$HOME/.swiftenv"' >> ~/.config/fish/config.fish
-    $ echo 'setenv PATH "$SWIFTENV_ROOT/bin" $PATH' >> ~/.config/fish/config.fish
-    $ echo 'status --is-interactive; and . (swiftenv init -|psub)' >> ~/.config/fish/config.fish
-    ```
-    
-    For other shells, please [open an issue](https://github.com/kylef/swiftenv/issues/new) and we will visit adding support.
-
-3. Restart your shell so the changes take effect.
-
-### Via Homebrew
-
-You can install swiftenv using the [Homebrew](http://brew.sh/) package manager
-on OS X.
-
-```shell
-$ brew install kylef/formulae/swiftenv
-```
-
-## Usage
-
-### Commands
-
-##### `version`
+## `version`
 
 Displays the current active Swift version and why it was chosen.
 
@@ -80,7 +9,7 @@ $ swiftenv version
 2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
 ```
 
-##### `versions`
+## `versions`
 
 Lists all installed Swift versions, showing an asterisk next to the currently
 active version.
@@ -91,7 +20,7 @@ $ swiftenv versions
 * 2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
 ```
 
-##### `global`
+## `global`
 
 Sets the global version of Swift to be used by writing to the
 `~/.swiftenv/version` file. This version can be overridden by
@@ -104,7 +33,7 @@ $ swiftenv global
 2.2-SNAPSHOT-2015-12-10-a
 ```
 
-##### `local`
+## `local`
 
 Sets the local application-specific Swift version by writing the version to a
 `.swift-version` file in the current directory. This version overrides the
@@ -117,7 +46,7 @@ $ swiftenv local
 2.2-SNAPSHOT-2015-12-10-a
 ```
 
-##### `install`
+## `install`
 
 Installs a version of Swift. This supports any binary release provides by
 Apple. For example, a 2.2 snapshots such as `2.2-SNAPSHOT-2016-01-11-a`.
@@ -147,7 +76,7 @@ information.
 **NOTE**: *After manually installing a version of Swift, it's recommended that
 you run `swiftenv rehash` to update the shims.*
 
-##### `uninstall`
+## `uninstall`
 
 Uninstalls a specific Swift version.
 
@@ -155,7 +84,7 @@ Uninstalls a specific Swift version.
 $ swiftenv uninstall 2.2-SNAPSHOT-2015-12-10-a
 ```
 
-##### `rehash`
+## `rehash`
 
 Installs shims for the Swift binaries. This command should be ran after you
 manually install new versions of Swift.
@@ -164,7 +93,7 @@ manually install new versions of Swift.
 $ swiftenv rehash
 ```
 
-##### `which`
+## `which`
 
 Displays the full path to the executable that would be invoked for the selected
 version for the given command.

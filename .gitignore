@@ -2,3 +2,6 @@
 /versions/
 /version
 /bats/
+
+/docs/_build/
+/docs/_build_html/
