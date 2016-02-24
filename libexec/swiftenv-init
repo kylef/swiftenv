@@ -15,10 +15,11 @@ fi
 
 print=""
 
-if [ -r "$SWIFTENV_ROOT/shims" ]; then
+rehash=true
+
+if [ -r "$SWIFTENV_ROOT/shims" ] && [[ "$(uname)" == "Darwin" ]]; then
+  # Rehash takes a long time on Darwin due to mdfind
   rehash=false
-else
-  rehash=true
 fi
 
 for args in "$@"
