@@ -69,3 +69,8 @@ You will need to install the following dependencies on FreeBSD:
 ```shell
 $ pkg install clang36-3.6.2 git python ninja cmake pkgconf e2fsprogs-lluuid
 ```
+
+### Your platform here
+
+If you have successfully build Swift via swiftenv on other platforms, feel free
+to [update this list with a pull request](https://github.com/kylef/swiftenv/blob/master/docs/building-swift.md).
