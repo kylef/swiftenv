@@ -40,6 +40,18 @@ fetch_git() {
 }
 
 build_swift() {
+  if ! type pod2man &>/dev/null && [[ -x "/usr/bin/core_perl/pod2man" ]]; then
+    # On Arch linux, pod2man is in /usr/bin/core_perl
+    export PATH="/usr/bin/core_perl:$PATH"
+  fi
+
+  if type python2 &>/dev/null; then
+    # When python2 exists, link python to python2
+    mkdir -p "$TMP/bin"
+    ln -s "$(which python2)" "$TMP/bin/python"
+    export PATH="$TMP/bin:$PATH"
+  fi
+
   cd swift
   echo "Building Swift"
   echo "This may take a very long time..."
