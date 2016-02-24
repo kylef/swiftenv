@@ -47,8 +47,12 @@ build_swift() {
 
   if type python2 &>/dev/null; then
     # When python2 exists, link python to python2
-    mkdir -p "$TMP/bin"
-    ln -s "$(which python2)" "$TMP/bin/python"
+
+    if ! [[ -x "$TMP/bin/python" ]]; then
+      mkdir -p "$TMP/bin"
+      ln -s "$(which python2)" "$TMP/bin/python"
+    fi
+
     export PATH="$TMP/bin:$PATH"
   fi
 
