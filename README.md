@@ -53,7 +53,7 @@ swiftenv allows you to:
     $ echo 'setenv PATH "$SWIFTENV_ROOT/bin" $PATH' >> ~/.config/fish/config.fish
     $ echo 'status --is-interactive; and . (swiftenv init -|psub)' >> ~/.config/fish/config.fish
     ```
-    
+
     For other shells, please [open an issue](https://github.com/kylef/swiftenv/issues/new) and we will visit adding support.
 
 3. Restart your shell so the changes take effect.
@@ -63,9 +63,33 @@ swiftenv allows you to:
 You can install swiftenv using the [Homebrew](http://brew.sh/) package manager
 on OS X.
 
-```shell
-$ brew install kylef/formulae/swiftenv
-```
+1. Install swiftenv
+
+    ```shell
+    $ brew install kylef/formulae/swiftenv
+    ```
+
+2. Then configure the shims and completions by adding the following to your profile.
+
+    For Bash:
+
+    ```shell
+    $ echo 'if which swiftenv > /dev/null; then eval "$(swiftenv init -)"; fi' >> ~/.bash_profile
+    ```
+
+    **NOTE**: *On some platforms, you may need to modify `~/.bashrc` instead of `~/.bash_profile`.*
+
+    For ZSH:
+
+    ```shell
+    $ echo 'if which swiftenv > /dev/null; then eval "$(swiftenv init -)"; fi' >> ~/.zshrc
+    ```
+
+    For Fish:
+
+    ```shell
+    $ echo 'status --is-interactive; and . (swiftenv init -|psub)' >> ~/.config/fish/config.fish
+    ```
 
 ## Usage
 

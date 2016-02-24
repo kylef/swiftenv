@@ -47,6 +47,30 @@
 You can install swiftenv using the [Homebrew](http://brew.sh/) package manager
 on OS X.
 
-```shell
-$ brew install kylef/formulae/swiftenv
-```
+1. Install swiftenv
+
+    ```shell
+    $ brew install kylef/formulae/swiftenv
+    ```
+
+2. Then configure the shims and completions by adding the following to your profile.
+
+    For Bash:
+
+    ```shell
+    $ echo 'if which swiftenv > /dev/null; then eval "$(swiftenv init -)"; fi' >> ~/.bash_profile
+    ```
+
+    **NOTE**: *On some platforms, you may need to modify `~/.bashrc` instead of `~/.bash_profile`.*
+
+    For ZSH:
+
+    ```shell
+    $ echo 'if which swiftenv > /dev/null; then eval "$(swiftenv init -)"; fi' >> ~/.zshrc
+    ```
+
+    For Fish:
+
+    ```shell
+    $ echo 'status --is-interactive; and . (swiftenv init -|psub)' >> ~/.config/fish/config.fish
+    ```
