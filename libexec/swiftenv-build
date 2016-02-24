@@ -6,9 +6,6 @@ set -E
 
 exec 3<&2 # preserve original stderr at fd 3
 
-package=$1
-destination=$2
-
 # Determines the number of CPU cores
 num_cpu_cores() {
   local num
@@ -88,7 +85,29 @@ sort_versions() {
     LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
 }
 
-if [ "$package" == "--definitions" ]; then
+clean=true
+definitions=false
+
+for args in "$@"; do
+  if [ "$args" = "--no-clean" ]; then
+    clean=false
+  elif [ "$args" = "--clean" ]; then
+    rehash=true
+  elif [ "$args" = "--definitions" ]; then
+    definitions=true
+  elif [ -z "$package" ]; then
+    package="$args"
+  elif [ -z "$destination" ]; then
+    destination="$args"
+  else
+    echo "Unknown argument: $args"
+    exit 1
+  fi
+
+  shift
+done
+
+if $definitions; then
   list_definitions
   exit 0
 fi
@@ -130,4 +149,7 @@ mkdir -p "$destination"
 trap build_failed ERR
 source "$PACKAGE_DEFINITION"
 install_swift
-#rm -fr $TMP
+
+if $clean; then
+  rm -fr $TMP
+fi

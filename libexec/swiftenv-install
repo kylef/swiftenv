@@ -109,12 +109,39 @@ install_binary_url() {
 
 install_source() {
   VERSION="$1"
-  swiftenv-build "$VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
+
+  if $clean; then
+    swiftenv-build --clean "$VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
+  else
+    swiftenv-build --no-clean "$VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
+  fi
 }
 
-mkdir -p "$SWIFTENV_ROOT/versions"
+clean=true
+list=false
 
-VERSION=$1
+for args in "$@"; do
+  if [ "$args" = "--no-clean" ]; then
+    clean=false
+  elif [ "$args" = "--clean" ]; then
+    clean=true
+  elif [ "$args" = "--list" ]; then
+    list=true
+  elif [ "$args" = "--complete" ]; then
+    list=true
+  else
+    VERSION="$args"
+  fi
+
+  shift
+done
+
+if $list; then
+  swiftenv-build --definitions
+  exit
+fi
+
+mkdir -p "$SWIFTENV_ROOT/versions"
 if [ -z "$VERSION" ] ; then
   VERSION="$(swiftenv-version-name --dont-check)"
 
@@ -122,11 +149,6 @@ if [ -z "$VERSION" ] ; then
     echo "Usage: swiftenv install <version>"
     exit 1
   fi
-fi
-
-if [ "$VERSION" == "--list" ] || [ "$VERSION" == "--complete" ]; then
-  swiftenv-build --definitions
-  exit
 fi
 
 if [ -z "$TMPDIR" ] ; then
