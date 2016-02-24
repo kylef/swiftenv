@@ -8,6 +8,8 @@
   on OS X.
 - Fixes a problem where `swiftenv install` on Linux will incorrectly
   determine URL for the Swift binaries.
+- Adds a `--verbose` mode to `swiftenv versions` to show where the version was
+  installed.
 
 
 ## 0.5.0

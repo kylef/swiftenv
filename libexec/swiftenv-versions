@@ -4,9 +4,11 @@
 set -e
 
 unset bare
+unset verbose
 for arg; do
   case "$arg" in
   --bare ) bare=1 ;;
+  --verbose ) verbose=1 ;;
   esac
 done
 
@@ -21,7 +23,13 @@ print_version() {
     if [ -n "$bare" ]; then
       echo "$version"
     elif [ "$version" == "$CURRENT_VERSION" ]; then
+      if [ -n "$verbose" ]; then
+      echo "* $version [from $2] (set by $(swiftenv-version-origin))"
+      else
       echo "* $version (set by $(swiftenv-version-origin))"
+      fi
+    elif [ -n "$verbose" ]; then
+      echo "  $version [from $2]"
     else
       echo "  $version"
     fi
@@ -39,7 +47,7 @@ fi
 # Installed into ~/.swiftenv/versions
 for path in "$VERSIONS_DIR"/*; do
   if [ -d "$path" ]; then
-    print_version "${path##*/}"
+    print_version "${path##*/}" "swiftenv"
   fi
 done
 
@@ -50,7 +58,7 @@ if [ -d "$TOOLCHAIN_DIR" ]; then
     if [[ "$path" == *".xctoolchain" ]] && [ -d "$path" ]; then
       version="$(basename ${path##*/} .xctoolchain)"
       if [ "$version" != "swift-latest" ]; then
-        print_version "$version"
+        print_version "$version" "toolchain"
       fi
     fi
   done
@@ -63,7 +71,7 @@ if command -v "mdfind" >/dev/null 2>&1; then
     if [ -d "$xcode" ]; then
       version_line="$(env DEVELOPER_DIR="$xcode" xcrun swift --version | head -n1)"
       version="swift-$(echo "$version_line" | cut -d " " -f 4)"
-      print_version "$version"
+      print_version "$version" "xcode $xcode"
     fi
   done
 fi
