@@ -1,0 +1,6 @@
+fetch_git swift master swift
+fetch_git swift-llvm swift-3.0-branch llvm
+fetch_git swift-clang swift-3.0-branch clang
+fetch_git swift-lldb master lldb
+fetch_git swift-cmark master cmark
+build_swift
