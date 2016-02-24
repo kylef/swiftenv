@@ -20,6 +20,7 @@ The User Guide
 
    installation
    getting-started
+   building-swift
    commands
 
 Integrations
