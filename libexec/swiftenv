@@ -30,7 +30,7 @@ usage() {
   echo "  uninstall Uninstalls a specific Swift version"
   echo "  rehash    Installs shims for Swift binaries"
   echo
-  echo "Visit https://github.com/kylef/swiftenv for more info."
+  echo "Visit https://swiftenv.fuller.li for more info."
 }
 
 command="$1"
