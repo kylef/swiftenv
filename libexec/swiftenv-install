@@ -84,7 +84,11 @@ install_osx_binary() {
   check_url "$URL"
 
   echo "Downloading $URL"
-  curl -Lo --progress-bar "$TMPDIR/swiftenv-$VERSION.pkg" "$URL"
+  if tty -s; then
+    curl -Lo --progress-bar "$TMPDIR/swiftenv-$VERSION.pkg" "$URL"
+  else
+    curl -sLo "$TMPDIR/swiftenv-$VERSION.pkg" "$URL"
+  fi
   sudo installer -pkg "$TMPDIR/swiftenv-$VERSION.pkg" -target /
 }
 
