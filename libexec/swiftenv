@@ -25,7 +25,7 @@ usage() {
   echo "  version   Displays the current active Swift version"
   echo "  versions  Lists all installed Swift versions"
   echo "  global    Sets the global version of Swift"
-  echo "  local     Sets the local application-specific version fo Swift"
+  echo "  local     Sets the local application-specific version of Swift"
   echo "  install   Installs a version of Swift"
   echo "  uninstall Uninstalls a specific Swift version"
   echo "  rehash    Installs shims for Swift binaries"
