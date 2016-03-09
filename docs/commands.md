@@ -64,6 +64,13 @@ $ swiftenv install 2.2-SNAPSHOT-2016-01-11-a
 Downloading 2.2-SNAPSHOT-2016-01-11-a from https://swift.org/builds/ubuntu1510/swift-2.2-SNAPSHOT-2016-01-11-a/swift-2.2-SNAPSHOT-2016-01-11-a-ubuntu15.10.tar.gz
 ```
 
+You may also use URLs to a Swift Binary package URL from [Swift Snapshots](https://swift.org/download/#latest-development-snapshots) as a parameter 
+```shell
+$ swiftenv install https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg
+Downloading https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg
+Password:
+```
+
 You may also manually install Swift and make it accessible to swiftenv. Custom
 Swift installations can either be placed in a directory using the correct
 version number at `~/.swiftenv/versions/VERSION`, or can be symbolic
