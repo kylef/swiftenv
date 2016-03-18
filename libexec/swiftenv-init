@@ -75,7 +75,7 @@ if [ -z "$print" ]; then
 
     case "$shell" in
     fish )
-      echo 'status --is-interactive; and . (swiftenv init -|psub)'
+      echo 'status --is-interactive; and source (swiftenv init -|psub)'
       ;;
     * )
       echo 'eval "$(swiftenv init -)"'
@@ -106,8 +106,5 @@ fi
 source_root="${0%/*}/.."
 completion="$source_root/completions/swiftenv.${shell}"
 if [ -r "$completion" ]; then
-  case "$shell" in
-  fish ) echo ". '$completion'" ;;
-  *    ) echo "source '$completion'" ;;
-  esac
+  echo "source '$completion'"
 fi
