@@ -34,3 +34,4 @@ if [ "$VERSION" == "$CURRENT_VERSION" ]; then
 fi
 
 rm -fr "$VERSION_DIRECTORY"
+swiftenv rehash
