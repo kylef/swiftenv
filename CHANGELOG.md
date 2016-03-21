@@ -1,6 +1,10 @@
 # Changelog
 
-## Master
+## 1.0.0
+
+### Enhancements
+
+- Supports installing final Swift releases such as `2.2`.
 
 ### Bug Fixes
 
