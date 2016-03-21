@@ -40,7 +40,7 @@ DEVELOPMENT-SNAPSHOT-2016-02-08-a
 To change the global version:
 
 ```shell
-$ swiftenv global 2.1.1
+$ swiftenv global 2.2
 ```
 
 ### Local Version
@@ -60,7 +60,7 @@ automatically changed to the local version.
 
 ```shell
 $ swiftenv version
-DEVELOPMENT-SNAPSHOT-2016-02-08-a (set by /Users/kyle/Projects/kylef/Curassow/.swift-version)
+2.2 (set by /Users/kyle/Projects/kylef/Curassow/.swift-version)
 ```
 
 When you switch to another directory without a `.swift-version` file, the
@@ -68,5 +68,5 @@ global version will be used.
 
 ```shell
 $ swiftenv version
-2.1.1 (set by /Users/kyle/.swiftenv/version)
+2.2 (set by /Users/kyle/.swiftenv/version)
 ```

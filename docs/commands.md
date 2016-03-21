@@ -6,7 +6,7 @@ Displays the current active Swift version and why it was chosen.
 
 ```shell
 $ swiftenv version
-2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
+2.2 (set by /home/kyle/.swiftenv/version)
 ```
 
 ## `versions`
@@ -16,8 +16,9 @@ active version.
 
 ```shell
 $ swiftenv versions
-  2.2-SNAPSHOT-2015-12-01-b
-* 2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
+  2.1.1
+* 2.2 (set by /home/kyle/.swiftenv/version)
+  DEVELOPMENT-SNAPSHOT-2016-03-01-a
 ```
 
 ## `global`
@@ -28,9 +29,9 @@ application-specific `.swift-version` file, or by setting the `SWIFT_VERSION`
 environment variable.
 
 ```shell
-$ swiftenv global 2.2-SNAPSHOT-2015-12-10-a
+$ swiftenv global 2.2
 $ swiftenv global
-2.2-SNAPSHOT-2015-12-10-a
+2.2
 ```
 
 ## `local`
@@ -41,35 +42,38 @@ global version and can also be overridden by th `SWIFT_VERSION` environment
 variable.
 
 ```shell
-$ swiftenv local 2.2-SNAPSHOT-2015-12-10-a
+$ swiftenv local 2.2
 $ swiftenv local
-2.2-SNAPSHOT-2015-12-10-a
+2.2
 ```
 
 ## `install`
 
-Installs a version of Swift. This supports any binary release provides by
-Apple. For example, a 2.2 snapshots such as `2.2-SNAPSHOT-2016-01-11-a`.
+Installs a version of Swift. This supports both binary releases provided by
+Apple, along with all open source Swift releases.
 
-You may also specify `2.2-dev` to build Swift from source, this will require
-all of the dependencies mention on
-[Swift system
-requirements](https://github.com/apple/swift#system-requirements). It is
-important to note that the Swift Package Manager will not be installed with
-`2.2-dev` as Swift Package Manager is still in early development and it won't
-be included in 2.2, however it is available in the development binary snapshots.
+You may use `--build` or `--no-build` to force a building from source, or
+installing from a binary release. Otherwise swiftenv will prefer installing
+from a binary release if available.
+
+Please see [Building Swift from source](/building-swift.html) for more information.
 
 ```shell
-$ swiftenv install 2.2-SNAPSHOT-2016-01-11-a
-Downloading 2.2-SNAPSHOT-2016-01-11-a from https://swift.org/builds/ubuntu1510/swift-2.2-SNAPSHOT-2016-01-11-a/swift-2.2-SNAPSHOT-2016-01-11-a-ubuntu15.10.tar.gz
+$ swiftenv install 2.2
 ```
 
-You may also use URLs to a Swift Binary package URL from [Swift Snapshots](https://swift.org/download/#latest-development-snapshots) as a parameter 
+You may also install from a user supplied  URLs to a Swift Binary package URL from [Swift Snapshots](https://swift.org/download/#latest-development-snapshots) as a parameter
+
+### Installing Swift from a URL
+
+You may pass a URL of a binary Swift release directly to swiftenv install.
+
 ```shell
 $ swiftenv install https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg
 Downloading https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-osx.pkg
-Password:
 ```
+
+### Custom Installation
 
 You may also manually install Swift and make it accessible to swiftenv. Custom
 Swift installations can either be placed in a directory using the correct
@@ -88,7 +92,7 @@ you run `swiftenv rehash` to update the shims.*
 Uninstalls a specific Swift version.
 
 ```shell
-$ swiftenv uninstall 2.2-SNAPSHOT-2015-12-10-a
+$ swiftenv uninstall 2.2
 ```
 
 ## `rehash`
@@ -107,8 +111,8 @@ version for the given command.
 
 ```shell
 $ swiftenv which swift
-/home/kyle/.swiftenv/versions/swift-2.2-SNAPSHOT-2015-12-10-a/usr/bin/swift
+/home/kyle/.swiftenv/versions/2.2/usr/bin/swift
 
 $ swiftenv which lldb
-/home/kyle/.swiftenv/versions/swift-2.2-SNAPSHOT-2015-12-10-a/usr/bin/lldb
+/home/kyle/.swiftenv/versions/2.2/usr/bin/lldb
 ```

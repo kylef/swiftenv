@@ -101,7 +101,7 @@ Displays the current active Swift version and why it was chosen.
 
 ```shell
 $ swiftenv version
-2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
+2.2 (set by /home/kyle/.swiftenv/version)
 ```
 
 ##### `versions`
@@ -111,7 +111,7 @@ active version.
 
 ```shell
 $ swiftenv versions
-  2.2-SNAPSHOT-2015-12-01-b
+  2.2
 * 2.2-SNAPSHOT-2015-12-10-a (set by /home/kyle/.swiftenv/version)
 ```
 
@@ -123,9 +123,9 @@ application-specific `.swift-version` file, or by setting the `SWIFT_VERSION`
 environment variable.
 
 ```shell
-$ swiftenv global 2.2-SNAPSHOT-2015-12-10-a
+$ swiftenv global 2.2
 $ swiftenv global
-2.2-SNAPSHOT-2015-12-10-a
+2.2
 ```
 
 ##### `local`
@@ -136,9 +136,9 @@ global version and can also be overridden by th `SWIFT_VERSION` environment
 variable.
 
 ```shell
-$ swiftenv local 2.2-SNAPSHOT-2015-12-10-a
+$ swiftenv local 2.2
 $ swiftenv local
-2.2-SNAPSHOT-2015-12-10-a
+2.2
 ```
 
 ##### `install`
@@ -184,7 +184,7 @@ you run `swiftenv rehash` to update the shims.*
 Uninstalls a specific Swift version.
 
 ```shell
-$ swiftenv uninstall 2.2-SNAPSHOT-2015-12-10-a
+$ swiftenv uninstall 2.2
 ```
 
 ##### `rehash`
@@ -203,8 +203,8 @@ version for the given command.
 
 ```shell
 $ swiftenv which swift
-/home/kyle/.swiftenv/versions/swift-2.2-SNAPSHOT-2015-12-10-a/usr/bin/swift
+/home/kyle/.swiftenv/versions/2.2/usr/bin/swift
 
 $ swiftenv which lldb
-/home/kyle/.swiftenv/versions/swift-2.2-SNAPSHOT-2015-12-10-a/usr/bin/lldb
+/home/kyle/.swiftenv/versions/2.2/usr/bin/lldb
 ```

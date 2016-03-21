@@ -6,6 +6,7 @@ Listing available versions.
 
 ```shell
 $ swiftenv install --list
+2.2
 2.2-dev
 3.0-dev
 ```
@@ -13,7 +14,14 @@ $ swiftenv install --list
 **NOTE**: *Swift 2.2 does not include the Swift Package Manager.*
 
 ```shell
-$ swiftenv install 2.2-dev
+$ swiftenv install 2.2
+```
+
+By default, Swift will download from an Apple binary release available from
+swift.org. However you can use `--build` to force building the version.
+
+```shell
+$ swiftenv install 2.2 --build
 ```
 
 ## Platforms
