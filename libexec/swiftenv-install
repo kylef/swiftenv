@@ -89,24 +89,6 @@ install_osx_binary() {
   sudo installer -pkg "$TMPDIR/swiftenv-$VERSION.pkg" -target /
 }
 
-# Install a binary from the given URL
-install_binary_url() {
-  URL="$1"
-
-  case $(uname) in
-  'Linux' )
-    install_linux_binary "$VERSION" "$URL"
-    ;;
-  'Darwin' )
-    install_osx_binary "$VERSION" "$URL"
-    ;;
-  * )
-    echo "$(uname) is unsupported, please file an issue with swiftenv."
-    exit 1
-    ;;
-  esac
-}
-
 install_source() {
   VERSION="$1"
 
@@ -161,6 +143,7 @@ if [[ "$VERSION" == "https://"* ]]; then
   VERSION="${VERSION%-*}"
 fi
 VERSION="${VERSION##swift-}"
+VERSION_BINARY="$VERSION"
 
 PREFIX="$(swiftenv-prefix "$VERSION" || true)"
 if [ -d "$PREFIX" ]; then
@@ -170,8 +153,11 @@ fi
 
 if [[ "$VERSION" == "DEVELOPMENT"* ]]; then
   RELEASE="development"
-else
+elif [[ "$VERSION" == *"-SNAPSHOT-"* ]]; then
   RELEASE="swift-${VERSION%%-*}-branch"
+else
+  RELEASE="swift-$VERSION-release"
+  VERSION_BINARY="$VERSION-RELEASE"
 fi
 
 if [ -z "$URL" ] && [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
@@ -183,10 +169,10 @@ fi
 
 case $(uname) in
 'Linux' )
-  install_linux_binary "$VERSION" "$URL"
+  install_linux_binary "$VERSION_BINARY" "$URL"
   ;;
 'Darwin' )
-  install_osx_binary "$VERSION" "$URL"
+  install_osx_binary "$VERSION_BINARY" "$URL"
   ;;
 * )
   echo "There are no binary releases of Swift for $(uname). Please manually install Swift into $SWIFTENV_ROOT/versions/$VERSION"
