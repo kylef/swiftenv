@@ -101,6 +101,7 @@ install_source() {
 
 clean=true
 list=false
+build=auto
 
 for args in "$@"; do
   if [ "$args" = "--no-clean" ]; then
@@ -111,6 +112,10 @@ for args in "$@"; do
     list=true
   elif [ "$args" = "--complete" ]; then
     list=true
+  elif [ "$args" = "--build" ]; then
+    build=true
+  elif [ "$args" = "--no-build" ]; then
+    build=false
   else
     VERSION="$args"
   fi
@@ -160,11 +165,45 @@ else
   VERSION_BINARY="$VERSION-RELEASE"
 fi
 
-if [ -z "$URL" ] && [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
-  install_source "$VERSION"
-  swiftenv-rehash
-  swiftenv-global "${VERSION##swift-}"
-  exit 0
+if [ "$build" == "auto" ]; then
+  if [ -n "$URL" ]; then
+    # URLs are always binary
+    build=false
+  else
+    build=false
+
+    if [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
+      build=true
+    fi
+
+    if [ "$VERSION" == *"SNAPSHOT"* ]; then
+      # Snapshots don't build from source
+      build=false
+    fi
+
+    if [ "$VERSION_BINARY" == *"-RELEASE" ] && [ "$(uname)" == "Darwin" ]; then
+      # There isn't a binary version outside of Xcode for Darwin (as of 2.2)
+      build=false
+    fi
+  fi
+fi
+
+if [ "$build" == "true" ]; then
+  if [ -n "$URL" ]; then
+    echo 'The given URL must be to a binary version of Swift, you cannot use the `--build` option with a URL.'
+    exit 1
+  fi
+
+  if [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
+    install_source "$VERSION"
+    echo "$VERSION has been installed."
+    swiftenv-rehash
+    swiftenv-global "${VERSION##swift-}"
+    exit 0
+  fi
+
+  echo "We don't have build instructions for $VERSION."
+  exit 1
 fi
 
 case $(uname) in
