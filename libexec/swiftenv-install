@@ -29,8 +29,13 @@ check_url() {
 }
 
 install_linux_binary() {
+  local VERSION_RELEASE
+  local VERSION
+  local URL
+
   VERSION="$1"
-  URL="$2"
+  VERSION_RELEASE="$2"
+  URL="$3"
 
   if [ -z "$URL" ]; then
     if [ -z "$UBUNTU_VERSION" ]; then
@@ -48,7 +53,7 @@ install_linux_binary() {
       fi
     fi
 
-    URL="https://swift.org/builds/$RELEASE/${UBUNTU_VERSION//./}/swift-$VERSION/swift-$VERSION-$UBUNTU_VERSION.tar.gz"
+    URL="https://swift.org/builds/$RELEASE/${UBUNTU_VERSION//./}/swift-$VERSION_RELEASE/swift-$VERSION_RELEASE-$UBUNTU_VERSION.tar.gz"
   fi
 
   if [[ "$URL" != *".tar.gz" ]]; then
@@ -69,11 +74,16 @@ install_linux_binary() {
 
 # Installs an OS X binary from the supplied URL
 install_osx_binary() {
+  local VERSION_RELEASE
+  local VERSION
+  local URL
+
   VERSION="$1"
-  URL="$2"
+  VERSION_RELEASE="$2"
+  URL="$3"
 
   if [ -z "$URL" ]; then
-    URL="https://swift.org/builds/$RELEASE/xcode/swift-$VERSION/swift-$VERSION-osx.pkg"
+    URL="https://swift.org/builds/$RELEASE/xcode/swift-$VERSION_RELEASE/swift-$VERSION_RELEASE-osx.pkg"
   fi
 
   if [[ "$URL" != *"-osx.pkg" ]]; then
@@ -208,10 +218,10 @@ fi
 
 case $(uname) in
 'Linux' )
-  install_linux_binary "$VERSION_BINARY" "$URL"
+  install_linux_binary "$VERSION" "$VERSION_BINARY" "$URL"
   ;;
 'Darwin' )
-  install_osx_binary "$VERSION_BINARY" "$URL"
+  install_osx_binary "$VERSION" "$VERSION_BINARY" "$URL"
   ;;
 * )
   echo "There are no binary releases of Swift for $(uname). Please manually install Swift into $SWIFTENV_ROOT/versions/$VERSION"
