@@ -176,14 +176,14 @@ if [ "$build" == "auto" ]; then
       build=true
     fi
 
-    if [ "$VERSION" == *"SNAPSHOT"* ]; then
+    if [[ "$VERSION" == *"SNAPSHOT"* ]]; then
       # Snapshots don't build from source
       build=false
     fi
 
-    if [ "$VERSION_BINARY" == *"-RELEASE" ] && [ "$(uname)" == "Darwin" ]; then
+    if [[ "$VERSION_BINARY" == *"-RELEASE" ]] && [ "$(uname)" != "Darwin" ]; then
       # There isn't a binary version outside of Xcode for Darwin (as of 2.2)
-      build=false
+      build=true
     fi
   fi
 fi
