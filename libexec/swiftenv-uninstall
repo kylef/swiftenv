@@ -23,6 +23,8 @@ if [ -d "$SWIFTENV_ROOT/versions/$VERSION" ]; then
   VERSION_DIRECTORY="$SWIFTENV_ROOT/versions/$VERSION"
 elif [ -d "$SWIFTENV_ROOT/versions/swift-$VERSION" ]; then
   VERSION_DIRECTORY="$SWIFTENV_ROOT/versions/swift-$VERSION"
+elif [ -d "/Library/Developer/Toolchains/swift-$VERSION.xctoolchain" ]; then
+  VERSION_DIRECTORY="/Library/Developer/Toolchains/swift-$VERSION.xctoolchain"
 else
   echo "$VERSION is not installed."
   exit 1
@@ -33,5 +35,14 @@ if [ "$VERSION" == "$CURRENT_VERSION" ]; then
   rm -f "$SWIFTENV_ROOT/version"
 fi
 
-rm -fr "$VERSION_DIRECTORY"
+if [[ "$VERSION_DIRECTORY" == "/Library/Developer/Toolchains/"* ]]; then
+  if [ "$(readlink /Library/Developer/Toolchains/swift-latest.xctoolchain)" == "$VERSION_DIRECTORY" ]; then
+    sudo rm -fr /Library/Developer/Toolchains/swift-latest.xctoolchain
+  fi
+
+  sudo rm -fr "$VERSION_DIRECTORY"
+else
+  rm -fr "$VERSION_DIRECTORY"
+fi
+
 swiftenv rehash

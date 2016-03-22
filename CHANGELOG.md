@@ -1,5 +1,11 @@
 # Changelog
 
+## Master
+
+### Bug Fixes
+
+- `swiftenv uninstall` will now uninstall Swift toolchains on OS X.
+
 ## 1.0.0
 
 ### Enhancements
