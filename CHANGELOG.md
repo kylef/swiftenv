@@ -4,6 +4,8 @@
 
 ### Bug Fixes
 
+- Adds support for building Swift 2.2.1 from source, and installing 2.2.1
+  development snapshots.
 - `swiftenv uninstall` will now uninstall Swift toolchains on OS X.
 
 ## 1.0.0
