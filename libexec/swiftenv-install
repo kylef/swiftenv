@@ -169,7 +169,12 @@ fi
 if [[ "$VERSION" == "DEVELOPMENT"* ]]; then
   RELEASE="development"
 elif [[ "$VERSION" == *"-SNAPSHOT-"* ]]; then
-  RELEASE="swift-${VERSION%%-*}-branch"
+  VERSION_NUMBER=${VERSION%%-*}
+  if [[ "$VERSION_NUMBER" = *"."*"."* ]]; then
+    VERSION_NUMBER="$(echo $VERSION_NUMBER | sed -E 's/\.[1-9]$//')"
+  fi
+
+  RELEASE="swift-$VERSION_NUMBER-branch"
 else
   RELEASE="swift-$VERSION-release"
   VERSION_BINARY="$VERSION-RELEASE"
