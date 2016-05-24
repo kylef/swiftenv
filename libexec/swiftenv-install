@@ -28,6 +28,25 @@ check_url() {
   fi
 }
 
+get_platform() {
+  case $(uname) in
+  'Linux' )
+    if command -v "lsb_release" >/dev/null 2>&1; then
+      if [ $(lsb_release -is) = "Ubuntu" ]; then
+        echo "ubuntu$(lsb_release -rs)"
+      fi
+    fi
+    ;;
+  'Darwin' )
+    echo "osx"
+    ;;
+  * )
+    echo "Unsupported Platform"
+    exit 1
+    ;;
+  esac
+}
+
 install_linux_binary() {
   local VERSION_RELEASE
   local VERSION
@@ -111,6 +130,7 @@ install_source() {
 
 clean=true
 list=false
+snapshot=false
 build=auto
 
 for args in "$@"; do
@@ -120,6 +140,9 @@ for args in "$@"; do
     clean=true
   elif [ "$args" = "--list" ]; then
     list=true
+  elif [ "$args" = "--list-snapshots" ]; then
+    list=true
+    snapshots=true
   elif [ "$args" = "--complete" ]; then
     list=true
   elif [ "$args" = "--build" ]; then
@@ -134,6 +157,11 @@ for args in "$@"; do
 done
 
 if $list; then
+  if $snapshots; then
+      curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?snapshot=true&platform=$(get_platform)"
+    exit
+  fi
+
   swiftenv-build --definitions
   exit
 fi

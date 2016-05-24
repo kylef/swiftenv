@@ -22,6 +22,20 @@ You can install swift using `swiftenv install`.
 $ swiftenv install DEVELOPMENT-SNAPSHOT-2016-02-08-a
 ```
 
+### Listing all versions
+
+You can list all versions of Swift:
+
+```shell
+$ swiftenv install --list
+```
+
+You can also list all binary snapshots of Swift that you can install.
+
+```shell
+$ swiftenv install --list-snapshots
+```
+
 ## Switching Swift Versions
 
 swiftenv allows you to switch between the installed Swift versions either
