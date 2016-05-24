@@ -26,6 +26,23 @@ elif [ -d "$SWIFTENV_ROOT/versions/swift-$VERSION" ]; then
 elif [ -d "/Library/Developer/Toolchains/swift-$VERSION.xctoolchain" ]; then
   VERSION_DIRECTORY="/Library/Developer/Toolchains/swift-$VERSION.xctoolchain"
 else
+
+  # Xcode installs
+  if command -v "mdfind" >/dev/null 2>&1; then
+    XCODES="$(mdfind "kMDItemCFBundleIdentifier == 'com.apple.dt.Xcode'" 2>/dev/null)"
+    for xcode in $XCODES; do
+      if [ -d "$xcode" ]; then
+        version_line="$(env DEVELOPER_DIR="$xcode" xcrun swift --version | head -n1)"
+        xversion="$(echo "$version_line" | cut -d " " -f 4)"
+        if [ "$xversion" == "$VERSION" ]; then
+          echo "Cannot uninstall $VERSION from swiftenv."
+          echo "You can unintall $VERSION by uninstalling Xcode ($xcode)."
+          exit 1
+        fi
+      fi
+    done
+  fi
+
   echo "$VERSION is not installed."
   exit 1
 fi
