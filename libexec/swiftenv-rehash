@@ -74,3 +74,4 @@ SH
 registered_shims=" $(list_executable_names | sort -u) "
 remove_stale_shims
 create_shims
+swiftenv --version > "$SHIM_PATH/.version"
