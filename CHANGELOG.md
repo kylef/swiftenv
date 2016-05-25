@@ -1,8 +1,16 @@
 # Changelog
 
+## Master
+
+### Bug Fixes
+
+- `swiftenv init` will now cause a rehash if the version of swiftenv has
+  changed.
+
+
 ## 1.0.1
 
-## Enhancements
+### Enhancements
 
 - Added `swiftenv install --list-snapshots` which shows you a list of
   snapshots for your platform.
