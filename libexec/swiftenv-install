@@ -197,7 +197,7 @@ fi
 if [[ "$VERSION" == "DEVELOPMENT"* ]]; then
   RELEASE="development"
 elif [[ "$VERSION" == *"-SNAPSHOT-"* ]]; then
-  VERSION_NUMBER=${VERSION%%-*}
+  VERSION_NUMBER=${VERSION%%-SNAPSHOT*}
   if [[ "$VERSION_NUMBER" = *"."*"."* ]]; then
     VERSION_NUMBER="$(echo $VERSION_NUMBER | sed -E 's/\.[1-9]$//')"
   fi

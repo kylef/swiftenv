@@ -4,6 +4,8 @@
 
 ### Bug Fixes
 
+- Adds support for installing preview snapshots such as
+  `3.0-preview-1-SNAPSHOT-2016-05-31-a`.
 - `swiftenv init` will now cause a rehash if the version of swiftenv has
   changed.
 
