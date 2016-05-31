@@ -130,7 +130,7 @@ install_source() {
 
 clean=true
 list=false
-snapshot=false
+snapshots=false
 build=auto
 
 for args in "$@"; do
