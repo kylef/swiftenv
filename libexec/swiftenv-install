@@ -151,6 +151,8 @@ list=false
 snapshots=false
 build=auto
 
+unset SKIP_EXISTING
+
 for args in "$@"; do
   if [ "$args" = "--no-clean" ]; then
     clean=false
@@ -167,6 +169,8 @@ for args in "$@"; do
     build=true
   elif [ "$args" = "--no-build" ]; then
     build=false
+  elif [ "$args" = "--skip-existing" ] || [ "$args" = "-s" ]; then
+    SKIP_EXISTING=true
   else
     VERSION="$args"
   fi
@@ -209,6 +213,11 @@ VERSION_BINARY="$VERSION"
 PREFIX="$(swiftenv-prefix "$VERSION" || true)"
 if [ -d "$PREFIX" ]; then
   echo "$VERSION is already installed."
+
+  if [ -n "$SKIP_EXISTING" ]; then
+    exit 0
+  fi
+
   exit 1
 fi
 

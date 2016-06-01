@@ -1,5 +1,13 @@
 # Changelog
 
+## Master
+
+### Enhancements
+
+- Add a `--skip-existing`/`-s` flag to `swiftenv install` to skip installation
+  if version is already installed.
+
+
 ## 1.0.2
 
 ### Bug Fixes
