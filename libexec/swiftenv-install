@@ -47,6 +47,24 @@ get_platform() {
   esac
 }
 
+safe_get_platform() {
+  case $(uname) in
+  'Linux' )
+    if command -v "lsb_release" >/dev/null 2>&1; then
+      if [ $(lsb_release -is) = "Ubuntu" ]; then
+        echo "ubuntu$(lsb_release -rs)"
+      fi
+    fi
+    ;;
+  'Darwin' )
+    echo "osx"
+    ;;
+  * )
+    echo "unknown"
+    ;;
+  esac
+}
+
 install_linux_binary() {
   local VERSION_RELEASE
   local VERSION
@@ -213,20 +231,24 @@ if [ "$build" == "auto" ]; then
     # URLs are always binary
     build=false
   else
-    build=false
-
     if [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
       build=true
+    fi
+
+    status_code=$(curl -o /dev/null --silent --head --write-out '%{http_code}' "https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(safe_get_platform)")
+    if [ "$status_code" = "404" ]; then
+      build=true
+    elif [ "$status_code" = "200" ]; then
+      URL="$(curl --silent https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(safe_get_platform) -H 'Accept: text/plain')"
+      build=false
+    else
+      echo "There was a network problem checking for a binary release of $VERSION, server returned $status_code."
+      exit 1
     fi
 
     if [[ "$VERSION" == *"SNAPSHOT"* ]]; then
       # Snapshots don't build from source
       build=false
-    fi
-
-    if [[ "$VERSION_BINARY" == *"-RELEASE" ]] && [ "$(uname)" != "Darwin" ]; then
-      # There isn't a binary version outside of Xcode for Darwin (as of 2.2)
-      build=true
     fi
   fi
 fi
