@@ -40,7 +40,7 @@ list_executable_names() {
   VERSIONS_DIR="$SWIFTENV_ROOT/versions/$version"
 
   for path in "$VERSIONS_DIR"/*; do
-    if [ -d "$path" ]; then
+    if [ -d "$path/usr/bin" ]; then
       for file in "$path/usr/bin"/*; do
         echo "${file##*/}"
       done
