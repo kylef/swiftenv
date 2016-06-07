@@ -52,17 +52,24 @@ for path in "$VERSIONS_DIR"/*; do
 done
 
 # Swift toolchains on OS X
-TOOLCHAIN_DIR="/Library/Developer/Toolchains"
-if [ -d "$TOOLCHAIN_DIR" ]; then
-  for path in "$TOOLCHAIN_DIR"/*; do
-    if [[ "$path" == *".xctoolchain" ]] && [ -d "$path" ]; then
-      version="$(basename ${path##*/} .xctoolchain)"
-      if [ "$version" != "swift-latest" ]; then
-        print_version "$version" "toolchain"
+
+check_toolchains() {
+  TOOLCHAIN_DIR="$1"
+
+  if [ -d "$TOOLCHAIN_DIR" ]; then
+    for path in "$TOOLCHAIN_DIR"/*; do
+      if [[ "$path" == *".xctoolchain" ]] && [ -d "$path" ]; then
+        version="$(basename ${path##*/} .xctoolchain)"
+        if [ "$version" != "swift-latest" ]; then
+          print_version "$version" "toolchain"
+        fi
       fi
-    fi
-  done
-fi
+    done
+  fi
+}
+
+check_toolchains "/Library/Developer/Toolchains"
+check_toolchains "$HOME/Library/Developer/Toolchains"
 
 # Xcode installs
 if command -v "mdfind" >/dev/null 2>&1; then

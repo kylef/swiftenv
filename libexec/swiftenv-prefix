@@ -26,11 +26,13 @@ fi
 
 # OS X Swift Toolchain
 TOOLCHAIN_DIR="/Library/Developer/Toolchains"
-if [ -d "$TOOLCHAIN_DIR/$SWIFT_VERSION.xctoolchain" ]; then
-  echo "$TOOLCHAIN_DIR/$SWIFT_VERSION.xctoolchain"
+if [ -d "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain" ]; then
+  echo "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain"
   exit
 fi
 
+# OS X User Swift Toolchain
+TOOLCHAIN_DIR="$HOME/Library/Developer/Toolchains"
 if [ -d "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain" ]; then
   echo "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain"
   exit

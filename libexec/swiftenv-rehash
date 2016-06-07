@@ -7,23 +7,11 @@ SHIM_PATH=$SWIFTENV_ROOT/shims
 
 mkdir -p "$SHIM_PATH"
 
-# List all basenames of executables for every installed Swift version
-list_executable_names() {
-  VERSIONS_DIR="$SWIFTENV_ROOT/versions/$version"
+list_executable_names_toolchains() {
+  TOOLCHAINS_DIR="$1"
 
-  for path in "$VERSIONS_DIR"/*; do
-    if [ -d "$path" ]; then
-      for file in "$path/usr/bin/"*; do
-        echo "${file##*/}"
-      done
-    fi
-  done
-
-  # OS X Swift Toolchains
-  if [ -d "/Library/Developer/Toolchains" ]; then
-    VERSIONS_DIR="/Library/Developer/Toolchains"
-
-    for path in "$VERSIONS_DIR"/*.xctoolchain; do
+  if [ -d "$TOOLCHAINS_DIR" ]; then
+    for path in "$TOOLCHAINS_DIR"/*.xctoolchain; do
       if [ -d "$path" ]; then
         for file in "$path/usr/bin/"*; do
           echo "${file##*/}"
@@ -31,8 +19,9 @@ list_executable_names() {
       fi
     done
   fi
+}
 
-  # Xcode installs
+list_executable_names_xcodes() {
   if command -v "mdfind" >/dev/null 2>&1; then
     XCODES="$(mdfind "kMDItemCFBundleIdentifier == 'com.apple.dt.Xcode'" 2>/dev/null)"
     for xcode in $XCODES; do
@@ -44,6 +33,26 @@ list_executable_names() {
       fi
     done
   fi
+}
+
+# List all basenames of executables for every installed Swift version
+list_executable_names() {
+  VERSIONS_DIR="$SWIFTENV_ROOT/versions/$version"
+
+  for path in "$VERSIONS_DIR"/*; do
+    if [ -d "$path" ]; then
+      for file in "$path/usr/bin"/*; do
+        echo "${file##*/}"
+      done
+    fi
+  done
+
+  # OS X Swift Toolchains
+  list_executable_names_toolchains "/Library/Developer/Toolchains"
+  list_executable_names_toolchains "$HOME/Library/Developer/Toolchains"
+
+  # Xcode installs
+  list_executable_names_xcodes
 }
 
 remove_stale_shims() {

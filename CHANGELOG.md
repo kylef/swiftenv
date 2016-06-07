@@ -6,6 +6,8 @@
 
 - Add a `--skip-existing`/`-s` flag to `swiftenv install` to skip installation
   if version is already installed.
+- Adds support for Swift toolchains installed into
+  `~/Library/Developer/Toolchains/` on OS X.
 
 
 ## 1.0.2

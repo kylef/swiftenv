@@ -25,6 +25,8 @@ elif [ -d "$SWIFTENV_ROOT/versions/swift-$VERSION" ]; then
   VERSION_DIRECTORY="$SWIFTENV_ROOT/versions/swift-$VERSION"
 elif [ -d "/Library/Developer/Toolchains/swift-$VERSION.xctoolchain" ]; then
   VERSION_DIRECTORY="/Library/Developer/Toolchains/swift-$VERSION.xctoolchain"
+elif [ -d "$HOME/Library/Developer/Toolchains/swift-$VERSION.xctoolchain" ]; then
+  VERSION_DIRECTORY="$HOME/Library/Developer/Toolchains/swift-$VERSION.xctoolchain"
 else
 
   # Xcode installs
