@@ -6,21 +6,6 @@ set -E
 
 exec 3<&2 # preserve original stderr at fd 3
 
-# Determines the number of CPU cores
-num_cpu_cores() {
-  local num
-  case "$(uname -s)" in
-  Darwin | *BSD )
-    num="$(sysctl -n hw.ncpu 2>/dev/null || true)"
-    ;;
-  * )
-    num="$(grep ^processor /proc/cpuinfo 2>/dev/null | wc -l | xargs)"
-    num="${num#0}"
-    ;;
-  esac
-  echo "${num:-2}"
-}
-
 # Usage: fetch_git repository-name branch [destination]
 fetch_git() {
   if ! type git &>/dev/null; then
@@ -57,8 +42,7 @@ build_swift() {
   echo "Building Swift"
   echo "This may take a very long time..."
 
-  jobs="$(num_cpu_cores)"
-  ./utils/build-script -R -- --install-prefix="$destination" --build-args="-j$jobs" --build-jobs="$jobs" >&4 2>&1
+  ./utils/build-script -R -- --install-prefix="$destination" >&4 2>&1
   cd "$TMP"
 }
 
