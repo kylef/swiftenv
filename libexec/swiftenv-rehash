@@ -28,7 +28,10 @@ list_executable_names_xcodes() {
       TOOLCHAIN_DIR="$xcode/Contents/Developer/Toolchains/XcodeDefault.xctoolchain"
       if [ -d "$TOOLCHAIN_DIR" ]; then
         for file in "$TOOLCHAIN_DIR/usr/bin/"*; do
-          echo "${file##*/}"
+          executable="${file##*/}"
+          if [[ "$executable" == "swift"* ]] || [[ "$executable" == "lldb"* ]]; then
+            echo "$executable"
+          fi
         done
       fi
     done

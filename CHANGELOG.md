@@ -1,5 +1,14 @@
 # Changelog
 
+## Master
+
+### Enhancements
+
+- Only create shims for `swift*` and `lldb*` binaries found within Xcode
+  installs. Before we created shims for all executable tools found in Xcode
+  and created shims for tools like ctags, cc, clang, etc.
+
+
 ## 1.1.0
 
 ### Enhancements
