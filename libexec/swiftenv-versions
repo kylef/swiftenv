@@ -16,10 +16,10 @@ CURRENT_VERSION=$(swiftenv-version-name || true)
 
 printed=" "
 print_version() {
+  version="$1"
+
   # Don't print if we've already printed it
-  if [[ "$printed" != *" $1 "* ]]; then
-    local version
-    version="${1##swift-}"
+  if [[ "$printed" != *" $version "* ]]; then
     if [ -n "$bare" ]; then
       echo "$version"
     elif [ "$version" == "$CURRENT_VERSION" ]; then
@@ -60,8 +60,23 @@ check_toolchains() {
     for path in "$TOOLCHAIN_DIR"/*; do
       if [[ "$path" == *".xctoolchain" ]] && [ -d "$path" ]; then
         version="$(basename ${path##*/} .xctoolchain)"
+
+        if [ "$version" == "XcodeDefault" ]; then
+          version_line="$(env DEVELOPER_DIR="$xcode" xcrun swift --version | head -n1)"
+          version="swift-$(echo "$version_line" | cut -d " " -f 4)"
+        fi
+
         if [ "$version" != "swift-latest" ]; then
-          print_version "$version" "toolchain"
+
+          # Swift toolchains start with `swift-`.
+          # For example: swift-DEVELOPMENT-SNAPSHOT-2016-05-09-a
+          version="${version##swift-}"
+
+          # Xcode swift toolchains start with `Swift_`.
+          # For example: Swift_2.3
+          version="${version##Swift_}"
+
+          print_version "$version" "toolchain $TOOLCHAIN_DIR"
         fi
       fi
     done
@@ -71,14 +86,14 @@ check_toolchains() {
 check_toolchains "/Library/Developer/Toolchains"
 check_toolchains "$HOME/Library/Developer/Toolchains"
 
-# Xcode installs
+# Xcode Toolchains
 if command -v "mdfind" >/dev/null 2>&1; then
   XCODES="$(mdfind "kMDItemCFBundleIdentifier == 'com.apple.dt.Xcode'" 2>/dev/null)"
   for xcode in $XCODES; do
-    if [ -d "$xcode" ]; then
-      version_line="$(env DEVELOPER_DIR="$xcode" xcrun swift --version | head -n1)"
-      version="swift-$(echo "$version_line" | cut -d " " -f 4)"
-      print_version "$version" "xcode $xcode"
+    toolchain="$xcode/Contents/Developer/Toolchains"
+
+    if [ -d "$toolchain" ]; then
+      check_toolchains "$toolchain"
     fi
   done
 fi
