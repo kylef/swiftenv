@@ -15,10 +15,15 @@ if [ -z "$COMMAND" ] ; then
   exit 1
 fi
 
-COMMAND_PATH="$(swiftenv-which $SHIM $COMMAND)"
+COMMAND_PATH="$(swiftenv-which $SHIM $COMMAND || true)"
 COMMAND_BIN_PATH="${COMMAND_PATH%/*}"
 
 shift 1
+
+if [[ -z "$COMMAND_PATH" ]]; then
+  echo "no such command: $COMMAND"
+  exit 127
+fi
 
 VERSION=$(swiftenv-version-name)
 if [ "$VERSION" != "system" ]; then

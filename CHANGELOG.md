@@ -8,6 +8,10 @@
   installs. Before we created shims for all executable tools found in Xcode
   and created shims for tools like ctags, cc, clang, etc.
 
+### Bug Fixes
+
+- Expose not found errors when using `swiftenv exec` against unknown commands.
+
 
 ## 1.1.0
 
