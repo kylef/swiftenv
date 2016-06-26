@@ -255,7 +255,7 @@ if [ "$build" == "auto" ]; then
       exit 1
     fi
 
-    if [[ "$VERSION" == *"SNAPSHOT"* ]]; then
+    if [[ "$VERSION" == *"SNAPSHOT"* ]] || [[ "$VERSION" == *"preview"* ]]; then
       # Snapshots don't build from source
       build=false
     fi

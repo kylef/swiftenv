@@ -11,6 +11,8 @@
 ### Bug Fixes
 
 - Expose not found errors when using `swiftenv exec` against unknown commands.
+- Swift preview versions such as `3.0-preview-1` will be detected as binary
+  versions when using `swiftenv install`.
 
 
 ## 1.1.0
