@@ -230,9 +230,9 @@ elif [[ "$VERSION" == *"-SNAPSHOT-"* ]]; then
   fi
 
   RELEASE="swift-$VERSION_NUMBER-branch"
-elif [[ "$VERSION" == *"-preview-"* ]]; then
-  RELEASE="swift-$VERSION"
-  VERSION_BINARY="$(echo $VERSION | sed 's/preview/PREVIEW/')"
+elif [[ "$VERSION" == *"-PREVIEW-"* ]]; then
+  RELEASE="swift-$(echo $VERSION | sed 's/PREVIEW/preview/')"
+  VERSION_BINARY="$VERSION"
 else
   RELEASE="swift-$VERSION-release"
   VERSION_BINARY="$VERSION-RELEASE"
@@ -258,7 +258,7 @@ if [ "$build" == "auto" ]; then
       exit 1
     fi
 
-    if [[ "$VERSION" == *"SNAPSHOT"* ]] || [[ "$VERSION" == *"preview"* ]]; then
+    if [[ "$VERSION" == *"SNAPSHOT"* ]] || [[ "$VERSION" == *"PREVIEW"* ]]; then
       # Snapshots don't build from source
       build=false
     fi
