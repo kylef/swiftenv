@@ -106,7 +106,7 @@ install_linux_binary() {
   curl "$URL" -s | tar xz -C "$TMPDIR/swiftenv-$VERSION"
 
   DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
-  mv "$TMPDIR/swiftenv-$VERSION/swift-$VERSION"* "$DESTINATION"
+  mv "$TMPDIR/swiftenv-$VERSION/swift-$VERSION_RELEASE"* "$DESTINATION"
 }
 
 # Installs an OS X binary from the supplied URL
@@ -230,6 +230,9 @@ elif [[ "$VERSION" == *"-SNAPSHOT-"* ]]; then
   fi
 
   RELEASE="swift-$VERSION_NUMBER-branch"
+elif [[ "$VERSION" == *"-preview-"* ]]; then
+  RELEASE="swift-$VERSION"
+  VERSION_BINARY="$(echo $VERSION | sed 's/preview/PREVIEW/')"
 else
   RELEASE="swift-$VERSION-release"
   VERSION_BINARY="$VERSION-RELEASE"
