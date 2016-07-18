@@ -12,7 +12,7 @@ $ swiftenv versions
 ```
 
 **NOTE**: *swiftenv will automatically pick up any versions of Swift installed on
-OS X by Xcode or Swift toolchains.*
+macOS by Xcode or Swift toolchains.*
 
 ## Installing Swift
 

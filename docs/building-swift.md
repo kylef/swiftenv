@@ -28,10 +28,10 @@ $ swiftenv install 2.2 --build
 
 Below you can find a list of specific dependencies for each platform.
 
-### OS X
+### macOS
 
 You will need to install the latest version of Xcode along with cmake
-and ninja build to build Swift on OS X.
+and ninja build to build Swift on macOS.
 
 #### Via Homebrew
 

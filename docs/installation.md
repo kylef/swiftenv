@@ -1,6 +1,6 @@
 # Installation
 
-**NOTE**: If you're on OS X, consider [installing with Homebrew](#via-homebrew).
+**NOTE**: If you're on macOS, consider [installing with Homebrew](#via-homebrew).
 
 ### Via a Git clone
 
@@ -45,7 +45,7 @@
 ## Via Homebrew
 
 You can install swiftenv using the [Homebrew](http://brew.sh/) package manager
-on OS X.
+on macOS.
 
 1. Install swiftenv
 

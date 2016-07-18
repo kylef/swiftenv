@@ -14,10 +14,10 @@ install:
 
 ## Operating Systems
 
-### OS X
+### macOS
 
-For OS X support on Travis, you will want to enable the `xcode7.2` or
-newer image which contains a version of OS X and Xcode required for Swift.
+For macOS support on Travis, you will want to enable the `xcode7.2` or
+newer image which contains a version of macOS and Xcode required for Swift.
 
 ```yaml
 osx_image: xcode7.2
@@ -38,7 +38,7 @@ dist: trusty
 
 ### Multi-OS
 
-swiftenv can be used on both OS X and Linux, you can use Travis
+swiftenv can be used on both macOS and Linux, you can use Travis
 [multiple operating system](https://docs.travis-ci.com/user/multi-os/)
 support by adding both platforms to the `os` key:
 
@@ -48,7 +48,7 @@ os:
   - osx
 ```
 
-You can mix this together with the above steps required for OS X and
+You can mix this together with the above steps required for macOS and
 Linux to have a complete `.travis.yml` file as follows:
 
 ```yaml
