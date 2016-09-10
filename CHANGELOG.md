@@ -7,6 +7,7 @@
 - Only create shims for `swift*` and `lldb*` binaries found within Xcode
   installs. Before we created shims for all executable tools found in Xcode
   and created shims for tools like ctags, cc, clang, etc.
+- Adds support for installing binary GM releases.
 
 ### Bug Fixes
 

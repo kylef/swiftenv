@@ -235,7 +235,7 @@ elif [[ "$VERSION" == *"-PREVIEW-"* ]]; then
   VERSION_BINARY="$VERSION"
 elif [[ "$VERSION" == *"-GM-CANDIDATE" ]]; then
   VERSION_NUMBER=${VERSION%%-GM-CANDIDATE}
-  RELEASE="swift-$VERSION_NUMBER-GM"
+  RELEASE="swift-$VERSION_NUMBER-GM-CANDIDATE"
   VERSION_BINARY="$VERSION"
 else
   RELEASE="swift-$VERSION-release"
@@ -262,7 +262,7 @@ if [ "$build" == "auto" ]; then
       exit 1
     fi
 
-    if [[ "$VERSION" == *"SNAPSHOT"* ]] || [[ "$VERSION" == *"PREVIEW"* ]]; then
+    if [[ "$VERSION" == *"SNAPSHOT"* ]] || [[ "$VERSION" == *"PREVIEW"* ]] || [[ "$VERSION" == *"GM"* ]]; then
       # Snapshots don't build from source
       build=false
     fi
