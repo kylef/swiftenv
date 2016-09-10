@@ -233,6 +233,10 @@ elif [[ "$VERSION" == *"-SNAPSHOT-"* ]]; then
 elif [[ "$VERSION" == *"-PREVIEW-"* ]]; then
   RELEASE="swift-$(echo $VERSION | sed 's/PREVIEW/preview/')"
   VERSION_BINARY="$VERSION"
+elif [[ "$VERSION" == *"-GM-CANDIDATE" ]]; then
+  VERSION_NUMBER=${VERSION%%-GM-CANDIDATE}
+  RELEASE="swift-$VERSION_NUMBER-GM"
+  VERSION_BINARY="$VERSION"
 else
   RELEASE="swift-$VERSION-release"
   VERSION_BINARY="$VERSION-RELEASE"
