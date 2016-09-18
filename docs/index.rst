@@ -31,3 +31,4 @@ Integrations
 
    integrations/heroku
    integrations/travis-ci
+   integrations/docker
