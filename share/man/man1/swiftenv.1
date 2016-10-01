@@ -1,0 +1,84 @@
+.TH SWIFTENV 1
+
+.SH NAME
+swiftenv \- Swift Version Manager
+
+.SH SYNOPSIS
+swiftenv [\-\-help] [\-\-version] <command>
+
+.SH DESCRIPTION
+
+swiftenv allows you to easily install, and switch between multiple versions of
+Swift.
+
+swiftenv allows you to:
+
+\- Change the \fBglobal Swift version\fR, per user.
+
+\- Set a \fBper-project Swift version\fR.
+
+\- Allows you to \fBoverride the Swift version\fR with an environmental variable.
+
+.SH OPTIONS
+
+\-\-version
+
+.RS
+Prints the version of Swiftenv.
+.RE
+
+\-\-help
+
+.RS
+Prints the synopsis and a list of the most commonly used commands.
+.RE
+
+.SH COMMANDS
+
+\fBversion\fR
+
+.RS
+Displays the current active Swift version and why it was chosen.
+.RE
+
+\fBversions\fR
+
+.RS
+Lists all installed Swift versions, showing an asterisk next to the currently active version.
+.RE
+
+\fBglobal\fR [version]
+
+.RS
+Sets the global version of Swift
+.RE
+
+\fBlocal\fR [version]
+
+.RS
+Sets the local application-specific version of Swift
+.RE
+
+\fBinstall\fR <version>
+
+.RS
+Installs a version of Swift
+.RE
+
+\fBuninstall\fR <version>
+
+.RS
+Uninstalls a specific Swift version.
+.RE
+
+\fBrehash\fR
+
+.RS
+Installs shims for the Swift binaries. This command should be ran after you manually install new versions of Swift.
+.RE
+
+\fBwhich\fR <command>
+
+.RS
+Displays the full path to the executable that would be invoked for the selected version for the given command.
+.RE

@@ -1,5 +1,15 @@
 # Changelog
 
+## Master
+
+### Enhancements
+
+- Adds a manpage for `swiftenv`.
+
+  ```shell
+  $ man swiftenv
+  ```
+
 ## 1.2.0
 
 ### Enhancements
