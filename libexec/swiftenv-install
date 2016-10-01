@@ -3,18 +3,6 @@
 
 set -e
 
-unsupported_binary_platform() {
-  echo "Apple does not provide binary releases for $1."
-  echo
-  echo "You may manually install Swift and place it into:"
-  echo "  $SWIFTENV_ROOT/versions/$VERSION"
-  echo
-  echo "Alternatively, you can force using a Ubuntu binaries by using the following:"
-  echo "  $ env UBUNTU_VERSION=ubuntu15.10 swiftenv install $VERSION"
-  echo
-  exit 1
-}
-
 check_url() {
   status_code=$(curl -o /dev/null --silent --head --write-out '%{http_code}' "$1")
   if [ "$status_code" = "404" ]; then
@@ -29,75 +17,39 @@ check_url() {
 }
 
 get_platform() {
+  if [ -n "$PLATFORM" ]; then
+    echo "$PLATFORM"
+    return
+  fi
+
   case $(uname) in
   'Linux' )
     if command -v "lsb_release" >/dev/null 2>&1; then
       if [ $(lsb_release -is) = "Ubuntu" ]; then
         echo "ubuntu$(lsb_release -rs)"
+      else
+        echo "unsupported-platform"
       fi
+    elif [ -r "/etc/lsb-release" ]; then
+      echo "The `lsb_release` command line tool is missing. `/etc/lsb-release` file is found."
+      exit 1
     fi
     ;;
   'Darwin' )
     echo "osx"
     ;;
   * )
-    echo "Unsupported Platform"
-    exit 1
+    echo "unsupported-platform"
     ;;
   esac
 }
 
-safe_get_platform() {
-  case $(uname) in
-  'Linux' )
-    if command -v "lsb_release" >/dev/null 2>&1; then
-      if [ $(lsb_release -is) = "Ubuntu" ]; then
-        echo "ubuntu$(lsb_release -rs)"
-      fi
-    fi
-    ;;
-  'Darwin' )
-    echo "osx"
-    ;;
-  * )
-    echo "unknown"
-    ;;
-  esac
-}
-
-install_linux_binary() {
-  local VERSION_RELEASE
+# Install a tarball binary from the supplied URL
+install_tar_binary() {
   local VERSION
   local URL
-
   VERSION="$1"
-  VERSION_RELEASE="$2"
-  URL="$3"
-
-  if [ -z "$URL" ]; then
-    if [ -z "$UBUNTU_VERSION" ]; then
-      if command -v "lsb_release" >/dev/null 2>&1; then
-        if [ $(lsb_release -is) = "Ubuntu" ]; then
-          UBUNTU_VERSION="ubuntu$(lsb_release -rs)"
-          if [ "$UBUNTU_VERSION" != "ubuntu15.10" ] && [ "$UBUNTU_VERSION" != "ubuntu14.04" ]; then
-            unsupported_binary_platform $UBUNTU_VERSION
-          fi
-        else
-          unsupported_binary_platform "$(lsb_release -ds)"
-        fi
-      else
-        unsupported_binary_platform "your distribution"
-      fi
-    fi
-
-    URL="https://swift.org/builds/$RELEASE/${UBUNTU_VERSION//./}/swift-$VERSION_RELEASE/swift-$VERSION_RELEASE-$UBUNTU_VERSION.tar.gz"
-  fi
-
-  if [[ "$URL" != *".tar.gz" ]]; then
-    echo "$URL is not as a tar.gz as expected."
-    exit 1
-  fi
-
+  URL="$2"
   check_url "$URL"
 
   mkdir -p "$TMPDIR/swiftenv-$VERSION"
@@ -109,25 +61,10 @@ install_linux_binary() {
   mv "$TMPDIR/swiftenv-$VERSION/swift-$VERSION_RELEASE"* "$DESTINATION"
 }
 
-# Installs an OS X binary from the supplied URL
-install_osx_binary() {
-  local VERSION_RELEASE
-  local VERSION
+# Installs an `.pkg` binary from the supplied URL
+install_pkg_binary() {
   local URL
-
-  VERSION="$1"
-  VERSION_RELEASE="$2"
-  URL="$3"
-
-  if [ -z "$URL" ]; then
-    URL="https://swift.org/builds/$RELEASE/xcode/swift-$VERSION_RELEASE/swift-$VERSION_RELEASE-osx.pkg"
-  fi
-
-  if [[ "$URL" != *"-osx.pkg" ]]; then
-    echo "$URL does not end in '-osx.pkg' as expected."
-    exit 1
-  fi
-
+  URL="$1"
   check_url "$URL"
 
   echo "Downloading $URL"
@@ -136,6 +73,7 @@ install_osx_binary() {
   sudo installer -pkg "$TMPDIR/swiftenv-$VERSION.pkg" -target /
 }
 
+# Install the given version from source
 install_source() {
   VERSION="$1"
 
@@ -150,6 +88,7 @@ clean=true
 list=false
 snapshots=false
 build=auto
+verbose=false
 
 unset SKIP_EXISTING
 
@@ -171,6 +110,8 @@ for args in "$@"; do
     build=false
   elif [ "$args" = "--skip-existing" ] || [ "$args" = "-s" ]; then
     SKIP_EXISTING=true
+  elif [ "$args" = "--verbose" ]; then
+    verbose=true
   else
     VERSION="$args"
   fi
@@ -178,9 +119,15 @@ for args in "$@"; do
   shift
 done
 
+vlog() {
+  if $verbose; then
+    echo "$1"
+  fi
+}
+
 if $list; then
   if $snapshots; then
-      curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?snapshot=true&platform=$(get_platform)"
+    curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?snapshot=true&platform=$(get_platform)"
     exit
   fi
 
@@ -207,8 +154,8 @@ if [[ "$VERSION" == "https://"* ]]; then
   VERSION="${URL##*/}"
   VERSION="${VERSION%-*}"
 fi
+
 VERSION="${VERSION##swift-}"
-VERSION_BINARY="$VERSION"
 
 PREFIX="$(swiftenv-prefix "$VERSION" || true)"
 if [ -d "$PREFIX" ]; then
@@ -221,51 +168,34 @@ if [ -d "$PREFIX" ]; then
   exit 1
 fi
 
-if [[ "$VERSION" == "DEVELOPMENT"* ]]; then
-  RELEASE="development"
-elif [[ "$VERSION" == *"-SNAPSHOT-"* ]]; then
-  VERSION_NUMBER=${VERSION%%-SNAPSHOT*}
-  if [[ "$VERSION_NUMBER" = *"."*"."* ]]; then
-    VERSION_NUMBER="$(echo $VERSION_NUMBER | sed -E 's/\.[1-9]$//')"
-  fi
+# Detect URL for potential binary version
+if ([ "$build" == "auto" ] || [ "$build" == "false" ]) && [ -z "$URL" ]; then
+  vlog "Checking for a URL for the $VERSION on $(get_platform)."
 
-  RELEASE="swift-$VERSION_NUMBER-branch"
-elif [[ "$VERSION" == *"-PREVIEW-"* ]]; then
-  RELEASE="swift-$(echo $VERSION | sed 's/PREVIEW/preview/')"
-  VERSION_BINARY="$VERSION"
-elif [[ "$VERSION" == *"-GM-CANDIDATE" ]]; then
-  VERSION_NUMBER=${VERSION%%-GM-CANDIDATE}
-  RELEASE="swift-$VERSION_NUMBER-GM-CANDIDATE"
-  VERSION_BINARY="$VERSION"
-else
-  RELEASE="swift-$VERSION-release"
-  VERSION_BINARY="$VERSION-RELEASE"
+  status_code=$(curl -o /dev/null --silent --head --write-out '%{http_code}' "https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform)")
+
+  if [ "$status_code" = "404" ]; then
+    vlog "Did not find a binary release for $VERSION on $(get_platform)."
+  elif [ "$status_code" = "200" ]; then
+    URL="$(curl --silent https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform) -H 'Accept: text/plain')"
+    vlog "Found $URL for $VERSION on $(get_platform)."
+  else
+    echo "There was a problem checking for a binary release of $VERSION, server returned $status_code."
+    exit 1
+  fi
 fi
 
 if [ "$build" == "auto" ]; then
-  if [ -n "$URL" ]; then
+  if [ -z "$VERSION" ] && [ -n "$URL" ]; then
     # URLs are always binary
     build=false
+  elif [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ] && [ -z "$URL" ]; then
+    build=true
+  elif [ -z "$URL" ]; then
+    echo "Failed to find a binary release for $VERSION on $(get_platform) or find build instructions for $VERSION."
+    exit 1
   else
-    if [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
-      build=true
-    fi
-
-    status_code=$(curl -o /dev/null --silent --head --write-out '%{http_code}' "https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(safe_get_platform)")
-    if [ "$status_code" = "404" ]; then
-      build=true
-    elif [ "$status_code" = "200" ]; then
-      URL="$(curl --silent https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(safe_get_platform) -H 'Accept: text/plain')"
-      build=false
-    else
-      echo "There was a network problem checking for a binary release of $VERSION, server returned $status_code."
-      exit 1
-    fi
-
-    if [[ "$VERSION" == *"SNAPSHOT"* ]] || [[ "$VERSION" == *"PREVIEW"* ]] || [[ "$VERSION" == *"GM"* ]]; then
-      # Snapshots don't build from source
-      build=false
-    fi
+    build=false
   fi
 fi
 
@@ -276,6 +206,7 @@ if [ "$build" == "true" ]; then
   fi
 
   if [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
+    vlog "Building $VERSION from source..."
     install_source "$VERSION"
     echo "$VERSION has been installed."
     swiftenv-rehash
@@ -287,18 +218,19 @@ if [ "$build" == "true" ]; then
   exit 1
 fi
 
-case $(uname) in
-'Linux' )
-  install_linux_binary "$VERSION" "$VERSION_BINARY" "$URL"
-  ;;
-'Darwin' )
-  install_osx_binary "$VERSION" "$VERSION_BINARY" "$URL"
-  ;;
-* )
-  echo "There are no binary releases of Swift for $(uname). Please manually install Swift into $SWIFTENV_ROOT/versions/$VERSION"
+if [[ "$URL" = *".pkg" ]]; then
+  if [ "$(uname)" != "Darwin" ]; then
+    echo "Cannot install $URL on non macOS platform $(uname)."
+    exit 1
+  fi
+
+  install_pkg_binary "$URL"
+elif [[ "$URL" = *".tar.gz" ]]; then
+  install_tar_binary "$VERSION" "$URL"
+else
+  echo "swiftenv does not know how to install $URL."
   exit 1
-  ;;
-esac
+fi
 
 echo "$VERSION has been installed."
 swiftenv-rehash
