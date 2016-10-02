@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Display the path for a Swift version
+# Summary: Display the path for a Swift version
 
 set -e
 

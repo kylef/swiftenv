@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Uninstalls a Swift version
+# Usage: swiftenv uninstall <version>
+# Summary: Uninstalls a Swift version
 # completes
 
 set -e

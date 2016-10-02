@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# List all available commands
+# Summary: List all available commands
 
 set -e
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Find the reason the current swift version is set (either filename or environ)
+# Usage: Find the reason the current swift version is set (either filename or environ)
 
 set -e
 

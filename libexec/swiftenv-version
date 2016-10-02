@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Show the current selected Swift version and how it was selected.
+# Summary: Show the current selected Swift version and how it was selected.
 
 set -e
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Usage: swiftenv init [-] [--[no-]rehash]
 # completes
 
 set -e

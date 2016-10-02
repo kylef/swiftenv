@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# List all Swift versions available to swiftenv
+# Usage: List all Swift versions available to swiftenv
 
 set -e
 

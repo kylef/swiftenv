@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Build swift from source
-# Usage: swiftenv-build <package> <destination>
+# Summary: Build swift from source
+# Usage: swiftenv-build [--definitions] [--clean] [--no-clean] <package> <destination>
 
 set -E
 
 exec 3<&2 # preserve original stderr at fd 3
 
-# Usage: fetch_git repository-name branch [destination]
+# fetch_git repository-name branch [destination]
 fetch_git() {
   if ! type git &>/dev/null; then
     echo "error: please install \`git\` and try again." >& 2

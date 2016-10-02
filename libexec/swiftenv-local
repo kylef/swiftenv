@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Set or show the local Swift version
+# Usage: swiftenv local [<version>]
+# Summary: Set or show the local Swift version
 # completes
 
 set -e

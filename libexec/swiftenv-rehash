@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Rehash pyenv shims
+# Usage: Rehash swiftenv shims
 
 set -e
 

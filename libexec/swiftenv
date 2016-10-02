@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Usage: swiftenv [--version] <command>
 
 set -e
 

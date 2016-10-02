@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Set or show the global Swift version
+# Usage: swiftenv global [<version>]
+# Summary: Set or show the global Swift version
 # completes
 
 set -e
