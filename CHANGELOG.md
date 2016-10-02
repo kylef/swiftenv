@@ -4,10 +4,12 @@
 
 ### Enhancements
 
-- Adds a manpage for `swiftenv`.
+- Adds usage and summaries when using `swiftenv --help` with a subcommand.
+- Adds a manpage for `swiftenv` and `swiftenv-install`.
 
   ```shell
   $ man swiftenv
+  $ man swiftenv-install
   ```
 
 ## 1.2.0
