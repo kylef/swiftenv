@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# Usage: swiftenv help [--usage] [<command>]
+
+print_usage() {
+  local command
+  local command_path
+  local usage
+
+  command="$1"
+  command_path="$2"
+
+  usage=$(cat "$command_path" | grep "^\# Usage:" | sed 's/# //')
+
+  if [ -n "$usage" ]; then
+    echo $usage
+  else
+    echo "Usage: swiftenv $command"
+  fi
+}
+
+print_summary() {
+  local command
+  local command_path
+  local summary
+
+  command="$1"
+  command_path="$2"
+
+  summary=$(cat "$command_path" | grep "^\# Summary:" | sed 's/# Summary: //')
+
+  if [ -n "$summary" ]; then
+    echo
+    echo $summary
+  fi
+}
+
+swiftenv_help() {
+  print_usage "swiftenv" "$(which swiftenv)"
+  echo
+  echo "  version   Displays the current active Swift version"
+  echo "  versions  Lists all installed Swift versions"
+  echo "  global    Sets the global version of Swift"
+  echo "  local     Sets the local application-specific version of Swift"
+  echo "  install   Installs a version of Swift"
+  echo "  uninstall Uninstalls a specific Swift version"
+  echo "  rehash    Installs shims for Swift binaries"
+  echo
+  echo "Visit https://swiftenv.fuller.li for more info."
+}
+
+print_man() {
+  local command
+  command=$1
+
+  if man -w "swiftenv-$command" >/dev/null 2>/dev/null; then
+    man "swiftenv-$command"
+    exit
+  fi
+}
+
+usage=false
+if [ "$1" == "--usage" ]; then
+  shift 1
+  usage=true
+fi
+
+if [ -z "$1" ] || [ "$1" == "swiftenv" ]; then
+  swiftenv_help
+else
+  command="$1"
+  command_path="$(command -v "swiftenv-$command" || true)"
+
+  if ! [ -n "$command_path" ]; then
+    echo "swiftenv: no such command '$command'"
+    exit 1
+  fi
+
+  if ! $usage; then
+    print_man "$command"
+  fi
+
+  print_usage "$command" "$command_path"
+
+  if ! $usage; then
+    print_summary "$command" "$command_path"
+  fi
+fi

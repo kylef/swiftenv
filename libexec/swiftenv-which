@@ -12,7 +12,7 @@ fi
 COMMAND=$1
 
 if [ -z "$COMMAND" ] ; then
-  echo "Usage: swiftenv which <command>"
+  swiftenv-help --usage which
   exit 1
 fi
 

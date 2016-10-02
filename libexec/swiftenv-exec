@@ -12,7 +12,7 @@ fi
 COMMAND=$1
 
 if [ -z "$COMMAND" ] ; then
-  echo "Usage: swiftenv exec <command>"
+  swiftenv-help --usage exec
   exit 1
 fi
 

@@ -20,31 +20,41 @@ find_source_path() {
 export SWIFTENV_SOURCE_PATH="$(find_source_path)"
 export PATH="$SWIFTENV_SOURCE_PATH/libexec:$PATH"
 
-usage() {
-  echo "Usage: swiftenv [--version] <command>"
-  echo
-  echo "  version   Displays the current active Swift version"
-  echo "  versions  Lists all installed Swift versions"
-  echo "  global    Sets the global version of Swift"
-  echo "  local     Sets the local application-specific version of Swift"
-  echo "  install   Installs a version of Swift"
-  echo "  uninstall Uninstalls a specific Swift version"
-  echo "  rehash    Installs shims for Swift binaries"
-  echo
-  echo "Visit https://swiftenv.fuller.li for more info."
-}
+show_help=false
+
+for arg in "$@"; do
+  case "$arg" in
+  -v | --version )
+    exec swiftenv---version
+    exit
+    ;;
+
+  -h | --help )
+    show_help=true
+    ;;
+
+  -* )
+    # Ignore options and flags
+    ;;
+
+  * )
+    if [ -z "$command" ]; then
+      command=$arg
+    fi
+    ;;
+  esac
+done
+
+if $show_help; then
+  swiftenv-help "$command"
+  exit
+fi
 
 command="$1"
 case "$command" in
 "" )
-  usage
+  swiftenv-help
   exit 1
-  ;;
--v | --version )
-  exec swiftenv---version
-  ;;
--h | --help )
-  usage
   ;;
 * )
   command_path="$(command -v "swiftenv-$command" || true)"
