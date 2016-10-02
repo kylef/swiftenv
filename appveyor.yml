@@ -1,0 +1,10 @@
+environment:
+  PATH: '%APPVEYOR_BUILD_FOLDER%\bin;%APPVEYOR_BUILD_FOLDER%\bats\bin;C:\cygwin\bin;%PATH%'
+
+install:
+  - git clone --depth 1 https://github.com/sstephenson/bats.git
+
+build: false
+
+test_script:
+  - bash -lc 'bats /cygdrive/c/projects/swiftenv/test'
