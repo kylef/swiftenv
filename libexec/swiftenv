@@ -24,11 +24,6 @@ show_help=false
 
 for arg in "$@"; do
   case "$arg" in
-  -v | --version )
-    exec swiftenv---version
-    exit
-    ;;
-
   -h | --help )
     show_help=true
     ;;
@@ -56,6 +51,12 @@ case "$command" in
   swiftenv-help
   exit 1
   ;;
+
+-v | --version )
+  exec swiftenv---version
+  exit
+  ;;
+
 * )
   command_path="$(command -v "swiftenv-$command" || true)"
   if ! [ -n "$command_path" ]; then
