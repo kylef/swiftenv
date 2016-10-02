@@ -25,6 +25,10 @@
 }
 
 @test "invoking with command that has a man page and '--help' shows the man page" {
+  if [ "$CI" ]; then
+    skip
+  fi
+
   run swiftenv install --help
   [ "$status" -eq 0 ]
   [[ "${lines[0]}" = "SWIFTENV-INSTALL(1)"* ]]
