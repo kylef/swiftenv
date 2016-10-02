@@ -26,23 +26,29 @@ load helpers
   [ "${lines[1]}" = "command swiftenv rehash 2>/dev/null" ]
 }
 
-if [[ "$(uname -s)" == "Darwin" ]]; then
-  @test "does not add rehash by default if shims do exist" {
-    mkdir -p "$SWIFTENV_ROOT/shims"
-    swiftenv --version > "$SWIFTENV_ROOT/shims/.version"
-    run swiftenv init - bash
-    [ "$status" -eq 0 ]
-    [ "${lines[2]}" = "" ]
-  }
-else
-  @test "rehash is enabled by default, even when shims do exist" {
-    mkdir -p "$SWIFTENV_ROOT/shims"
-    swiftenv --version > "$SWIFTENV_ROOT/shims/.version"
-    run swiftenv init - bash
-    [ "$status" -eq 0 ]
-    [ "${lines[1]}" = "command swiftenv rehash 2>/dev/null" ]
-  }
-fi
+@test "does not add rehash by default if shims do exist" {
+  if [[ "$(uname -s)" != "Darwin" ]]; then
+    skip
+  fi
+
+  mkdir -p "$SWIFTENV_ROOT/shims"
+  swiftenv --version > "$SWIFTENV_ROOT/shims/.version"
+  run swiftenv init - bash
+  [ "$status" -eq 0 ]
+  [ "${lines[2]}" = "" ]
+}
+
+@test "rehash is enabled by default, even when shims do exist" {
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    skip
+  fi
+
+  mkdir -p "$SWIFTENV_ROOT/shims"
+  swiftenv --version > "$SWIFTENV_ROOT/shims/.version"
+  run swiftenv init - bash
+  [ "$status" -eq 0 ]
+  [ "${lines[1]}" = "command swiftenv rehash 2>/dev/null" ]
+}
 
 @test "adds rehash when you pass --rehash" {
   mkdir -p "$SWIFTENV_ROOT/shims"
