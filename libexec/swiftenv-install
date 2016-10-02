@@ -4,15 +4,20 @@
 
 set -e
 
-check_url() {
-  status_code=$(curl -o /dev/null --silent --head --write-out '%{http_code}' "$1")
-  if [ "$status_code" = "404" ]; then
-    echo "$VERSION was not found on swift.org."
-    echo "  $1"
-    exit 1
-  elif [ "$status_code" != "200" ]; then
-    echo "There was a network problem retreiving $VERSION, server returned $status_code."
-    echo "  $1"
+# Check if the given version is already installed
+check_installed() {
+  local VERSION
+  VERSION="$1"
+
+  local PREFIX
+  PREFIX="$(swiftenv-prefix "$VERSION" || true)"
+  if [ -d "$PREFIX" ]; then
+    echo "$VERSION is already installed."
+
+    if [ -n "$SKIP_EXISTING" ]; then
+      exit 0
+    fi
+
     exit 1
   fi
 }
@@ -45,13 +50,33 @@ get_platform() {
   esac
 }
 
+install_binary() {
+  local VERSION
+  local URL
+  VERSION="$1"
+  URL="$2"
+
+  if [[ "$URL" = *".pkg" ]]; then
+    if [ "$(uname)" != "Darwin" ]; then
+      echo "Cannot install .pkg from $URL on non macOS platform $(uname)."
+      exit 1
+    fi
+
+    install_pkg_binary "$URL"
+  elif [[ "$URL" = *".tar.gz" ]]; then
+    install_tar_binary "$VERSION" "$URL"
+  else
+    echo "swiftenv does not know how to install $URL. Only tar.gz and pkg files are supported."
+    exit 1
+  fi
+}
+
 # Install a tarball binary from the supplied URL
 install_tar_binary() {
   local VERSION
   local URL
   VERSION="$1"
   URL="$2"
-  check_url "$URL"
 
   mkdir -p "$TMPDIR/swiftenv-$VERSION"
 
@@ -66,7 +91,6 @@ install_tar_binary() {
 install_pkg_binary() {
   local URL
   URL="$1"
-  check_url "$URL"
 
   echo "Downloading $URL"
   curl -Lo "$TMPDIR/swiftenv-$VERSION.pkg" "$URL"
@@ -82,6 +106,43 @@ install_source() {
     swiftenv-build --clean "$VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
   else
     swiftenv-build --no-clean "$VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
+  fi
+}
+
+build_version() {
+  if [ -n "$URL" ]; then
+    echo 'The given URL must be to a binary version of Swift, you cannot use the `--build` option with a URL.'
+    exit 1
+  fi
+
+  if [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
+    vlog "Building $VERSION from source..."
+    install_source "$VERSION"
+    echo "$VERSION has been installed."
+    swiftenv-rehash
+    swiftenv-global "${VERSION##swift-}"
+    exit 0
+  fi
+
+  echo "We don't have build instructions for $VERSION."
+  exit 1
+}
+
+find_binary_url_from_api() {
+  vlog "Checking for a URL for the $VERSION on $(get_platform)."
+
+  status_code=$(curl -o /dev/null --silent --head --write-out '%{http_code}' "https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform)" || true)
+
+  if [ "$status_code" = "404" ]; then
+    vlog "Did not find a binary release for $VERSION on $(get_platform)."
+  elif [ "$status_code" = "200" ]; then
+    URL="$(curl --silent https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform) -H 'Accept: text/plain')"
+  elif [ "$status_code" = "000" ]; then
+    echo "There was a problem checking for a binary release of $VERSION, could not connect to the swiftenv API."
+    exit 1
+  else
+    echo "There was a problem checking for a binary release of $VERSION, server returned $status_code."
+    exit 1
   fi
 }
 
@@ -158,79 +219,35 @@ fi
 
 VERSION="${VERSION##swift-}"
 
-PREFIX="$(swiftenv-prefix "$VERSION" || true)"
-if [ -d "$PREFIX" ]; then
-  echo "$VERSION is already installed."
+check_installed "$VERSION"
 
-  if [ -n "$SKIP_EXISTING" ]; then
-    exit 0
+# Install Binary
+if ([ "$build" == "auto" ] || [ "$build" == "false" ]); then
+  if [ -z "$URL" ]; then
+    # Check for locally cached URL
+    PROFILE="$SWIFTENV_SOURCE_PATH/share/swiftenv-install/$VERSION"
+    if [ -r "$PROFILE" ]; then
+      source "$PROFILE"
+    fi
   fi
 
-  exit 1
-fi
+  if [ -z "$URL" ]; then
+    find_binary_url_from_api
+  fi
 
-# Detect URL for potential binary version
-if ([ "$build" == "auto" ] || [ "$build" == "false" ]) && [ -z "$URL" ]; then
-  vlog "Checking for a URL for the $VERSION on $(get_platform)."
-
-  status_code=$(curl -o /dev/null --silent --head --write-out '%{http_code}' "https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform)")
-
-  if [ "$status_code" = "404" ]; then
-    vlog "Did not find a binary release for $VERSION on $(get_platform)."
-  elif [ "$status_code" = "200" ]; then
-    URL="$(curl --silent https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform) -H 'Accept: text/plain')"
-    vlog "Found $URL for $VERSION on $(get_platform)."
-  else
-    echo "There was a problem checking for a binary release of $VERSION, server returned $status_code."
+  if [ "$URL" ]; then
+    vlog "Installing $VERSION from $URL on $(get_platform)."
+    install_binary "$VERSION" "$URL"
+  elif [ "$build" == "false" ]; then
+    echo "Could not find a binary release of $VERSION."
     exit 1
   fi
 fi
 
-if [ "$build" == "auto" ]; then
-  if [ -z "$VERSION" ] && [ -n "$URL" ]; then
-    # URLs are always binary
-    build=false
-  elif [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ] && [ -z "$URL" ]; then
-    build=true
-  elif [ -z "$URL" ]; then
-    echo "Failed to find a binary release for $VERSION on $(get_platform) or find build instructions for $VERSION."
-    exit 1
-  else
-    build=false
-  fi
-fi
 
+# Install Source
 if [ "$build" == "true" ]; then
-  if [ -n "$URL" ]; then
-    echo 'The given URL must be to a binary version of Swift, you cannot use the `--build` option with a URL.'
-    exit 1
-  fi
-
-  if [ -r "$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$VERSION" ]; then
-    vlog "Building $VERSION from source..."
-    install_source "$VERSION"
-    echo "$VERSION has been installed."
-    swiftenv-rehash
-    swiftenv-global "${VERSION##swift-}"
-    exit 0
-  fi
-
-  echo "We don't have build instructions for $VERSION."
-  exit 1
-fi
-
-if [[ "$URL" = *".pkg" ]]; then
-  if [ "$(uname)" != "Darwin" ]; then
-    echo "Cannot install $URL on non macOS platform $(uname)."
-    exit 1
-  fi
-
-  install_pkg_binary "$URL"
-elif [[ "$URL" = *".tar.gz" ]]; then
-  install_tar_binary "$VERSION" "$URL"
-else
-  echo "swiftenv does not know how to install $URL."
-  exit 1
+  build_version
 fi
 
 echo "$VERSION has been installed."
