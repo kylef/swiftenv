@@ -77,12 +77,12 @@ on macOS.
 
 ## Uninstalling swiftenv
 
-1) Remove swiftenv from any `.bash_profile`, `.bashrc`, `.zshenv`,
-`fish.config` that you've added during installation.
-2) Remove `SWIFTENV_ROOT` aka, `~/.swiftenv`.
+1. Remove swiftenv from any `.bash_profile`, `.bashrc`, `.zshrc`, `fish.config` that you've added during installation.
 
-  ```shell
+2. Remove `SWIFTENV_ROOT` aka, `~/.swiftenv`.
+
+    ```shell
     $ rm -fr ~/.swiftenv
-      ```
+    ```
 
-3) Uninstall any swiftenv packages (brew uninstall, pacman, etc).
+3. Uninstall any swiftenv packages (brew uninstall, pacman, etc).
