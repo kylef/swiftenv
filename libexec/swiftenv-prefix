@@ -25,18 +25,24 @@ if [ -d "$SWIFTENV_ROOT/versions/swift-$SWIFT_VERSION" ]; then
 fi
 
 # OS X Swift Toolchain
-TOOLCHAIN_DIR="/Library/Developer/Toolchains"
-if [ -d "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain" ]; then
-  echo "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain"
-  exit
-fi
 
-# OS X User Swift Toolchain
-TOOLCHAIN_DIR="$HOME/Library/Developer/Toolchains"
-if [ -d "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain" ]; then
-  echo "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain"
-  exit
-fi
+check_toolchain() {
+  local TOOLCHAIN_DIR
+  TOOLCHAIN_DIR=$1
+
+  if [ -d "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION-RELEASE.xctoolchain" ]; then
+    echo "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION-RELEASE.xctoolchain"
+    exit
+  fi
+
+  if [ -d "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain" ]; then
+    echo "$TOOLCHAIN_DIR/swift-$SWIFT_VERSION.xctoolchain"
+    exit
+  fi
+}
+
+check_toolchain "$HOME/Library/Developer/Toolchains"
+check_toolchain "/Library/Developer/Toolchains"
 
 # OS X Xcode Swift's
 if command -v "mdfind" >/dev/null 2>&1; then

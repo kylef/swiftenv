@@ -61,7 +61,7 @@ check_toolchains() {
       if [[ "$path" == *".xctoolchain" ]] && [ -d "$path" ]; then
         version="$(basename ${path##*/} .xctoolchain)"
         if [ "$version" != "swift-latest" ]; then
-          print_version "$version" "toolchain"
+          print_version "${version%-RELEASE}" "toolchain"
         fi
       fi
     done
