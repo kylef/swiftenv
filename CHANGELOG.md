@@ -1,6 +1,6 @@
 # Changelog
 
-## Master
+## 1.2.1
 
 ### Enhancements
 
@@ -11,6 +11,13 @@
   $ man swiftenv
   $ man swiftenv-install
   ```
+
+### Bug Fixes
+
+- Fixes detecting Swift release toolchains on macOS.
+- Fixes an issue where `swiftenv install` wouldn't emit an error if it
+  couldn't find instructions to install the given version.
+
 
 ## 1.2.0
 
