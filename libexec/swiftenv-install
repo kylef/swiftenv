@@ -241,6 +241,8 @@ if ([ "$build" == "auto" ] || [ "$build" == "false" ]); then
   elif [ "$build" == "false" ]; then
     echo "Could not find a binary release of $VERSION."
     exit 1
+  elif [ "$build" == "auto" ]; then
+    build="true"
   fi
 fi
 
