@@ -31,5 +31,6 @@ Integrations
 
    integrations/heroku
    integrations/travis-ci
+   integrations/gitlab-ci
    integrations/docker
    integrations/cocoapods
