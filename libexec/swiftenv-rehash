@@ -78,6 +78,7 @@ create_shim() {
   cat > "$SHIM_PATH/$1" <<SH
 #!/usr/bin/env bash
 set -e
+export SWIFTENV_SHIM=true
 exec "$(command -v swiftenv)" exec "--shim" "$1" "\$@"
 SH
   chmod +x "$SHIM_PATH/$1"

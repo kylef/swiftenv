@@ -40,9 +40,11 @@ for arg in "$@"; do
   esac
 done
 
-if $show_help; then
-  swiftenv-help "$command"
-  exit
+if [ -n "$SWIFTENV_SHIM" ]; then
+  if $show_help; then
+    swiftenv-help "$command"
+    exit
+  fi
 fi
 
 command="$1"
