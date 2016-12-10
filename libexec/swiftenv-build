@@ -4,8 +4,6 @@
 
 set -E
 
-exec 3<&2 # preserve original stderr at fd 3
-
 # fetch_git repository-name branch [destination]
 fetch_git() {
   if ! type git &>/dev/null; then
@@ -17,7 +15,7 @@ fetch_git() {
     echo "Found "$3", skipping download"
   else
     echo "Downloading $1 ($2) from git"
-    git clone --depth 1 --branch "$2" "https://github.com/apple/$1.git" "$3" >&4 2>&1
+    git clone --depth 1 --branch "$2" "https://github.com/apple/$1.git" "$3" >&3 2>&4
   fi
 }
 
@@ -42,7 +40,7 @@ build_swift() {
   echo "Building Swift"
   echo "This may take a very long time..."
 
-  ./utils/build-script -R -- --install-prefix="$destination" >&4 2>&1
+  ./utils/build-script -R -- --install-prefix="$destination" >&3 2>&4
   cd "$TMP"
 }
 
@@ -70,6 +68,7 @@ sort_versions() {
 }
 
 clean=true
+verbose=false
 definitions=false
 
 for args in "$@"; do
@@ -77,6 +76,8 @@ for args in "$@"; do
     clean=false
   elif [ "$args" = "--clean" ]; then
     rehash=true
+  elif [ "$args" = "--verbose" ]; then
+    verbose=true
   elif [ "$args" = "--definitions" ]; then
     definitions=true
   elif [ -z "$package" ]; then
@@ -122,12 +123,14 @@ cd "$TMP"
 SEED="$(date "+%Y%m%d%H%M%S").$$"
 LOG_PATH="$TMP/swiftenv-build.$SEED.log"
 
-exec 4<> "$LOG_PATH"  # open the log file at fd 4
-if [ -n "$VERBOSE" ]; then
-  tail -f "$LOG_PATH" &
-  TAIL_PID=$!
-  trap "kill $TAIL_PID" SIGINT SIGTERM EXIT
+if $verbose; then
+  exec 3>&1 4>&2 
+else
+  exec 3>/dev/null 4>/dev/null
 fi
+
+exec 3>  >(tee -ai "$LOG_PATH" >&3)
+exec 4>  >(tee -ai "$LOG_PATH" >&4)
 
 mkdir -p "$destination"
 trap build_failed ERR
