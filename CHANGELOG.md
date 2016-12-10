@@ -11,6 +11,8 @@
 - Added local cache for Swift binaries for 3.0.2, 3.1, 3.1.1.
 - `swiftenv install` will now resume any failed downloads instead of restarting
   the download process when restarting an install.
+- `swiftenv install --verbose` will now include verbose build output while
+  compiling swift.
 
 ## 1.2.1
 

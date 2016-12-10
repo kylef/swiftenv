@@ -123,11 +123,19 @@ install_pkg_binary() {
 install_source() {
   VERSION="$1"
 
+  OPTIONS=""
+
   if $clean; then
-    swiftenv-build --clean "$VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
+    OPTIONS="--clean"
   else
-    swiftenv-build --no-clean "$VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
+    OPTIONS="--no-clean"
   fi
+
+  if $verbose; then
+    OPTIONS="$OPTIONS --verbose"
+  fi
+
+  swiftenv-build $OPTIONS "$VERSION" "$SWIFTENV_ROOT/versions/$VERSION"
 }
 
 build_version() {
