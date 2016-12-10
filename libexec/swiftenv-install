@@ -82,7 +82,7 @@ install_tar_binary() {
 
   echo "Downloading $URL"
 
-  if $verfiy; then
+  if $verify; then
     pushd "$TMPDIR/swiftenv-$VERSION"
     curl -O "$URL"
     curl -O "$URL.sig"
