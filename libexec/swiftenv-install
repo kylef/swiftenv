@@ -94,7 +94,7 @@ install_tar_binary() {
   fi
 
   DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
-  mv "$TMPDIR/swiftenv-$VERSION/swift-$VERSION_RELEASE"* "$DESTINATION"
+  mv "$TMPDIR/swiftenv-$VERSION/swift-$VERSION_RELEASE"*/ "$DESTINATION"
 }
 
 # Installs an `.pkg` binary from the supplied URL
