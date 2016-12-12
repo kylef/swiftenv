@@ -81,7 +81,17 @@ install_tar_binary() {
   mkdir -p "$TMPDIR/swiftenv-$VERSION"
 
   echo "Downloading $URL"
-  curl "$URL" -s | tar xz -C "$TMPDIR/swiftenv-$VERSION"
+
+  if $verify; then
+    pushd "$TMPDIR/swiftenv-$VERSION"
+    curl -O "$URL"
+    curl -O "$URL.sig"
+    gpg --verify "swift-$VERSION"*.sig
+    tar xzf "swift-$VERSION"*.tar.gz
+    popd
+  else
+    curl "$URL" -s | tar xz -C "$TMPDIR/swiftenv-$VERSION"
+  fi
 
   DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
   mv "$TMPDIR/swiftenv-$VERSION/swift-$VERSION_RELEASE"* "$DESTINATION"
@@ -151,6 +161,7 @@ list=false
 snapshots=false
 build=auto
 verbose=false
+verify=false
 
 unset SKIP_EXISTING
 
@@ -174,6 +185,8 @@ for args in "$@"; do
     SKIP_EXISTING=true
   elif [ "$args" = "--verbose" ]; then
     verbose=true
+  elif [ "$args" = "--verify" ]; then
+    verify=true
   else
     VERSION="$args"
   fi

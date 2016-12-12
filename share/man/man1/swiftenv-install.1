@@ -47,3 +47,9 @@ Forces installation only from binary releases of Swift.
 .RS
 Leaves the build directory intact for inspection and debugging.
 .RE
+
+\-\-verify\
+
+.RS
+When downloading a pre-packaged tarball, also downloads the corresponding signature and verifies it with gpg. Assumes the keys already exist on the public gpg keyring. If verification fails, the version will not be installed. Signatures are only published for Linux tarballs, and not macOS packages.
+.RE

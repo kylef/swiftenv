@@ -87,6 +87,14 @@ information.
 **NOTE**: *After manually installing a version of Swift, it's recommended that
 you run `swiftenv rehash` to update the shims.*
 
+### Verifying Linux Binary Packages
+
+When downloading a pre-built binary package, swiftenv can also download the corresponding signature and verify it with gpg. This option assumes gpg is installed on the system, and the [Swift public keys](https://swift.org/download/#active-signing-keys) already exist on the public gpg keyring. If verification fails, the version will not be installed. Signatures are currently only checked in this way for Linux builds.
+
+```shell
+$ swiftenv install 2.2 --verify
+```
+
 ## `uninstall`
 
 Uninstalls a specific Swift version.
