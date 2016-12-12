@@ -85,7 +85,7 @@ install_tar_binary() {
   echo "Downloading $URL"
 
   pushd "$INSTALL_TMP"
-  curl -O "$URL"
+  curl -C - -O "$URL"
 
   if $verify; then
     curl -O "$URL.sig"
@@ -110,9 +110,13 @@ install_pkg_binary() {
   PKG="$TMPDIR/swiftenv-$VERSION-$USER.pkg"
 
   echo "Downloading $URL"
-  curl -Lo "$PKG" "$URL"
+  curl -C - -Lo "$PKG" "$URL"
 
   sudo installer -pkg "$PKG" -target /
+
+  if $clean; then
+    rm -fr "$PKG"
+  fi
 }
 
 # Install the given version from source
