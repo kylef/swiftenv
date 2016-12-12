@@ -187,6 +187,8 @@ for args in "$@"; do
     verbose=true
   elif [ "$args" = "--verify" ]; then
     verify=true
+  elif [ "$args" = "--no-verify" ]; then
+    verify=false
   else
     VERSION="$args"
   fi
