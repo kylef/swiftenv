@@ -82,16 +82,16 @@ install_tar_binary() {
 
   echo "Downloading $URL"
 
+  pushd "$TMPDIR/swiftenv-$VERSION"
+  curl -O "$URL"
+
   if $verify; then
-    pushd "$TMPDIR/swiftenv-$VERSION"
-    curl -O "$URL"
     curl -O "$URL.sig"
     gpg --verify "swift-$VERSION"*.sig
-    tar xzf "swift-$VERSION"*.tar.gz
-    popd
-  else
-    curl "$URL" -s | tar xz -C "$TMPDIR/swiftenv-$VERSION"
   fi
+
+  tar xzf "swift-$VERSION"*.tar.gz
+  popd
 
   DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
   mv "$TMPDIR/swiftenv-$VERSION/swift-$VERSION_RELEASE"*/ "$DESTINATION"
