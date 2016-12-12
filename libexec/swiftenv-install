@@ -78,11 +78,13 @@ install_tar_binary() {
   VERSION="$1"
   URL="$2"
 
-  mkdir -p "$TMPDIR/swiftenv-$VERSION"
+  INSTALL_TMP="$TMPDIR/swiftenv-$VERSION-$USER"
+
+  mkdir -p "$INSTALL_TMP"
 
   echo "Downloading $URL"
 
-  pushd "$TMPDIR/swiftenv-$VERSION"
+  pushd "$INSTALL_TMP"
   curl -O "$URL"
 
   if $verify; then
@@ -94,18 +96,23 @@ install_tar_binary() {
   popd
 
   DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
-  mv "$TMPDIR/swiftenv-$VERSION/swift-$VERSION_RELEASE"*/ "$DESTINATION"
+  mv "$INSTALL_TMP/swift-$VERSION_RELEASE"*/ "$DESTINATION"
+
+  if $clean; then
+    rm -fr "$INSTALL_TMP"
+  fi
 }
 
 # Installs an `.pkg` binary from the supplied URL
 install_pkg_binary() {
   local URL
   URL="$1"
+  PKG="$TMPDIR/swiftenv-$VERSION-$USER.pkg"
 
   echo "Downloading $URL"
-  curl -Lo "$TMPDIR/swiftenv-$VERSION.pkg" "$URL"
+  curl -Lo "$PKG" "$URL"
 
-  sudo installer -pkg "$TMPDIR/swiftenv-$VERSION.pkg" -target /
+  sudo installer -pkg "$PKG" -target /
 }
 
 # Install the given version from source
