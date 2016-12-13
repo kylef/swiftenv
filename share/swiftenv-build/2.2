@@ -1,6 +1,31 @@
-fetch_git swift swift-2.2-RELEASE swift
-fetch_git swift-llvm swift-2.2-RELEASE llvm
-fetch_git swift-clang swift-2.2-RELEASE clang
-fetch_git swift-lldb swift-2.2-RELEASE lldb
-fetch_git swift-cmark swift-2.2-RELEASE cmark
-build_swift
+TAG="swift-2.2-RELEASE"
+fetch_git swift $TAG swift
+fetch_git swift-llvm $TAG llvm
+fetch_git swift-clang $TAG clang
+fetch_git swift-lldb $TAG lldb
+fetch_git swift-cmark $TAG cmark
+
+cat > $TMP/swift-build-presets.ini << "EOF"
+[preset: mixin_lightweight_assertions]
+assertions
+no-swift-stdlib-assertions
+dash-dash
+swift-enable-ast-verifier=0
+
+[preset: swiftenv]
+mixin-preset=mixin_lightweight_assertions
+
+lldb
+release
+dash-dash
+build-swift-static-stdlib=1
+skip-test-lldb=1
+swift-install-components=autolink-driver;compiler;clang-builtin-headers;stdlib;swift-remote-mirror;sdk-overlay;license
+install-swift
+install-lldb
+install-prefix=/usr
+install-destdir=%(install_destdir)s
+reconfigure
+EOF
+
+build_swift --preset=file=swift/utils/build-presets.ini --preset-file=$TMP/swift-build-presets.ini --preset=swiftenv

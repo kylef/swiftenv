@@ -40,13 +40,8 @@ build_swift() {
   echo "Building Swift"
   echo "This may take a very long time..."
 
-  ./utils/build-script -R -- --install-prefix="$destination" >&3 2>&4
+  ./utils/build-script $@ install_destdir="$destination" >&3 2>&4
   cd "$TMP"
-}
-
-install_swift() {
-  mkdir -p "$destination/usr/bin"
-  cp "$TMP/build/Ninja-ReleaseAssert/"swift-*/bin/swift{,-demangle} "$destination/usr/bin"
 }
 
 build_failed() {
@@ -135,7 +130,6 @@ exec 4>  >(tee -ai "$LOG_PATH" >&4)
 mkdir -p "$destination"
 trap build_failed ERR
 source "$PACKAGE_DEFINITION"
-install_swift
 
 if $clean; then
   rm -fr $TMP
