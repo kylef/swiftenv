@@ -35,6 +35,13 @@ load helpers
   [ "${lines[1]}" = "2.2" ]
   [ "${lines[2]}" = "2.2.1" ]
   [ "${lines[3]}" = "3.0-dev" ]
+  [ "${lines[4]}" = "3.0" ]
+  [ "${lines[5]}" = "3.0.1" ]
+  [ "${lines[6]}" = "3.0.2" ]
+  [ "${lines[7]}" = "3.1-dev" ]
+  [ "${lines[8]}" = "3.1" ]
+  [ "${lines[9]}" = "3.1.1" ]
+  [ "${lines[10]}" = "4.0-dev" ]
 }
 
 @test "invoking with an installed version with skip existing saves global version" {
