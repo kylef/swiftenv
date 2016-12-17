@@ -20,7 +20,7 @@ release
 dash-dash
 build-swift-static-stdlib=1
 skip-test-lldb=1
-swift-install-components=autolink-driver;compiler;clang-builtin-headers;stdlib;swift-remote-mirror;sdk-overlay;license
+swift-install-components=compiler;clang-builtin-headers;stdlib;sdk-overlay;license
 install-swift
 install-lldb
 install-prefix=/usr
