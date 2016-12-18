@@ -7,7 +7,7 @@ set -E
 # fetch_git repository-name branch [destination]
 fetch_git() {
   if ! type git &>/dev/null; then
-    echo "error: please install \`git\` and try again." >& 2
+    echo "error: please install \`git\` and try again." >&2
     exit 1
   fi
 
@@ -15,7 +15,7 @@ fetch_git() {
     echo "Found "$3", skipping download"
   else
     echo "Downloading $1 ($2) from git"
-    git clone --depth 1 --branch "$2" "https://github.com/apple/$1.git" "$3" >&3 2>&4
+    git clone -b "$2" --depth 1 "https://github.com/apple/$1.git" "$3" >&3 2>&4
   fi
 }
 
@@ -40,7 +40,19 @@ build_swift() {
   echo "Building Swift"
   echo "This may take a very long time..."
 
-  ./utils/build-script $@ install_destdir="$destination" >&3 2>&4
+  case $(uname) in
+  'Darwin' )
+    preset=swiftenv_macOS
+    ;;
+  'Linux' )
+    preset=swiftenv_linux
+    ;;
+  * )
+    preset=swiftenv
+    ;;
+  esac
+
+  ./utils/build-script --preset-file=$PACKAGE_BUILD_PRESET --preset=$preset install_destdir="$destination" >&3 2>&4
   cd "$TMP"
 }
 
@@ -54,7 +66,7 @@ build_failed() {
 }
 
 list_definitions() {
-  ls "$SWIFTENV_SOURCE_PATH/share/swiftenv-build" | sort_versions | uniq
+  ls -pL "$SWIFTENV_SOURCE_PATH/share/swiftenv-build" | grep -v / | sort_versions | uniq
 }
 
 sort_versions() {
@@ -105,6 +117,12 @@ fi
 PACKAGE_DEFINITION="$SWIFTENV_SOURCE_PATH/share/swiftenv-build/$package"
 if ! [ -r "$PACKAGE_DEFINITION" ]; then
   echo "Package definition not found for $package"
+  exit 1
+fi
+
+PACKAGE_BUILD_PRESET="$SWIFTENV_SOURCE_PATH/share/swiftenv-build/presets/$package.ini"
+if ! [ -r "$PACKAGE_BUILD_PRESET" ]; then
+  echo "Package build preset not found for $package"
   exit 1
 fi
 

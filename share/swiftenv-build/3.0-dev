@@ -11,38 +11,4 @@ fetch_git swift-corelibs-xctest $BRANCH swift-corelibs-xctest
 fetch_git swift-corelibs-foundation $BRANCH swift-corelibs-foundation
 fetch_git swift-corelibs-libdispatch $BRANCH swift-corelibs-libdispatch
 
-cat > $TMP/swift-build-presets.ini << "EOF"
-[preset: mixin_lightweight_assertions]
-assertions
-no-swift-stdlib-assertions
-dash-dash
-swift-enable-ast-verifier=0
-
-[preset: swiftenv]
-mixin-preset=mixin_lightweight_assertions
-
-llbuild
-swiftpm
-xctest
-lldb
-release
-foundation
-libdispatch
-dash-dash
-build-swift-static-stdlib
-build-swift-static-sdk-overlay
-build-swift-stdlib-unittest-extra
-swift-install-components=autolink-driver;compiler;clang-builtin-headers;stdlib;swift-remote-mirror;sdk-overlay;license
-install-swift
-install-lldb
-install-llbuild
-install-swiftpm
-install-xctest
-install-foundation
-install-libdispatch
-install-prefix=/usr
-install-destdir=%(install_destdir)s
-reconfigure
-EOF
-
-build_swift --preset=file=swift/utils/build-presets.ini --preset-file=$TMP/swift-build-presets.ini --preset=swiftenv
+build_swift
