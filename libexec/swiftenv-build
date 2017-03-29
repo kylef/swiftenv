@@ -71,6 +71,7 @@ sort_versions() {
 
 clean=true
 definitions=false
+unset VERBOSE
 
 for args in "$@"; do
   if [ "$args" = "--no-clean" ]; then
@@ -79,6 +80,8 @@ for args in "$@"; do
     rehash=true
   elif [ "$args" = "--definitions" ]; then
     definitions=true
+  elif [ "$args" = "--verbose" ]; then
+    VERBOSE=true
   elif [ -z "$package" ]; then
     package="$args"
   elif [ -z "$destination" ]; then
