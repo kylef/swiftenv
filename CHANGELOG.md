@@ -1,5 +1,17 @@
 # Changelog
 
+## Master
+
+### Enhancements
+
+- New `--verify` option to swiftenv install to verify binary snapshots using
+  GPG. This option expects that GPG is setup and configured to accept the Swift
+  master keys. Verify can be forced with the environment variable
+  `SWIFTENV_VERIFY`.
+- Added local cache for Swift binaries for 3.0.2, 3.1, 3.1.1.
+- `swiftenv install` will now resume any failed downloads instead of restarting
+  the download process when restarting an install.
+
 ## 1.2.1
 
 ### Enhancements
