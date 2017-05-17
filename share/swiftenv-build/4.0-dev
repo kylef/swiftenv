@@ -1,4 +1,4 @@
-BRANCH="swift-3.0-branch"
+BRANCH="swift-4.0-branch"
 fetch_git swift $BRANCH swift
 fetch_git swift-llvm $BRANCH llvm
 fetch_git swift-clang $BRANCH clang

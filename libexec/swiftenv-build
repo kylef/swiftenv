@@ -21,6 +21,19 @@ fetch_git() {
   fi
 }
 
+# fetch_git repository-name release [destination]
+fetch_github_release() {
+  if [ -d "$3" ]; then
+    echo "Found "$3", skipping download"
+  else
+    echo "Downloading $1 ($2) from git"
+    curl -Lo "$1-$2.tar.gz" "https://github.com/apple/$1/archive/$2.tar.gz"
+
+    mkdir "$3"
+    tar xzf "$1-$2.tar.gz" --strip-components 1 -C "$3"
+  fi
+}
+
 build_swift() {
   if ! type pod2man &>/dev/null && [[ -x "/usr/bin/core_perl/pod2man" ]]; then
     # On Arch linux, pod2man is in /usr/bin/core_perl

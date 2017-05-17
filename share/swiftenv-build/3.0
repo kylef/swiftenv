@@ -1,0 +1,13 @@
+TAG="swift-3.0-RELEASE"
+fetch_github_release swift $TAG swift
+fetch_github_release swift-llvm $TAG llvm
+fetch_github_release swift-clang $TAG clang
+fetch_github_release swift-lldb $TAG lldb
+fetch_github_release swift-cmark $TAG cmark
+fetch_github_release swift-llbuild $TAG llbuild
+fetch_github_release swift-package-manager $TAG swiftpm
+fetch_github_release swift-compiler-rt $TAG compiler-rt
+fetch_github_release swift-corelibs-xctest $TAG swift-corelibs-xctest
+fetch_github_release swift-corelibs-foundation $TAG swift-corelibs-foundation
+fetch_github_release swift-corelibs-libdispatch $TAG swift-corelibs-libdispatch
+build_swift

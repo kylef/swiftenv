@@ -13,6 +13,10 @@
   the download process when restarting an install.
 - `swiftenv install --verbose` will now include verbose build output while
   compiling swift.
+- Adds build instructions for Swift 3.0, 3.0.1, 3.0.2, 3.1, 3.1.1, 3.0-dev,
+  3.1-dev and 4.0-dev.
+- When building Swift from source, swiftenv will download tarballs instead of
+  git cloning the repository resulting in faster download speed.
 
 ## 1.2.1
 
