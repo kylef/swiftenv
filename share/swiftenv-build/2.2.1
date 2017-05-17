@@ -1,6 +1,8 @@
-fetch_git swift swift-2.2.1-RELEASE swift
-fetch_git swift-llvm swift-2.2.1-RELEASE llvm
-fetch_git swift-clang swift-2.2.1-RELEASE clang
-fetch_git swift-lldb swift-2.2.1-RELEASE lldb
-fetch_git swift-cmark swift-2.2.1-RELEASE cmark
+TAG="swift-2.2.1-RELEASE"
+fetch_git swift $TAG swift
+fetch_git swift-llvm $TAG llvm
+fetch_git swift-clang $TAG clang
+fetch_git swift-lldb $TAG lldb
+fetch_git swift-cmark $TAG cmark
+
 build_swift

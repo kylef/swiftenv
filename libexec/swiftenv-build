@@ -4,12 +4,10 @@
 
 set -E
 
-exec 3<&2 # preserve original stderr at fd 3
-
 # fetch_git repository-name branch [destination]
 fetch_git() {
   if ! type git &>/dev/null; then
-    echo "error: please install \`git\` and try again." >& 2
+    echo "error: please install \`git\` and try again." >&2
     exit 1
   fi
 
@@ -17,7 +15,7 @@ fetch_git() {
     echo "Found "$3", skipping download"
   else
     echo "Downloading $1 ($2) from git"
-    git clone --depth 1 --branch "$2" "https://github.com/apple/$1.git" "$3" >&4 2>&1
+    git clone -b "$2" --depth 1 "https://github.com/apple/$1.git" "$3" >&3 2>&4
   fi
 }
 
@@ -42,13 +40,20 @@ build_swift() {
   echo "Building Swift"
   echo "This may take a very long time..."
 
-  ./utils/build-script -R -- --install-prefix="$destination" >&4 2>&1
-  cd "$TMP"
-}
+  case $(uname) in
+  'Darwin' )
+    preset=swiftenv_macOS
+    ;;
+  'Linux' )
+    preset=swiftenv_linux
+    ;;
+  * )
+    preset=swiftenv
+    ;;
+  esac
 
-install_swift() {
-  mkdir -p "$destination/usr/bin"
-  cp "$TMP/build/Ninja-ReleaseAssert/"swift-*/bin/swift{,-demangle} "$destination/usr/bin"
+  ./utils/build-script --preset-file=$PACKAGE_BUILD_PRESET --preset=$preset install_destdir="$destination" >&3 2>&4
+  cd "$TMP"
 }
 
 build_failed() {
@@ -61,7 +66,7 @@ build_failed() {
 }
 
 list_definitions() {
-  ls "$SWIFTENV_SOURCE_PATH/share/swiftenv-build" | sort_versions | uniq
+  ls -pL "$SWIFTENV_SOURCE_PATH/share/swiftenv-build" | grep -v / | sort_versions | uniq
 }
 
 sort_versions() {
@@ -70,6 +75,7 @@ sort_versions() {
 }
 
 clean=true
+verbose=false
 definitions=false
 unset VERBOSE
 
@@ -78,6 +84,8 @@ for args in "$@"; do
     clean=false
   elif [ "$args" = "--clean" ]; then
     rehash=true
+  elif [ "$args" = "--verbose" ]; then
+    verbose=true
   elif [ "$args" = "--definitions" ]; then
     definitions=true
   elif [ "$args" = "--verbose" ]; then
@@ -115,6 +123,12 @@ if ! [ -r "$PACKAGE_DEFINITION" ]; then
   exit 1
 fi
 
+PACKAGE_BUILD_PRESET="$SWIFTENV_SOURCE_PATH/share/swiftenv-build/presets/$package.ini"
+if ! [ -r "$PACKAGE_BUILD_PRESET" ]; then
+  echo "Package build preset not found for $package"
+  exit 1
+fi
+
 # Swift build takes up a lot of room and unfortunately
 # had issues where I've ran out of space in /tmp while building
 TMP="$SWIFTENV_ROOT/tmp/swiftenv-build-$package"
@@ -125,17 +139,18 @@ cd "$TMP"
 SEED="$(date "+%Y%m%d%H%M%S").$$"
 LOG_PATH="$TMP/swiftenv-build.$SEED.log"
 
-exec 4<> "$LOG_PATH"  # open the log file at fd 4
-if [ -n "$VERBOSE" ]; then
-  tail -f "$LOG_PATH" &
-  TAIL_PID=$!
-  trap "kill $TAIL_PID" SIGINT SIGTERM EXIT
+if $verbose; then
+  exec 3>&1 4>&2 
+else
+  exec 3>/dev/null 4>/dev/null
 fi
+
+exec 3>  >(tee -ai "$LOG_PATH" >&3)
+exec 4>  >(tee -ai "$LOG_PATH" >&4)
 
 mkdir -p "$destination"
 trap build_failed ERR
 source "$PACKAGE_DEFINITION"
-install_swift
 
 if $clean; then
   rm -fr $TMP
