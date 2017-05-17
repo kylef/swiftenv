@@ -1,0 +1,15 @@
+#compdef swiftenv
+
+_swiftenv() {
+  local -a _subcommands
+
+  if [[ ${#words[@]} -eq 2 ]]; then
+    _subcommands=($(swiftenv commands))
+    _describe -t commands "swiftenv subcommands" _subcommands
+  else
+    _subcommands=($(swiftenv completions ${words[2,-2]}))
+    _describe -t commands "swiftenv options" _subcommands
+  fi
+}
+
+_swiftenv "$@"
