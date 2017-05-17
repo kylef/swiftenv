@@ -3,9 +3,13 @@
 
 find_local_version_file() {
   local root="$1"
+  local system="$(uname | awk '{print tolower($0)}')"
   while true; do
     [[ "$root" =~ ^//[^/]*$ ]] && break
-    if [ -e "${root}/.swift-version" ]; then
+    if [ -e "${root}/.swift-version.${system}" ]; then
+      echo "${root}/.swift-version.${system}"
+      exit
+    elif [ -e "${root}/.swift-version" ]; then
       echo "${root}/.swift-version"
       exit
     fi

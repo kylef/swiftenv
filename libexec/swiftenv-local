@@ -12,12 +12,15 @@ if [ "$1" = "--complete" ]; then
 fi
 
 VERSION=$1
+SYSTEM_VERSION_FILE=".swift-version.$(uname | awk '{print tolower($0)}')"
 VERSION_FILE=".swift-version"
 
 if [ "$VERSION" = "--unset" ]; then
   rm -f $VERSION_FILE
 elif [ -z "$VERSION" ]; then
-  if [ -f "$VERSION_FILE" ]; then
+  if [ -f "$SYSTEM_VERSION_FILE" ]; then
+    cat "$SYSTEM_VERSION_FILE"
+  elif [ -f "$VERSION_FILE" ]; then
     cat "$VERSION_FILE"
   else
     echo "swiftenv: version is not set"
