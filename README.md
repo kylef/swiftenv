@@ -14,7 +14,7 @@ swiftenv allows you to:
 - Set a **per-project Swift version**.
 - Allows you to **override the Swift version** with an environmental variable.
 
-## The User Guide
+## The User Guide
 
 - [Installation](https://swiftenv.fuller.li/en/latest/installation.html)
 - [Getting Started](https://swiftenv.fuller.li/en/latest/getting-started.html)
