@@ -96,7 +96,7 @@ fi
 mkdir -p "$SWIFTENV_ROOT/"{shims,versions}
 case "$shell" in
 fish )
-  echo "setenv PATH '${SWIFTENV_ROOT}/shims' \$PATH"
+  echo "set -gx PATH '${SWIFTENV_ROOT}/shims' \$PATH"
   ;;
 * )
   echo 'export PATH="'${SWIFTENV_ROOT}'/shims:${PATH}"'
