@@ -5,7 +5,7 @@ load helpers
 @test "adds shims to PATH for fish" {
   run swiftenv init - fish
   [ "$status" -eq 0 ]
-  [ "$lines" = "setenv PATH '$SWIFTENV_ROOT/shims' \$PATH" ]
+  [ "$lines" = "set -gx PATH '$SWIFTENV_ROOT/shims' \$PATH" ]
 }
 
 @test "adds shims to PATH for bash" {
