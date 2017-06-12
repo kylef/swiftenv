@@ -35,7 +35,7 @@
     ```shell
     $ echo 'setenv SWIFTENV_ROOT "$HOME/.swiftenv"' >> ~/.config/fish/config.fish
     $ echo 'setenv PATH "$SWIFTENV_ROOT/bin" $PATH' >> ~/.config/fish/config.fish
-    $ echo 'status --is-interactive; and . (swiftenv init -|psub)' >> ~/.config/fish/config.fish
+    $ echo 'if which swiftenv > /dev/null; status --is-interactive; and source (swiftenv init -|psub); end' >> ~/.config/fish/config.fish
     ```
 
     For other shells, please [open an issue](https://github.com/kylef/swiftenv/issues/new) and we will visit adding support.
@@ -72,7 +72,7 @@ on macOS.
     For Fish:
 
     ```shell
-    $ echo 'status --is-interactive; and . (swiftenv init -|psub)' >> ~/.config/fish/config.fish
+    $ echo 'if which swiftenv > /dev/null; status --is-interactive; and source (swiftenv init -|psub); end' >> ~/.config/fish/config.fish
     ```
 
 ## Uninstalling swiftenv
