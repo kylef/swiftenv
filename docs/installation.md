@@ -16,7 +16,7 @@
 
     ```shell
     $ echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> ~/.bash_profile
-    $ echo 'export PATH="$SWIFTENV_ROOT/bin:$PATH"' >> ~/.bash_profile
+    $ echo 'export PATH="$SWIFTENV_ROOT/shims:$PATH"' >> ~/.bash_profile
     $ echo 'eval "$(swiftenv init -)"' >> ~/.bash_profile
     ```
 
@@ -26,7 +26,7 @@
 
     ```shell
     $ echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> ~/.zshenv
-    $ echo 'export PATH="$SWIFTENV_ROOT/bin:$PATH"' >> ~/.zshenv
+    $ echo 'export PATH="$SWIFTENV_ROOT/shims:$PATH"' >> ~/.zshenv
     $ echo 'eval "$(swiftenv init -)"' >> ~/.zshenv
     ```
 
@@ -34,7 +34,7 @@
 
     ```shell
     $ echo 'setenv SWIFTENV_ROOT "$HOME/.swiftenv"' >> ~/.config/fish/config.fish
-    $ echo 'setenv PATH "$SWIFTENV_ROOT/bin" $PATH' >> ~/.config/fish/config.fish
+    $ echo 'setenv PATH "$SWIFTENV_ROOT/shims" $PATH' >> ~/.config/fish/config.fish
     $ echo 'if which swiftenv > /dev/null; status --is-interactive; and source (swiftenv init -|psub); end' >> ~/.config/fish/config.fish
     ```
 
