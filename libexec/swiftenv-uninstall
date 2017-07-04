@@ -39,7 +39,7 @@ else
         xversion="$(echo "$version_line" | cut -d " " -f 4)"
         if [ "$xversion" == "$VERSION" ]; then
           echo "Cannot uninstall $VERSION from swiftenv."
-          echo "You can unintall $VERSION by uninstalling Xcode ($xcode)."
+          echo "You can uninstall $VERSION by uninstalling Xcode ($xcode)."
           exit 1
         fi
       fi
