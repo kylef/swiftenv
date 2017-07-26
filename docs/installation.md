@@ -33,8 +33,8 @@
     For Fish:
 
     ```shell
-    $ echo 'setenv SWIFTENV_ROOT "$HOME/.swiftenv"' >> ~/.config/fish/config.fish
-    $ echo 'setenv PATH "$SWIFTENV_ROOT/bin" $PATH' >> ~/.config/fish/config.fish
+    $ echo 'set -gx SWIFTENV_ROOT "$HOME/.swiftenv"' >> ~/.config/fish/config.fish
+    $ echo 'set -gx PATH "$SWIFTENV_ROOT/bin" $PATH' >> ~/.config/fish/config.fish
     $ echo 'if which swiftenv > /dev/null; status --is-interactive; and source (swiftenv init -|psub); end' >> ~/.config/fish/config.fish
     ```
 

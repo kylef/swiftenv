@@ -17,6 +17,7 @@
   3.1-dev and 4.0-dev.
 - When building Swift from source, swiftenv will download tarballs instead of
   git cloning the repository resulting in faster download speed.
+- Adds support for Fish 2.6.
 
 ## 1.2.1
 
