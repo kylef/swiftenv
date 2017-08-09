@@ -38,13 +38,23 @@ $ swiftenv global
 
 Sets the local application-specific Swift version by writing the version to a
 `.swift-version` file in the current directory. This version overrides the
-global version and can also be overridden by th `SWIFT_VERSION` environment
-variable.
+global version and can also be overridden further by the `SWIFT_VERSION`
+environment variable.
+
+### Setting a local Swift version
 
 ```shell
-$ swiftenv local 2.2
+$ swiftenv local 3.1.1
+```
+
+Setting the local swift version will write the version to the `.swift-version`
+file in the current working directory.
+
+### Checking the local Swift version
+
+```shell
 $ swiftenv local
-2.2
+3.1.1
 ```
 
 ## `install`
