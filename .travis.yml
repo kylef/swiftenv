@@ -10,3 +10,4 @@ dist: trusty
 script:
 - make test
 - make test-integration
+- make test-build
