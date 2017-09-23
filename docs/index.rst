@@ -22,6 +22,7 @@ The User Guide
    getting-started
    building-swift
    commands
+   changelog
 
 Integrations
 ~~~~~~~~~~~~
