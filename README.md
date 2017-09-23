@@ -26,3 +26,9 @@ swiftenv allows you to:
     - [`install`](https://swiftenv.fuller.li/en/latest/commands.html#install)
     - [`uninstall`](https://swiftenv.fuller.li/en/latest/commands.html#uninstall)
     - [`which`](https://swiftenv.fuller.li/en/latest/commands.html#which)
+- Integrations
+    - [Heroku](https://swiftenv.fuller.li/en/latest/integrations/heroku.html)
+    - [Travis CI](https://swiftenv.fuller.li/en/latest/integrations/travis-ci.html)
+    - [GitLab CI](https://swiftenv.fuller.li/en/latest/integrations/gitlab-ci.html)
+    - [CircleCI](https://swiftenv.fuller.li/en/latest/integrations/circle-ci.html)
+    - [Docker](https://swiftenv.fuller.li/en/latest/integrations/docker.html)
