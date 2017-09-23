@@ -3,13 +3,13 @@
 You can use swiftenv to both install Swift, and to manage multiple
 versions of Swift on [Travis CI](https://travis-ci.com/).
 
-Using the [following `install` phase](https://gist.github.com/kylef/5c0475ff02b7c7671d2a), you can install both swiftenv and the
+Using the [following `install` phase](https://swiftenv.fuller.li/install.sh), you can install both swiftenv and the
 Swift version found in the `.swift-version` file or the `SWIFT_VERSION`
 environment variable.
 
 ```yaml
 install:
-  - eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/raw/9f442512a46d7a2af7b850d65a7e9bd31edfb09b/swiftenv-install.sh)"
+  - eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
 ```
 
 ## Operating Systems
@@ -60,7 +60,7 @@ sudo: required
 dist: trusty
 osx_image: xcode7.2
 install:
-  - eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/raw/9f442512a46d7a2af7b850d65a7e9bd31edfb09b/swiftenv-install.sh)"
+  - eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
 script:
   - swift build
 ```
