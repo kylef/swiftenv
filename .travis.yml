@@ -10,4 +10,4 @@ dist: trusty
 script:
 - make test
 - make test-integration
-- make test-build
+- ./bin/swiftenv install --build --verbose 3.1.1
