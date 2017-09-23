@@ -1,5 +1,18 @@
 # Changelog
 
+## Master
+
+### Enhancements
+
+- You can now instruct `swiftenv install` to both locally and globally set the
+  installed swift version. `--set-local` and `--set-global` respectively will
+  set the current Swift version.
+
+  The default behaviour will set the global version by default when `swiftenv
+  install` was provided an explicit version. When installing with the
+  `SWIFT_VERSION` environment value or the `.swift-version` file present, then
+  the default behaviour is to not set the global or local version.
+
 ## 1.3.0
 
 ### Enhancements
