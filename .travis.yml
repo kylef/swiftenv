@@ -3,7 +3,7 @@ os:
 - osx
 
 language: generic
-osx_image: xcode8
+osx_image: xcode9
 sudo: required
 dist: trusty
 
