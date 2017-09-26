@@ -15,10 +15,23 @@ check_installed() {
     echo "$VERSION is already installed."
 
     if [ -n "$SKIP_EXISTING" ]; then
+      update_version_files
       exit 0
     fi
 
     exit 1
+  fi
+}
+
+update_version_files() {
+  if ([ "$set_global" == "auto" ] && [ "$set_local" == "false" ]); then
+    swiftenv-global "$VERSION"
+  elif ([ "$set_global" == "true" ]); then
+    swiftenv-global "$VERSION"
+  fi
+
+  if [ "$set_local" == "true" ]; then
+    swiftenv-local "$VERSION"
   fi
 }
 
@@ -181,6 +194,8 @@ snapshots=false
 build=auto
 verbose=false
 verify=false
+set_global=auto
+set_local=false
 
 if [ -n "$SWIFTENV_VERIFY" ] && [ "$SWIFTENV_VERIFY" != "false" ]; then
   verify=true
@@ -212,6 +227,14 @@ for args in "$@"; do
     verify=true
   elif [ "$args" = "--no-verify" ]; then
     verify=false
+  elif [ "$args" = "--no-set-global" ]; then
+    set_global=false
+  elif [ "$args" = "--no-set-local" ]; then
+    set_local=false
+  elif [ "$args" = "--set-global" ]; then
+    set_global=true
+  elif [ "$args" = "--set-local" ]; then
+    set_local=true
   else
     VERSION="$args"
   fi
@@ -238,6 +261,10 @@ fi
 mkdir -p "$SWIFTENV_ROOT/versions"
 if [ -z "$VERSION" ] ; then
   VERSION="$(swiftenv-version-name --dont-check)"
+
+  if [ "$set_global" == "auto" ]; then
+    set_global=false
+  fi
 
   if [ "$VERSION" == "system" ]; then
     echo "Usage: swiftenv install <version>"
@@ -292,4 +319,5 @@ fi
 
 echo "$VERSION has been installed."
 swiftenv-rehash
-swiftenv-global "$VERSION"
+
+update_version_files
