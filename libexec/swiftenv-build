@@ -26,7 +26,7 @@ fetch_github_release() {
   if [ -d "$3" ]; then
     echo "Found "$3", skipping download"
   else
-    echo "Downloading $1 ($2) from git"
+    echo "Downloading $1 ($2)"
     curl -Lo "$1-$2.tar.gz" "https://github.com/apple/$1/archive/$2.tar.gz"
 
     mkdir "$3"
