@@ -2,7 +2,27 @@
 
 ## Master
 
+## 1.4.2
+
+### Bug Fixes
+
+- Bumps revision.
+
 ### Enhancements
+
+- Updates changelog.
+
+## 1.4.1
+
+### Enhancements
+
+- Adds build instructions for Swift 4.0.3.
+
+## 1.4.0
+
+### Enhancements
+
+- Adds build instructions for Swift 4.0.2.
 
 - You can now instruct `swiftenv install` to both locally and globally set the
   installed swift version. `--set-local` and `--set-global` respectively will
