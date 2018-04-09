@@ -199,6 +199,16 @@ find_binary_url_from_api() {
   fi
 }
 
+get_version_list() {
+  if $snapshots; then
+    curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?snapshot=true&platform=$(get_platform)"
+    exit
+  fi
+
+  swiftenv-build --definitions
+  exit
+}
+
 clean=true
 list=false
 snapshots=false
@@ -207,6 +217,7 @@ verbose=false
 verify=false
 set_global=auto
 set_local=false
+completes=false
 
 if [ -n "$SWIFTENV_VERIFY" ] && [ "$SWIFTENV_VERIFY" != "false" ]; then
   verify=true
@@ -225,7 +236,7 @@ for args in "$@"; do
     list=true
     snapshots=true
   elif [ "$args" = "--complete" ]; then
-    list=true
+    completes=true
   elif [ "$args" = "--build" ]; then
     build=true
   elif [ "$args" = "--no-build" ]; then
@@ -234,6 +245,8 @@ for args in "$@"; do
     SKIP_EXISTING=true
   elif [ "$args" = "--verbose" ]; then
     verbose=true
+  elif [ "$args" = "--no-verbose" ]; then
+    verbose=false
   elif [ "$args" = "--verify" ]; then
     verify=true
   elif [ "$args" = "--no-verify" ]; then
@@ -259,14 +272,25 @@ vlog() {
   fi
 }
 
-if $list; then
-  if $snapshots; then
-    curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?snapshot=true&platform=$(get_platform)"
-    exit
-  fi
-
-  swiftenv-build --definitions
+if $completes; then
+  echo "--list"
+  echo "--list-snapshots"
+  echo "--verbose"
+  echo "--no-verbose"
+  echo "--verify"
+  echo "--no-verify"
+  echo "--clean"
+  echo "--no-clean"
+  echo "--set-global"
+  echo "--no-set-global"
+  echo "--set-local"
+  echo "--no-set-local"
+  get_version_list
   exit
+fi
+
+if $list; then
+  get_version_list
 fi
 
 mkdir -p "$SWIFTENV_ROOT/versions"
