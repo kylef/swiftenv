@@ -188,6 +188,16 @@ find_binary_url_from_api() {
   fi
 }
 
+get_version_list() {
+  if $snapshots; then
+    curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?snapshot=true&platform=$(get_platform)"
+    exit
+  fi
+
+  swiftenv-build --definitions
+  exit
+}
+
 clean=true
 list=false
 snapshots=false
@@ -196,6 +206,7 @@ verbose=false
 verify=false
 set_global=auto
 set_local=false
+completes=false
 
 if [ -n "$SWIFTENV_VERIFY" ] && [ "$SWIFTENV_VERIFY" != "false" ]; then
   verify=true
@@ -214,7 +225,7 @@ for args in "$@"; do
     list=true
     snapshots=true
   elif [ "$args" = "--complete" ]; then
-    list=true
+    completes=true
   elif [ "$args" = "--build" ]; then
     build=true
   elif [ "$args" = "--no-build" ]; then
@@ -223,6 +234,8 @@ for args in "$@"; do
     SKIP_EXISTING=true
   elif [ "$args" = "--verbose" ]; then
     verbose=true
+  elif [ "$args" = "--no-verbose" ]; then
+    verbose=false
   elif [ "$args" = "--verify" ]; then
     verify=true
   elif [ "$args" = "--no-verify" ]; then
@@ -248,14 +261,43 @@ vlog() {
   fi
 }
 
-if $list; then
-  if $snapshots; then
-    curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?snapshot=true&platform=$(get_platform)"
-    exit
+log_boolean_option() {
+  # $1 argument
+  # $2 value
+  # $3 doesn't have --no- option (true default)
+
+  if $2; then
+    if $3 || [ $3 == "" ]; then
+      echo "--no-$1"
+    fi
+  else
+    echo "--$1"
+  fi
+}
+
+if $completes; then
+  log_boolean_option "verbose" $verbose
+  log_boolean_option "verify" $verify
+  log_boolean_option "clear" $clean
+  log_boolean_option "list" $list false
+  log_boolean_option "set-local" $set_local
+
+  if [ "$set_global" == "auto" ]; then
+    echo "--set-global"
+    echo "--no-set-global"
+  else
+    log_boolean_option "set-global" $set_global
   fi
 
-  swiftenv-build --definitions
+  if [ -z "$VERSION" ] ; then
+    get_version_list
+  fi
+
   exit
+fi
+
+if $list; then
+  get_version_list
 fi
 
 mkdir -p "$SWIFTENV_ROOT/versions"
