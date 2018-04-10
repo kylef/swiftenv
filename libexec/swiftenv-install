@@ -46,6 +46,8 @@ get_platform() {
     if command -v "lsb_release" >/dev/null 2>&1; then
       if [ $(lsb_release -is) = "Ubuntu" ]; then
         echo "ubuntu$(lsb_release -rs)"
+      elif [ $(lsb_release -ius) = "Ubuntu" ]; then
+        echo "ubuntu$(lsb_release -rus)"
       else
         echo "unsupported-platform"
       fi
