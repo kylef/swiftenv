@@ -13,14 +13,14 @@
 
 @test "can install a Swift stable" {
   if [[ "$(uname -s)" == "Darwin" ]]; then
-    # Xcode already bundles Swift 3.0
+    # Xcode already bundles Swift
     skip
   fi
 
-  run swiftenv install 3.0
+  run swiftenv install 4.1
   [ "$status" -eq 0 ]
 
-  run env SWIFT_VERSION="3.0" swift --version
+  run env SWIFT_VERSION="4.1" swift --version
   [ "$status" -eq 0 ]
-  [[ "${lines[0]}" = *"Swift version 3.0 (swift-3.0-RELEASE)" ]]
+  [[ "${lines[0]}" = *"Swift version 4.1 (swift-4.1-RELEASE)" ]]
 }

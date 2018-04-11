@@ -1,0 +1,27 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: ubuntu:16.04
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install Dependencies
+          command: |
+            apt-get -qq update
+            apt-get -qq -y install make lsb-release curl git libicu55 libxml2 libcurl4-openssl-dev libc6-dev clang
+
+      - run:
+          name: Run Tests
+          command: |
+            make test
+
+      - run:
+          name: Run Integration Tests
+          command: |
+            make test-integration
