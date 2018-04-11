@@ -14,7 +14,12 @@ jobs:
           name: Install Dependencies
           command: |
             apt-get -qq update
+
+            # swiftenv + swift run-time dependencies
             apt-get -qq -y install make lsb-release curl git libicu55 libxml2 libcurl4-openssl-dev libc6-dev clang
+
+            # Build Dependencies
+            apt-get -qq -y install git cmake ninja-build clang python uuid-dev libicu-dev icu-devtools libbsd-dev libedit-dev libxml2-dev libsqlite3-dev swig libpython-dev libncurses5-dev pkg-config libblocksruntime-dev libcurl4-openssl-dev autoconf libtool systemtap-sdt-dev tzdata rsync
 
       - run:
           name: Run Tests
@@ -25,3 +30,8 @@ jobs:
           name: Run Integration Tests
           command: |
             make test-integration
+
+      - run:
+          name: Build Test
+          command: |
+            ./bin/swiftenv install --build 4.1 --verbose
