@@ -5,3 +5,5 @@
 
 /docs/_build/
 /docs/_build_html/
+
+share/swiftenv-install/*.json

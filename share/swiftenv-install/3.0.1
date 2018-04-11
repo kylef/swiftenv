@@ -1,4 +1,8 @@
 case "$PLATFORM" in
+  'osx' )
+    URL="https://swift.org/builds/swift-3.0.1-release/xcode/swift-3.0.1-RELEASE/swift-3.0.1-RELEASE-osx.pkg"
+    ;;
+
   'ubuntu14.04' )
     URL="https://swift.org/builds/swift-3.0.1-release/ubuntu1404/swift-3.0.1-RELEASE/swift-3.0.1-RELEASE-ubuntu14.04.tar.gz"
     ;;
@@ -9,10 +13,6 @@ case "$PLATFORM" in
 
   'ubuntu16.04' )
     URL="https://swift.org/builds/swift-3.0.1-release/ubuntu1604/swift-3.0.1-RELEASE/swift-3.0.1-RELEASE-ubuntu16.04.tar.gz"
-    ;;
-
-  'osx' )
-    URL="https://swift.org/builds/swift-3.0.1-release/xcode/swift-3.0.1-RELEASE/swift-3.0.1-RELEASE-osx.pkg"
     ;;
 
   * )
