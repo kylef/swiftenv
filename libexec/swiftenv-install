@@ -86,6 +86,16 @@ install_binary() {
   fi
 }
 
+download() {
+  URL=$1
+  FILE=$2
+
+  if ! [ -r "$FILE" ]; then
+    curl -C - -Lo "$FILE.download" "$URL"
+    mv "$FILE.download" "$FILE"
+  fi
+}
+
 # Install a tarball binary from the supplied URL
 install_tar_binary() {
   local VERSION
@@ -100,14 +110,14 @@ install_tar_binary() {
   echo "Downloading $URL"
 
   pushd "$INSTALL_TMP"
-  curl -C - -O "$URL"
+  download "$URL" "swift-$VERSION.tar.gz"
 
   if $verify; then
-    curl -O "$URL.sig"
-    gpg --verify "swift-$VERSION"*.sig
+    curl -o "swift-$VERSION.sig" "$URL.sig"
+    gpg --verify "swift-$VERSION.sig"
   fi
 
-  tar xzf "swift-$VERSION"*.tar.gz
+  tar xzf "swift-$VERSION.tar.gz"
   popd
 
   DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
@@ -124,8 +134,7 @@ install_pkg_binary() {
   URL="$1"
   PKG="$TMPDIR/swiftenv-$VERSION-$USER.pkg"
 
-  echo "Downloading $URL"
-  curl -C - -Lo "$PKG" "$URL"
+  download "$URL" "$PKG"
 
   sudo installer -pkg "$PKG" -target /
 
