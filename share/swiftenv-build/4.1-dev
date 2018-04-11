@@ -1,0 +1,13 @@
+BRANCH="swift-4.1-branch"
+fetch_git swift $BRANCH swift
+fetch_git swift-llvm $BRANCH llvm
+fetch_git swift-clang $BRANCH clang
+fetch_git swift-lldb $BRANCH lldb
+fetch_git swift-cmark $BRANCH cmark
+fetch_git swift-llbuild $BRANCH llbuild
+fetch_git swift-package-manager $BRANCH swiftpm
+fetch_git swift-compiler-rt $BRANCH compiler-rt
+fetch_git swift-corelibs-xctest $BRANCH swift-corelibs-xctest
+fetch_git swift-corelibs-foundation $BRANCH swift-corelibs-foundation
+fetch_git swift-corelibs-libdispatch $BRANCH swift-corelibs-libdispatch
+build_swift
