@@ -13,6 +13,10 @@
   `SWIFT_VERSION` environment value or the `.swift-version` file present, then
   the default behaviour is to not set the global or local version.
 
+- When installing Swift from binary, swiftenv will now detect Ubuntu-based
+  Linux distributions such as Elementary OS and use the appropriate binary
+  image from swift.org.
+
 ## 1.3.0
 
 ### Enhancements
