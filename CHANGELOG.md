@@ -23,6 +23,10 @@
   toolchains due to `-RELEASE` being after the version in some paths that was
   unexpected.
 
+- When using `swiftenv uninstall`, the command would fail if there was no
+  global set version of swift. The command can now handle missing global
+  version.
+
 
 ## 1.3.0
 

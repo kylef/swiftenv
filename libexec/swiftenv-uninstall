@@ -54,9 +54,13 @@ else
   exit 1
 fi
 
-CURRENT_VERSION=$(cat "$SWIFTENV_ROOT/version")
-if [ "$VERSION" == "$CURRENT_VERSION" ]; then
-  rm -f "$SWIFTENV_ROOT/version"
+
+if [ -r "$SWIFTENV_ROOT/version" ]; then
+  CURRENT_VERSION=$(cat "$SWIFTENV_ROOT/version")
+
+  if [ "$VERSION" == "$CURRENT_VERSION" ]; then
+    rm -f "$SWIFTENV_ROOT/version"
+  fi
 fi
 
 if [[ "$VERSION_DIRECTORY" == "/Library/Developer/Toolchains/"* ]]; then
