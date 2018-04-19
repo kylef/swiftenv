@@ -17,6 +17,13 @@
   Linux distributions such as Elementary OS and use the appropriate binary
   image from swift.org.
 
+### Bug Fixes
+
+- On macOS, `swiftenv uninstall` would fail to uninstall some installed binary
+  toolchains due to `-RELEASE` being after the version in some paths that was
+  unexpected.
+
+
 ## 1.3.0
 
 ### Enhancements

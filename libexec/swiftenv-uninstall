@@ -28,6 +28,10 @@ elif [ -d "/Library/Developer/Toolchains/swift-$VERSION.xctoolchain" ]; then
   VERSION_DIRECTORY="/Library/Developer/Toolchains/swift-$VERSION.xctoolchain"
 elif [ -d "$HOME/Library/Developer/Toolchains/swift-$VERSION.xctoolchain" ]; then
   VERSION_DIRECTORY="$HOME/Library/Developer/Toolchains/swift-$VERSION.xctoolchain"
+elif [ -d "/Library/Developer/Toolchains/swift-$VERSION-RELEASE.xctoolchain" ]; then
+  VERSION_DIRECTORY="/Library/Developer/Toolchains/swift-$VERSION-RELEASE.xctoolchain"
+elif [ -d "$HOME/Library/Developer/Toolchains/swift-$VERSION-RELEASE.xctoolchain" ]; then
+  VERSION_DIRECTORY="$HOME/Library/Developer/Toolchains/swift-$VERSION-RELEASE.xctoolchain"
 else
 
   # Xcode installs
