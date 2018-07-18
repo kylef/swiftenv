@@ -37,6 +37,15 @@ load helpers
   [ "${lines[3]}" = "3.0-dev" ]
 }
 
+@test "invoking with the -l option as a short option of install --list" {
+  run swiftenv install -l
+  [ "$status" -eq 0 ]
+  [ "${lines[0]}" = "2.2-dev" ]
+  [ "${lines[1]}" = "2.2" ]
+  [ "${lines[2]}" = "2.2.1" ]
+  [ "${lines[3]}" = "3.0-dev" ]
+}
+
 @test "invoking with an installed version with skip existing saves global version" {
   mkdir -p "$SWIFTENV_ROOT/versions/1.0.0"
   run swiftenv install -s 1.0.0
