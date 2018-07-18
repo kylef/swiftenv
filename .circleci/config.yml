@@ -1,20 +1,24 @@
 version: 2
 
+aliases:
+  - &defaults
+      working_directory: ~/.swiftenv
+      docker:
+        - image: ubuntu:16.04
+
+  - &install-dependencies
+      run:
+        name: Install Dependencies
+        command: |
+          apt-get -qq update
+          apt-get -qq -y install make lsb-release curl git libicu55 libxml2 libcurl4-openssl-dev libc6-dev clang
+
 jobs:
-  build:
-    docker:
-      - image: ubuntu:16.04
-
-    working_directory: ~/repo
-
+  test:
+    <<: *defaults
     steps:
       - checkout
-
-      - run:
-          name: Install Dependencies
-          command: |
-            apt-get -qq update
-            apt-get -qq -y install make lsb-release curl git libicu55 libxml2 libcurl4-openssl-dev libc6-dev clang
+      - <<: *install-dependencies
 
       - run:
           name: Run Tests
@@ -25,3 +29,9 @@ jobs:
           name: Run Integration Tests
           command: |
             make test-integration
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
