@@ -230,7 +230,7 @@ for args in "$@"; do
     clean=false
   elif [ "$args" = "--clean" ]; then
     clean=true
-  elif [ "$args" = "--list" ]; then
+  elif [ "$args" = "--list" ] || [ "$args" = "-l" ];  then
     list=true
   elif [ "$args" = "--list-snapshots" ]; then
     list=true
