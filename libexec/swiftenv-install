@@ -36,6 +36,11 @@ update_version_files() {
 }
 
 get_platform() {
+  if [ -n "$SWIFTENV_PLATFORM" ]; then
+    echo "$SWIFTENV_PLATFORM"
+    return
+  fi
+
   if [ -n "$PLATFORM" ]; then
     echo "$PLATFORM"
     return
