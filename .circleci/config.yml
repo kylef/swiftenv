@@ -30,8 +30,25 @@ jobs:
           command: |
             make test-integration
 
+  test-fish:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Configure Fish for Swiftenv
+          command: |
+            mkdir -p ~/.config/fish
+            echo 'set -gx SWIFTENV_ROOT "$HOME/.swiftenv"' > ~/.config/fish/config.fish
+            echo 'set -gx PATH "$SWIFTENV_ROOT/bin" $PATH' >> ~/.config/fish/config.fish
+            echo 'source (swiftenv init -|psub)' >> ~/.config/fish/config.fish
+      - <<: *install-dependencies
+      - run: apt-get -qq -y install fish
+      - run: fish -c 'swiftenv install 4.1.2'
+      - run: fish -c 'swift --version' | grep 4.1.2
+
 workflows:
   version: 2
   test:
     jobs:
       - test
+      - test-fish
