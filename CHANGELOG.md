@@ -1,6 +1,6 @@
 # Changelog
 
-## Master
+## 1.3.0
 
 ### Enhancements
 

@@ -21,7 +21,7 @@ You can pull down the `kylef/swiftenv` docker image and run it.
 $ docker pull kylef/swiftenv
 $ docker run -i -t --entrypoint /bin/sh kylef/swiftenv
 # swiftenv --version
-swiftenv 1.3.0
+swiftenv 1.4.0
 ```
 
 Or for swiftenv with latest Swift:
