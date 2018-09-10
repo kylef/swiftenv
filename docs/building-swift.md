@@ -75,7 +75,7 @@ $ sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3
 You will need to install the following dependencies on FreeBSD:
 
 ```shell
-$ pkg install clang36-3.6.2 git python ninja cmake pkgconf e2fsprogs-lluuid
+$ pkg install binutils git python ninja cmake pkgconf e2fsprogs-libuuid
 ```
 
 ### Your platform here
