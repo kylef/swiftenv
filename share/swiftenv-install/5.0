@@ -1,4 +1,8 @@
 case "$PLATFORM" in
+  'osx' )
+    URL="https://swift.org/builds/swift-5.0-release/xcode/swift-5.0-RELEASE/swift-5.0-RELEASE-osx.pkg"
+    ;;
+
   'ubuntu14.04' )
     URL="https://swift.org/builds/swift-5.0-release/ubuntu1404/swift-5.0-RELEASE/swift-5.0-RELEASE-ubuntu14.04.tar.gz"
     ;;
