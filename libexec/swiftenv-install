@@ -82,7 +82,12 @@ install_binary() {
       exit 1
     fi
 
-    install_pkg_binary "$URL"
+    if [ "$set_install_local" == "true" ]; then
+      install_pkg_binary_local "$VERSION" "$URL"
+    else
+      install_pkg_binary "$URL"
+    fi
+
   elif [[ "$URL" = *".tar.gz" ]]; then
     install_tar_binary "$VERSION" "$URL"
   else
@@ -145,6 +150,32 @@ install_pkg_binary() {
 
   if $clean; then
     rm -fr "$PKG"
+  fi
+}
+
+install_pkg_binary_local() {
+  local VERSION
+  local URL
+  VERSION="$1"
+  URL="$2"
+  PKG="swiftenv-$VERSION-$USER.pkg"
+  INSTALL_TMP="$TMPDIR/swiftenv-$VERSION-$USER"
+
+  mkdir -p "$INSTALL_TMP"
+  pushd "$INSTALL_TMP"
+
+  download "$URL" "$PKG"
+
+  pkgutil --expand "$PKG" tmp
+  cat tmp/*.pkg/Payload | gunzip -dc | cpio -i
+  popd
+
+  DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
+  mkdir -p "$DESTINATION"
+  mv "$INSTALL_TMP/usr" "$DESTINATION"
+
+  if $clean; then
+    rm -fr "$INSTALL_TMP"
   fi
 }
 
@@ -284,6 +315,8 @@ for args in "$@"; do
     set_global=true
   elif [ "$args" = "--set-local" ]; then
     set_local=true
+  elif [ "$args" = "--install-local" ]; then
+    set_install_local=true
   else
     VERSION="$args"
   fi
@@ -310,6 +343,7 @@ if $completes; then
   echo "--no-set-global"
   echo "--set-local"
   echo "--no-set-local"
+  echo "--install-local"
   get_version_list
   exit
 fi
