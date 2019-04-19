@@ -17,6 +17,9 @@
   Linux distributions such as Elementary OS and use the appropriate binary
   image from swift.org.
 
+- On macOS, `swiftenv install` now accepts `--user` command which allows you to
+  install Swift into your home directory instead of requiring root.
+
 ### Bug Fixes
 
 - On macOS, `swiftenv uninstall` would fail to uninstall some installed binary

@@ -89,22 +89,12 @@ load helpers
   [ ! -r "$SWIFTENV_ROOT/version" ]
 }
 
-@test "does't allow --user on macOS" {
-  if [[ "$(uname)" != "Darwin" ]]; then
-    skip
-  fi
-
-  run swiftenv install 4.1 --user
-  [ "$status" -eq 1 ]
-  [ "$lines" = "--user installation is not supported on macOS." ]
-}
-
-@test "does't allow --no-user on macOS" {
+@test "does't allow --no-user on non-macOS" {
   if [[ "$(uname)" == "Darwin" ]]; then
     skip
   fi
 
-  run swiftenv install 4.1 --user
+  run swiftenv install 4.1 --no-user
   [ "$status" -eq 1 ]
   [ "$lines" = "--no-user installation is only supported on macOS." ]
 }
