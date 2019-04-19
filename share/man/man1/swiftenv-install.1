@@ -4,7 +4,7 @@
 swiftenv-install \- Install a version of Swift
 
 .SH SYNOPSIS
-swiftenv install [\-\-verbose] [\-\-list] [\-\-list-snapshots] [\-\-[no\-]build] [\-\-[no\-]set\-global] [\-\-[no\-]set\-local] [--no-clean] <version>
+swiftenv install [\-\-verbose] [\-\-list] [\-\-list-snapshots] [\-\-[no\-]build] [\-\-[no\-]set\-global] [\-\-[no\-]set\-local] [--no-clean] [\-\-[no\-]user] <version>
 
 .SH DESCRIPTION
 
@@ -77,4 +77,18 @@ Set the installed version in the local .swift-version file.
 
 .RS
 Don't set the installed version locally.
+.RE
+
+
+\-\-user
+
+.RS
+Install to the swiftenv user install directory for your platform. Typically ~/.swiftenv/versions
+.RE
+
+
+\-\-no\-user
+
+.RS
+Install to the swiftenv system install directory for your platform. On macOS this is in /Library
 .RE

@@ -88,3 +88,23 @@ load helpers
   [ "$lines" = "1.0.0 is already installed." ]
   [ ! -r "$SWIFTENV_ROOT/version" ]
 }
+
+@test "does't allow --user on macOS" {
+  if [[ "$(uname)" != "Darwin" ]]; then
+    skip
+  fi
+
+  run swiftenv install 4.1 --user
+  [ "$status" -eq 1 ]
+  [ "$lines" = "--user installation is not supported on macOS." ]
+}
+
+@test "does't allow --no-user on macOS" {
+  if [[ "$(uname)" == "Darwin" ]]; then
+    skip
+  fi
+
+  run swiftenv install 4.1 --user
+  [ "$status" -eq 1 ]
+  [ "$lines" = "--no-user installation is only supported on macOS." ]
+}
