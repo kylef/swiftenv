@@ -141,7 +141,11 @@ install_pkg_binary() {
 
   download "$URL" "$PKG"
 
-  sudo installer -pkg "$PKG" -target /
+  if $user; then
+    installer -pkg "$PKG" -target CurrentUserHomeDirectory
+  else
+    sudo installer -pkg "$PKG" -target LocalSystem
+  fi
 
   if $clean; then
     rm -fr "$PKG"
@@ -357,12 +361,7 @@ VERSION="${VERSION##swift-}"
 
 check_installed "$VERSION"
 
-if $user; then
-  if [ "$(uname)" == "Darwin" ]; then
-    echo "--user installation is not supported on macOS."
-    exit 1
-  fi
-else
+if ! $user; then
   if [ "$(uname)" != "Darwin" ]; then
     echo "--no-user installation is only supported on macOS."
     exit 1
