@@ -46,6 +46,25 @@ jobs:
       - run: fish -c 'swiftenv install 4.1.2'
       - run: fish -c 'swift --version' | grep 4.1.2
 
+  test-elementary:
+    <<: *defaults
+    docker:
+      - image: elementary/docker:loki
+
+    steps:
+      - checkout
+      - <<: *install-dependencies
+
+      - run:
+          name: Run Tests
+          command: |
+            make test
+
+      - run:
+          name: Run Integration Tests
+          command: |
+            make test-integration
+
 workflows:
   version: 2
   test:
