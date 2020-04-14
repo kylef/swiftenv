@@ -16,24 +16,30 @@ install:
 
 ### macOS
 
-For macOS support on Travis, you will want to enable the `xcode7.2` or
-newer image which contains a version of macOS and Xcode required for Swift.
+For macOS support on Travis, you will need to enable a version of Xcode which
+contains a support for the desired Swift version. See [Swift Documentation for
+Requirements on Apple
+platforms](https://swift.org/download/#requirements-for-tools).
+
+For example, Swift 5.1 requires macOS 10.14.6 and Xcode 11 or later:
 
 ```yaml
-osx_image: xcode7.2
+osx_image: xcode11.3
 ```
 
 ### Linux
 
-The default Linux image on Travis CI doesn't have a version of Clang that
-is required to use Swift. You can switch to the new Travis
-[`trusty` build environment](https://docs.travis-ci.com/user/trusty-ci-environment/)
-which contains Clang 3.5 using the following:
+For Linux, Travis needs to be configured to use a compatible version of Ubuntu
+and the surrounding tools.
+
+Modern versions of Swift provided binary releases for Ubuntu 18.04 (also known
+as bionic). Use the `dist` key in Travis CI to enable the [Ubuntu 18.04 bionic
+runtime](https://docs.travis-ci.com/user/reference/bionic/).
 
 ```yaml
 language: generic
 sudo: required
-dist: trusty
+dist: bionic
 ```
 
 ### Multi-OS
@@ -57,8 +63,8 @@ os:
   - osx
 language: generic
 sudo: required
-dist: trusty
-osx_image: xcode7.2
+dist: buster
+osx_image: xcode11.3
 install:
   - eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
 script:
@@ -73,6 +79,6 @@ versions of Swift.
 
 ```yaml
 env:
-  - SWIFT_VERSION=2.2-SNAPSHOT-2016-01-06-a
-  - SWIFT_VERSION=DEVELOPMENT-SNAPSHOT-2016-02-08-a
+  - SWIFT_VERSION=4.2
+  - SWIFT_VERSION=5.2.1
 ```
