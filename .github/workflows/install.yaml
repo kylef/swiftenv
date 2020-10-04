@@ -1,0 +1,25 @@
+on: push
+jobs:
+  install:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Install swiftenv
+        uses: actions/checkout@v2
+      - name: Install Swift
+        run: |
+          export SWIFTENV_ROOT=$GITHUB_WORKSPACE
+          export PATH="$SWIFTENV_ROOT/bin:$PATH"
+          swiftenv install 5.3
+      - name: Verify Swift is installed
+        run: |
+          export SWIFTENV_ROOT=$GITHUB_WORKSPACE
+          export PATH="$SWIFTENV_ROOT/bin:$PATH"
+          swiftenv versions
+          swiftenv init -
+          swiftenv exec swift --version
+          eval $(swiftenv init -)
+          swift --version
+          swift --version | grep 5.3
