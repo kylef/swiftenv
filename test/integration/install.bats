@@ -1,26 +1,19 @@
 #!/usr/bin/env bats
 
-@test "can install a Swift development snapshot" {
-  version="DEVELOPMENT-SNAPSHOT-2016-10-01-a"
-  run swiftenv install "$version"
-  [ "$status" -eq 0 ]
-
-  run env SWIFT_VERSION="$version" swift --version
-  echo $lines
-  [ "$status" -eq 0 ]
-  [[ "${lines[0]}" = *"Swift version 3.0-dev (LLVM d735cf71a5, Clang 035a4bf71a, Swift 42d3b18f2c)" ]]
-}
-
-@test "can install a Swift stable" {
+@test "can install a Swift stable release" {
   if [[ "$(uname -s)" == "Darwin" ]]; then
     # Xcode already bundles Swift
     skip
   fi
 
-  run swiftenv install 4.1
+  run swiftenv install 5.3
+  echo "Installed"
+  echo $lines
   [ "$status" -eq 0 ]
 
-  run env SWIFT_VERSION="4.1" swift --version
+  run env SWIFT_VERSION="5.3" swift --version
+  echo "Version"
+  echo $lines
   [ "$status" -eq 0 ]
-  [[ "${lines[0]}" = *"Swift version 4.1 (swift-4.1-RELEASE)" ]]
+  [[ "${lines[0]}" = *"Swift version 5.3 (swift-5.3-RELEASE)" ]]
 }

@@ -3,7 +3,7 @@ test: bats
 	@PATH="$$PWD/bats/bin:$$PWD/bin:$$PATH" bats test
 
 .PHONY: test-integration
-test-integration:
+test-integration: bats
 	@PATH="$$PWD/bats/bin:$$PWD/bin:$$PWD/shims:$$PATH" SWIFTENV_ROOT="$$PWD" bats test/integration
 
 bats:
