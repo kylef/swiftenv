@@ -14,22 +14,6 @@ aliases:
           apt-get -qq -y install make lsb-release curl git libicu55 libxml2 libcurl4-openssl-dev libc6-dev clang
 
 jobs:
-  test:
-    <<: *defaults
-    steps:
-      - checkout
-      - <<: *install-dependencies
-
-      - run:
-          name: Run Tests
-          command: |
-            make test
-
-      - run:
-          name: Run Integration Tests
-          command: |
-            make test-integration
-
   test-fish:
     <<: *defaults
     steps:
