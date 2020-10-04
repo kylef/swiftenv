@@ -85,8 +85,10 @@ install_binary() {
     install_pkg_binary "$URL"
   elif [[ "$URL" = *".tar.gz" ]]; then
     install_tar_binary "$VERSION" "$URL"
+  elif [[ "$URL" = *".exe" ]]; then
+    install_exe_binary "$URL"
   else
-    echo "swiftenv does not know how to install $URL. Only tar.gz and pkg files are supported."
+    echo "swiftenv does not know how to install $URL. Only tar.gz, pkg and exe files are supported."
     exit 1
   fi
 }
@@ -145,6 +147,27 @@ install_pkg_binary() {
     installer -pkg "$PKG" -target CurrentUserHomeDirectory
   else
     sudo installer -pkg "$PKG" -target LocalSystem
+  fi
+
+  if $clean; then
+    rm -fr "$PKG"
+  fi
+}
+
+install_exe_binary() {
+  local URL
+  URL="$1"
+  OUTPUT="$TMPDIR/swiftenv-$VERSION-$USER.exe"
+
+  download "$URL" "$OUTPUT"
+
+  if $user; then
+    echo "user install unsupported"
+    exit 1
+  else
+    $OUTPUT
+    echo "system install unsupported"
+    exit 1
   fi
 
   if $clean; then
