@@ -8,3 +8,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: make test
+
+  test-integration:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: make test-integration
