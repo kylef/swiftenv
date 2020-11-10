@@ -3,6 +3,10 @@
 load helpers
 
 @test "finds binary from selected Swift version" {
+  if [[ "$OSTYPE" == "msys" ]]; then
+    skip
+  fi
+
   binpath="$SWIFTENV_ROOT/versions/known-1.2.0/usr/bin"
   mkdir -p "$binpath"
   touch "$binpath/swift"
