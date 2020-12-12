@@ -1,5 +1,14 @@
 # Changelog
 
+## Master
+
+### Bug Fixes
+
+- Prevent `swiftenv install` picking up on unrelated `$URL` environment
+  variables.  
+  [#170](https://github.com/kylef/swiftenv/issues/170)
+
+
 ## 1.4.0
 
 ### Enhancements

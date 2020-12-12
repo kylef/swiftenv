@@ -92,6 +92,8 @@ install_binary() {
 }
 
 download() {
+  local URL
+  local FILE
   URL=$1
   FILE=$2
 
@@ -172,7 +174,7 @@ install_source() {
 }
 
 build_version() {
-  if [ -n "$URL" ]; then
+  if [ -n "$url" ]; then
     echo 'The given URL must be to a binary version of Swift, you cannot use the `--build` option with a URL.'
     exit 1
   fi
@@ -198,7 +200,7 @@ find_binary_url_from_api() {
   if [ "$status_code" = "404" ]; then
     vlog "Did not find a binary release for $VERSION on $(get_platform)."
   elif [ "$status_code" = "200" ]; then
-    URL="$(curl --silent https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform) -H 'Accept: text/plain')"
+    url="$(curl --silent https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform) -H 'Accept: text/plain')"
   elif [ "$status_code" = "000" ]; then
     echo "There was a problem checking for a binary release of $VERSION, could not connect to the swiftenv API."
     exit 1
@@ -224,10 +226,10 @@ get_version_list() {
     PLATFORM="$(get_platform)"
 
     for version in $VERSIONS; do
-      URL=""
+      url=""
       source "$SWIFTENV_SOURCE_PATH/share/swiftenv-install/$version"
 
-      if [ -n "$URL" ]; then
+      if [ -n "$url" ]; then
         echo $version
       fi
     done
@@ -352,8 +354,8 @@ if [ -z "$TMPDIR" ] ; then
 fi
 
 if [[ "$VERSION" == "https://"* ]]; then
-  URL="$VERSION"
-  VERSION="${URL##*/}"
+  url="$VERSION"
+  VERSION="${url##*/}"
   VERSION="${VERSION%-*}"
 fi
 
@@ -370,7 +372,7 @@ fi
 
 # Install Binary
 if ([ "$build" == "auto" ] || [ "$build" == "false" ]); then
-  if [ -z "$URL" ]; then
+  if [ -z "$url" ]; then
     # Check for locally cached URL
     PROFILE="$SWIFTENV_SOURCE_PATH/share/swiftenv-install/$VERSION"
     if [ -r "$PROFILE" ]; then
@@ -378,13 +380,13 @@ if ([ "$build" == "auto" ] || [ "$build" == "false" ]); then
     fi
   fi
 
-  if [ -z "$URL" ]; then
+  if [ -z "$url" ]; then
     find_binary_url_from_api
   fi
 
-  if [ "$URL" ]; then
-    vlog "Installing $VERSION from $URL on $(get_platform)."
-    install_binary "$VERSION" "$URL"
+  if [ "$url" ]; then
+    vlog "Installing $VERSION from $url on $(get_platform)."
+    install_binary "$VERSION" "$url"
   elif [ "$build" == "false" ]; then
     echo "Could not find a binary release of $VERSION."
     exit 1
