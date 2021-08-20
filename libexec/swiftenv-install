@@ -35,8 +35,10 @@ update_version_files() {
   fi
 }
 
-get_os_version_variable() {
-  grep "^$1=" /etc/os-release | cut -d "=" -f2 | tr -d '"'
+get_os_version() {
+  test -e /etc/os-release && os_release='/etc/os-release' || os_release='/usr/lib/os-release'
+  . "${os_release}"
+  echo $NAME $VERSION_ID
 }
 
 get_platform() {
@@ -52,9 +54,9 @@ get_platform() {
 
   case $(uname) in
   'Linux' )
-    OS_NAME=$(get_os_version_variable NAME)	  
-    OS_VERSION_ID=$(get_os_version_variable VERSION_ID)
-    echo "$OS_NAME:$OS_VERSION_ID"
+    # lowercase OS_VERSION and remove spaces so get_platform is consistent with previous builds
+    OS_VERSION=$(get_os_version) | tr '[:upper:]' '[:lower:]' | tr -d ' '
+    echo "$OS_VERSION"
     ;;
   'Darwin' )
     echo "osx"
@@ -196,27 +198,31 @@ find_binary_url_from_api() {
   vlog "Checking for a URL for Swift $VERSION on $(get_platform)."
 
   case $(get_platform) in
-    'Ubuntu:16.04' )
+    'ubuntu14.04' )
+      SWIFT_BUILD_FOLDER="ubuntu1604"
+      SWIFT_ZIP_FILE="ubuntu14.04"
+      ;;
+    'ubuntu16.04' )
       SWIFT_BUILD_FOLDER="ubuntu1604"
       SWIFT_ZIP_FILE="ubuntu16.04"
       ;;
-    'Ubuntu:18.04' )
+    'ubuntu18.04' )
       SWIFT_BUILD_FOLDER="ubuntu1804"
       SWIFT_ZIP_FILE="ubuntu18.04"
       ;;
-    'Ubuntu:20.04' )
+    'ubuntu20.04' )
       SWIFT_BUILD_FOLDER="ubuntu2004"
       SWIFT_ZIP_FILE="ubuntu20.04"
       ;;
-    'CentOS Linux:7')
+    'centoslinux7')
       SWIFT_BUILD_FOLDER="centos7"
       SWIFT_ZIP_FILE="centos7"
       ;;
-    'CentOS Linux:8')
+    'centoslinux8')
       SWIFT_BUILD_FOLDER="centos8"
       SWIFT_ZIP_FILE="centos8"
       ;;
-    'Amazon Linux:2')
+    'amazonlinux2')
       SWIFT_BUILD_FOLDER="amazonlinux2"
       SWIFT_ZIP_FILE="amazonlinux2"
       ;;
