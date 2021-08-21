@@ -8,16 +8,3 @@ test-integration: bats
 
 bats:
 	git clone --depth 1 https://github.com/sstephenson/bats.git
-
-CACHED_VERSIONS := \
-  4.1.3 4.2.4 \
-  5.0 5.0.1 5.0.2 5.0.3 \
-  5.1 5.2 5.2.1 5.2.2 5.2.3 \
-  5.3 5.4 5.4.2
-CACHED_PATHS := $(foreach version,$(CACHED_VERSIONS),share/swiftenv-install/$(version))
-versions: $(CACHED_PATHS)
-
-share/swiftenv-install/%:
-	@echo Generating $*
-	@curl -o $@.json https://swiftenv-api.fuller.li/versions/$*
-	@cat $@.json | python -c "import json, sys; p = json.load(sys.stdin)['_links']; p = sorted(['  \'{}\' )\n    URL=\"{}\"\n    ;;\n'.format(p, u['href']) for (p,u) in p.items() if p != 'self']); print('case \"%sPLATFORM\" in') % chr(36); print('\n'.join(p)); print('  * )\n    ;;\nesac')" > $@

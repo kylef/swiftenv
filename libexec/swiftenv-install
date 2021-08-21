@@ -407,14 +407,6 @@ fi
 # Install Binary
 if ([ "$build" == "auto" ] || [ "$build" == "false" ]); then
   if [ -z "$url" ]; then
-    # Check for locally cached URL
-    PROFILE="$SWIFTENV_SOURCE_PATH/share/swiftenv-install/$VERSION"
-    if [ -r "$PROFILE" ]; then
-      source "$PROFILE"
-    fi
-  fi
-
-  if [ -z "$url" ]; then
     find_binary_url_from_api
   fi
 
