@@ -201,18 +201,22 @@ find_binary_url_from_api() {
     'ubuntu'* )
       SWIFT_BUILD_FOLDER=${platform/.}
       SWIFT_ZIP_FILE=$platform
+      EXTENSION="tar.gz"
       ;;
     'centoslinux'* )
       SWIFT_BUILD_FOLDER=${platform/linux}
       SWIFT_ZIP_FILE=${platform/linux}
+      EXTENSION="tar.gz"
       ;;
     'amazonlinux2')
       SWIFT_BUILD_FOLDER="amazonlinux2"
       SWIFT_ZIP_FILE="amazonlinux2"
+      EXTENSION="tar.gz"
       ;;
     'osx')
-      url="https://swift.org/builds/swift-$VERSION-release/xcode/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-osx.pkg"
-      return
+      SWIFT_BUILD_FOLDER="xcode"
+      SWIFT_ZIP_FILE="osx"
+      EXTENSION="pkg"
       ;;
     *)
       echo "There was a problem identifying your OS $(get_platform)"
@@ -220,7 +224,15 @@ find_binary_url_from_api() {
       ;;
   esac
 
-  url="https://swift.org/builds/swift-$VERSION-release/$SWIFT_BUILD_FOLDER/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-$SWIFT_ZIP_FILE.tar.gz"
+  case "$VERSION" in
+    *'-DEVELOPMENT-SNAPSHOT'* )
+      VERSION_NUMBER=$(echo "$VERSION" | cut -d "-" -f1)
+      url="https://swift.org/builds/swift-$VERSION_NUMBER-branch/$SWIFT_BUILD_FOLDER/swift-$VERSION/swift-$VERSION-$SWIFT_ZIP_FILE.$EXTENSION" ;;
+    "DEVELOPMENT-SNAPSHOT"* )
+      url="https://swift.org/builds/development/$SWIFT_BUILD_FOLDER/swift-$VERSION/swift-$VERSION-$SWIFT_ZIP_FILE.$EXTENSION" ;;
+    * )
+      url="https://swift.org/builds/swift-$VERSION-release/$SWIFT_BUILD_FOLDER/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-$SWIFT_ZIP_FILE.$EXTENSION"
+  esac
 }
 
 sort_versions() {
