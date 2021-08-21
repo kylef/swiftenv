@@ -132,7 +132,13 @@ install_tar_binary() {
   popd
 
   DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
-  mv "$INSTALL_TMP/swift-$VERSION_RELEASE"*/ "$DESTINATION"
+  # Some archives don't have an enclosing directory so check "usr" exists first
+  if [ -d "$INSTALL_TMP/usr" ]; then
+    mkdir -p "$DESTINATION"
+    mv "$INSTALL_TMP/usr" "$DESTINATION"
+  else
+    mv "$INSTALL_TMP/swift-$VERSION_RELEASE"*/ "$DESTINATION"
+  fi
 
   if $clean; then
     rm -fr "$INSTALL_TMP"
