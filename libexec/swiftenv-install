@@ -55,7 +55,7 @@ get_platform() {
   case $(uname) in
   'Linux' )
     # lowercase OS_VERSION and remove spaces so get_platform is consistent with previous builds
-    OS_VERSION=$(get_os_version) | tr '[:upper:]' '[:lower:]' | tr -d ' '
+    OS_VERSION=$(get_os_version | tr '[:upper:]' '[:lower:]' | tr -d ' ')
     echo "$OS_VERSION"
     ;;
   'Darwin' )
@@ -93,7 +93,6 @@ download() {
   local FILE
   URL=$1
   FILE=$2
-  
   if ! [ -r "$FILE" ]; then
     status_code=$(curl -I -s -o /dev/null -w "%{http_code}" $URL || true)
     if [ "$status_code" != "200" ]; then
@@ -197,30 +196,15 @@ build_version() {
 find_binary_url_from_api() {
   vlog "Checking for a URL for Swift $VERSION on $(get_platform)."
 
-  case $(get_platform) in
-    'ubuntu14.04' )
-      SWIFT_BUILD_FOLDER="ubuntu1604"
-      SWIFT_ZIP_FILE="ubuntu14.04"
+  platform=$(get_platform)
+  case "$platform" in
+    'ubuntu'* )
+      SWIFT_BUILD_FOLDER=${platform/.}
+      SWIFT_ZIP_FILE=$platform
       ;;
-    'ubuntu16.04' )
-      SWIFT_BUILD_FOLDER="ubuntu1604"
-      SWIFT_ZIP_FILE="ubuntu16.04"
-      ;;
-    'ubuntu18.04' )
-      SWIFT_BUILD_FOLDER="ubuntu1804"
-      SWIFT_ZIP_FILE="ubuntu18.04"
-      ;;
-    'ubuntu20.04' )
-      SWIFT_BUILD_FOLDER="ubuntu2004"
-      SWIFT_ZIP_FILE="ubuntu20.04"
-      ;;
-    'centoslinux7')
-      SWIFT_BUILD_FOLDER="centos7"
-      SWIFT_ZIP_FILE="centos7"
-      ;;
-    'centoslinux8')
-      SWIFT_BUILD_FOLDER="centos8"
-      SWIFT_ZIP_FILE="centos8"
+    'centoslinux'* )
+      SWIFT_BUILD_FOLDER=${platform/linux}
+      SWIFT_ZIP_FILE=${platform/linux}
       ;;
     'amazonlinux2')
       SWIFT_BUILD_FOLDER="amazonlinux2"
