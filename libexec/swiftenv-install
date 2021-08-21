@@ -56,6 +56,14 @@ get_platform() {
   'Linux' )
     # lowercase OS_VERSION and remove spaces so get_platform is consistent with previous builds
     OS_VERSION=$(get_os_version | tr '[:upper:]' '[:lower:]' | tr -d ' ')
+    # Is this aarch64
+    # Is this aarch64
+    if command -v "lscpu" >/dev/null 2>&1; then
+      CPU_ARCH=$(lscpu | grep Architecture | cut -d ":" -f2 | tr -d " ")
+      if [ "$CPU_ARCH" = "aarch64" ]; then
+        OS_VERSION="$OS_VERSION-aarch64"
+      fi
+    fi
     echo "$OS_VERSION"
     ;;
   'Darwin' )
@@ -203,9 +211,9 @@ find_binary_url_from_api() {
       SWIFT_ZIP_FILE=${platform/linux}
       EXTENSION="tar.gz"
       ;;
-    'amazonlinux2')
-      SWIFT_BUILD_FOLDER="amazonlinux2"
-      SWIFT_ZIP_FILE="amazonlinux2"
+    'amazonlinux2'*)
+      SWIFT_BUILD_FOLDER=$platform
+      SWIFT_ZIP_FILE=$platform
       EXTENSION="tar.gz"
       ;;
     'osx')
