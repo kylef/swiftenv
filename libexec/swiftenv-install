@@ -94,11 +94,6 @@ download() {
   URL=$1
   FILE=$2
   if ! [ -r "$FILE" ]; then
-    status_code=$(curl -I -s -o /dev/null -w "%{http_code}" $URL || true)
-    if [ "$status_code" != "200" ]; then
-      echo "Cannot find file $URL"
-      exit 1
-    fi  
     curl -C - -Lo "$FILE.download" "$URL"
     mv "$FILE.download" "$FILE"
   fi
@@ -408,6 +403,12 @@ if ([ "$build" == "auto" ] || [ "$build" == "false" ]); then
   if [ -z "$url" ]; then
     find_binary_url_from_api
   fi
+
+  # verify URL points to valid file
+  status_code=$(curl -I -s -o /dev/null -w "%{http_code}" $url || true)
+  if [ "$status_code" == "404" ]; then
+    unset url
+  fi  
 
   if [ "$url" ]; then
     install_binary "$VERSION" "$url"
