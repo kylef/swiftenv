@@ -29,7 +29,7 @@ load helpers
 }
 
 @test "invoking with the --list option" {
-  run swiftenv install --list
+  run swiftenv install --list --no-refresh
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "2.2-dev" ]
   [ "${lines[1]}" = "2.2" ]
@@ -38,7 +38,7 @@ load helpers
 }
 
 @test "invoking with the -l option as a short option of install --list" {
-  run swiftenv install -l
+  run swiftenv install -l --no-refresh
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "2.2-dev" ]
   [ "${lines[1]}" = "2.2" ]
