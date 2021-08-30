@@ -35,10 +35,15 @@ update_version_files() {
   fi
 }
 
-get_os_version() {
+get_os_release() {
   test -e /etc/os-release && os_release='/etc/os-release' || os_release='/usr/lib/os-release'
   . "${os_release}"
-  echo $NAME $VERSION_ID
+
+  if [ "$ID" = "amzn" ]; then
+    echo "amazonlinux$VERSION_ID"
+  else
+    echo $ID$VERSION_ID
+  fi
 }
 
 get_platform() {
@@ -54,17 +59,7 @@ get_platform() {
 
   case $(uname) in
   'Linux' )
-    # lowercase OS_VERSION and remove spaces so get_platform is consistent with previous builds
-    OS_VERSION=$(get_os_version | tr '[:upper:]' '[:lower:]' | tr -d ' ')
-    # Is this aarch64
-    # Is this aarch64
-    if command -v "lscpu" >/dev/null 2>&1; then
-      CPU_ARCH=$(lscpu | grep Architecture | cut -d ":" -f2 | tr -d " ")
-      if [ "$CPU_ARCH" = "aarch64" ]; then
-        OS_VERSION="$OS_VERSION-aarch64"
-      fi
-    fi
-    echo "$OS_VERSION"
+    get_os_release
     ;;
   'Darwin' )
     echo "osx"
@@ -203,45 +198,40 @@ build_version() {
 }
 
 find_binary_url_from_api() {
-  vlog "Checking for a URL for Swift $VERSION on $(get_platform)."
-
   platform=$(get_platform)
-  case "$platform" in
-    'ubuntu'* )
-      SWIFT_BUILD_FOLDER=${platform/.}
-      SWIFT_ZIP_FILE=$platform
-      EXTENSION="tar.gz"
-      ;;
-    'centoslinux'* )
-      SWIFT_BUILD_FOLDER=${platform/linux}
-      SWIFT_ZIP_FILE=${platform/linux}
-      EXTENSION="tar.gz"
-      ;;
-    'amazonlinux2'*)
-      SWIFT_BUILD_FOLDER=$platform
-      SWIFT_ZIP_FILE=$platform
-      EXTENSION="tar.gz"
-      ;;
-    'osx')
-      SWIFT_BUILD_FOLDER="xcode"
-      SWIFT_ZIP_FILE="osx"
-      EXTENSION="pkg"
-      ;;
-    *)
-      echo "There was a problem identifying your OS $(get_platform)"
-      exit 1
-      ;;
-  esac
+  vlog "Checking for a URL for Swift $VERSION on $platform."
+
+  extension="tar.gz"
+  platform_directory="${platform/.}"
+
+  if [ "$platform" == "osx" ]; then
+    extension="pkg"
+    platform_directory="xcode"
+  fi
+
+  architecture=""
+  if [ "$platform" != "osx" ]; then
+    # macOS uses dual architecture binaries
+
+    if command -v "lscpu" >/dev/null 2>&1; then
+      cpu_arch=$(lscpu | grep Architecture | cut -d ":" -f2 | tr -d " ")
+      if [ "$cpu_arch" != "x86_64" ]; then
+        architecture="-$cpu_arch"
+      fi
+    fi
+  fi
 
   case "$VERSION" in
     *'-DEVELOPMENT-SNAPSHOT'* )
       VERSION_NUMBER=$(echo "$VERSION" | cut -d "-" -f1)
-      url="https://swift.org/builds/swift-$VERSION_NUMBER-branch/$SWIFT_BUILD_FOLDER/swift-$VERSION/swift-$VERSION-$SWIFT_ZIP_FILE.$EXTENSION" ;;
+      url="https://swift.org/builds/swift-$VERSION_NUMBER-branch/$platform_directory/swift-$VERSION/swift-$VERSION-$platform$architecture.$extension" ;;
     "DEVELOPMENT-SNAPSHOT"* )
-      url="https://swift.org/builds/development/$SWIFT_BUILD_FOLDER/swift-$VERSION/swift-$VERSION-$SWIFT_ZIP_FILE.$EXTENSION" ;;
+      url="https://swift.org/builds/development/$platform_directory/swift-$VERSION/swift-$VERSION-$platform$architecture.$extension" ;;
     * )
-      url="https://swift.org/builds/swift-$VERSION-release/$SWIFT_BUILD_FOLDER/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-$SWIFT_ZIP_FILE.$EXTENSION"
+      url="https://swift.org/builds/swift-$VERSION-release/$platform_directory/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-$platform$architecture.$extension" ;;
   esac
+
+  vlog "Trying URL: $url"
 }
 
 sort_versions() {
