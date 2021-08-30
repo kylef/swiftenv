@@ -245,6 +245,12 @@ get_version_list() {
     exit
   fi
 
+  if $refresh; then
+    # FIXME: Add support for architecture to swiftenv api
+    curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?platform=$(get_platform)"
+    exit
+  fi
+
   if ([ "$build" == "false" ]); then
     VERSIONS="$(ls "$SWIFTENV_SOURCE_PATH/share/swiftenv-install" | grep -v json | sort_versions | uniq)"
     PLATFORM="$(get_platform)"
@@ -266,6 +272,7 @@ get_version_list() {
 
 clean=true
 list=false
+refresh=false
 snapshots=false
 build=auto
 verbose=false
@@ -295,6 +302,10 @@ for args in "$@"; do
   elif [ "$args" = "--list-snapshots" ]; then
     list=true
     snapshots=true
+  elif [ "$args" = "--refresh" ]; then
+    refresh=true
+  elif [ "$args" = "--no-refresh" ]; then
+    refresh=false
   elif [ "$args" = "--complete" ]; then
     completes=true
   elif [ "$args" = "--build" ]; then
@@ -404,7 +415,7 @@ if ([ "$build" == "auto" ] || [ "$build" == "false" ]); then
   status_code=$(curl -I -s -o /dev/null -w "%{http_code}" $url || true)
   if [ "$status_code" == "404" ]; then
     unset url
-  fi  
+  fi
 
   if [ "$url" ]; then
     install_binary "$VERSION" "$url"

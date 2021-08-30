@@ -26,7 +26,7 @@ $ swiftenv install 3.0
 You can list all versions of Swift:
 
 ```shell
-$ swiftenv install --list
+$ swiftenv install --list --refresh
 ```
 
 You can also list all binary snapshots of Swift that you can install.
