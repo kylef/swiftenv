@@ -4,7 +4,7 @@
 swiftenv-install \- Install a version of Swift
 
 .SH SYNOPSIS
-swiftenv install [\-\-verbose] [\-\-list] [\-\-list-snapshots] [\-\-[no\-]build] [\-\-[no\-]set\-global] [\-\-[no\-]set\-local] [--no-clean] [\-\-[no\-]user] <version>
+swiftenv install [\-\-verbose] [\-\-list] [\-\-list-snapshots] [\-\-no\-refresh] [\-\-[no\-]build] [\-\-[no\-]set\-global] [\-\-[no\-]set\-local] [--no-clean] [\-\-[no\-]user] <version>
 
 .SH DESCRIPTION
 
@@ -27,7 +27,14 @@ Lists all the Swift releases that can be installed.
 \-\-refresh
 
 .RS
+On by default.
 When used in conjunction with \-\-list, fetches an updated information.
+.RE
+
+\-\-no\-refresh
+
+.RS
+Force using local version information with \-\-list.
 .RE
 
 \-\-list-snapshots

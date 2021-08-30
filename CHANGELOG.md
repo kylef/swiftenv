@@ -2,6 +2,11 @@
 
 ## Master
 
+### Enhancements
+
+- Fetching a list of versions that can be installed (`swiftenv install --list`)
+  will now fetch an updated list of versions.
+
 ### Bug Fixes
 
 - Prevent `swiftenv install` picking up on unrelated `$URL` environment

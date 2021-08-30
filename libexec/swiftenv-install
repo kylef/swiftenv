@@ -251,6 +251,7 @@ get_version_list() {
   CACHE_FILE="$CACHE_DIR/versions-${platform}.txt"
 
   if $refresh; then
+    vlog "Updating version cache"
     # FIXME: Add support for architecture to swiftenv api
     mkdir -p $CACHE_DIR
     curl -s -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?platform=$platform" > "$CACHE_FILE"
@@ -267,7 +268,7 @@ get_version_list() {
 
 clean=true
 list=false
-refresh=false
+refresh=true
 snapshots=false
 build=auto
 verbose=false
@@ -302,6 +303,7 @@ for args in "$@"; do
   elif [ "$args" = "--no-refresh" ]; then
     refresh=false
   elif [ "$args" = "--complete" ]; then
+    refresh=false
     completes=true
   elif [ "$args" = "--build" ]; then
     build=true
@@ -345,6 +347,8 @@ vlog() {
 if $completes; then
   echo "--list"
   echo "--list-snapshots"
+  echo "--refresh"
+  echo "--no-refresh"
   echo "--verbose"
   echo "--no-verbose"
   echo "--verify"
