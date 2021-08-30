@@ -35,6 +35,12 @@ update_version_files() {
   fi
 }
 
+get_os_version() {
+  test -e /etc/os-release && os_release='/etc/os-release' || os_release='/usr/lib/os-release'
+  . "${os_release}"
+  echo $NAME $VERSION_ID
+}
+
 get_platform() {
   if [ -n "$SWIFTENV_PLATFORM" ]; then
     echo "$SWIFTENV_PLATFORM"
@@ -48,18 +54,17 @@ get_platform() {
 
   case $(uname) in
   'Linux' )
-    if command -v "lsb_release" >/dev/null 2>&1; then
-      if [ $(lsb_release -is) = "Ubuntu" ]; then
-        echo "ubuntu$(lsb_release -rs)"
-      elif [ $(lsb_release -ius) = "Ubuntu" ]; then
-        echo "ubuntu$(lsb_release -rus)"
-      else
-        echo "unsupported-platform"
+    # lowercase OS_VERSION and remove spaces so get_platform is consistent with previous builds
+    OS_VERSION=$(get_os_version | tr '[:upper:]' '[:lower:]' | tr -d ' ')
+    # Is this aarch64
+    # Is this aarch64
+    if command -v "lscpu" >/dev/null 2>&1; then
+      CPU_ARCH=$(lscpu | grep Architecture | cut -d ":" -f2 | tr -d " ")
+      if [ "$CPU_ARCH" = "aarch64" ]; then
+        OS_VERSION="$OS_VERSION-aarch64"
       fi
-    elif [ -r "/etc/lsb-release" ]; then
-      echo "The `lsb_release` command line tool is missing. `/etc/lsb-release` file is found."
-      exit 1
     fi
+    echo "$OS_VERSION"
     ;;
   'Darwin' )
     echo "osx"
@@ -96,7 +101,6 @@ download() {
   local FILE
   URL=$1
   FILE=$2
-
   if ! [ -r "$FILE" ]; then
     curl -C - -Lo "$FILE.download" "$URL"
     mv "$FILE.download" "$FILE"
@@ -128,7 +132,13 @@ install_tar_binary() {
   popd
 
   DESTINATION="$SWIFTENV_ROOT/versions/$VERSION"
-  mv "$INSTALL_TMP/swift-$VERSION_RELEASE"*/ "$DESTINATION"
+  # Some archives don't have an enclosing directory so check "usr" exists first
+  if [ -d "$INSTALL_TMP/usr" ]; then
+    mkdir -p "$DESTINATION"
+    mv "$INSTALL_TMP/usr" "$DESTINATION"
+  else
+    mv "$INSTALL_TMP/swift-$VERSION_RELEASE"*/ "$DESTINATION"
+  fi
 
   if $clean; then
     rm -fr "$INSTALL_TMP"
@@ -193,21 +203,45 @@ build_version() {
 }
 
 find_binary_url_from_api() {
-  vlog "Checking for a URL for the $VERSION on $(get_platform)."
+  vlog "Checking for a URL for Swift $VERSION on $(get_platform)."
 
-  status_code=$(curl -o /dev/null --silent --head --write-out '%{http_code}' "https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform)" || true)
+  platform=$(get_platform)
+  case "$platform" in
+    'ubuntu'* )
+      SWIFT_BUILD_FOLDER=${platform/.}
+      SWIFT_ZIP_FILE=$platform
+      EXTENSION="tar.gz"
+      ;;
+    'centoslinux'* )
+      SWIFT_BUILD_FOLDER=${platform/linux}
+      SWIFT_ZIP_FILE=${platform/linux}
+      EXTENSION="tar.gz"
+      ;;
+    'amazonlinux2'*)
+      SWIFT_BUILD_FOLDER=$platform
+      SWIFT_ZIP_FILE=$platform
+      EXTENSION="tar.gz"
+      ;;
+    'osx')
+      SWIFT_BUILD_FOLDER="xcode"
+      SWIFT_ZIP_FILE="osx"
+      EXTENSION="pkg"
+      ;;
+    *)
+      echo "There was a problem identifying your OS $(get_platform)"
+      exit 1
+      ;;
+  esac
 
-  if [ "$status_code" = "404" ]; then
-    vlog "Did not find a binary release for $VERSION on $(get_platform)."
-  elif [ "$status_code" = "200" ]; then
-    url="$(curl --silent https://swiftenv-api.fuller.li/versions/$VERSION/binaries/$(get_platform) -H 'Accept: text/plain')"
-  elif [ "$status_code" = "000" ]; then
-    echo "There was a problem checking for a binary release of $VERSION, could not connect to the swiftenv API."
-    exit 1
-  else
-    echo "There was a problem checking for a binary release of $VERSION, server returned $status_code."
-    exit 1
-  fi
+  case "$VERSION" in
+    *'-DEVELOPMENT-SNAPSHOT'* )
+      VERSION_NUMBER=$(echo "$VERSION" | cut -d "-" -f1)
+      url="https://swift.org/builds/swift-$VERSION_NUMBER-branch/$SWIFT_BUILD_FOLDER/swift-$VERSION/swift-$VERSION-$SWIFT_ZIP_FILE.$EXTENSION" ;;
+    "DEVELOPMENT-SNAPSHOT"* )
+      url="https://swift.org/builds/development/$SWIFT_BUILD_FOLDER/swift-$VERSION/swift-$VERSION-$SWIFT_ZIP_FILE.$EXTENSION" ;;
+    * )
+      url="https://swift.org/builds/swift-$VERSION-release/$SWIFT_BUILD_FOLDER/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-$SWIFT_ZIP_FILE.$EXTENSION"
+  esac
 }
 
 sort_versions() {
@@ -373,19 +407,16 @@ fi
 # Install Binary
 if ([ "$build" == "auto" ] || [ "$build" == "false" ]); then
   if [ -z "$url" ]; then
-    # Check for locally cached URL
-    PROFILE="$SWIFTENV_SOURCE_PATH/share/swiftenv-install/$VERSION"
-    if [ -r "$PROFILE" ]; then
-      source "$PROFILE"
-    fi
-  fi
-
-  if [ -z "$url" ]; then
     find_binary_url_from_api
   fi
 
+  # verify URL points to valid file
+  status_code=$(curl -I -s -o /dev/null -w "%{http_code}" $url || true)
+  if [ "$status_code" == "404" ]; then
+    unset url
+  fi  
+
   if [ "$url" ]; then
-    vlog "Installing $VERSION from $url on $(get_platform)."
     install_binary "$VERSION" "$url"
   elif [ "$build" == "false" ]; then
     echo "Could not find a binary release of $VERSION."
