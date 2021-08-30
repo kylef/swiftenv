@@ -240,29 +240,24 @@ sort_versions() {
 }
 
 get_version_list() {
+  platform="$(get_platform)"
+
   if $snapshots; then
-    curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?snapshot=true&platform=$(get_platform)"
+    curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?snapshot=true&platform=$platform"
     exit
   fi
+
+  CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/swiftenv"
+  CACHE_FILE="$CACHE_DIR/versions-${platform}.txt"
 
   if $refresh; then
     # FIXME: Add support for architecture to swiftenv api
-    curl -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?platform=$(get_platform)"
-    exit
+    mkdir -p $CACHE_DIR
+    curl -s -H 'Accept: text/plain' "https://swiftenv-api.fuller.li/versions?platform=$platform" > "$CACHE_FILE"
   fi
 
-  if ([ "$build" == "false" ]); then
-    VERSIONS="$(ls "$SWIFTENV_SOURCE_PATH/share/swiftenv-install" | grep -v json | sort_versions | uniq)"
-    PLATFORM="$(get_platform)"
-
-    for version in $VERSIONS; do
-      url=""
-      source "$SWIFTENV_SOURCE_PATH/share/swiftenv-install/$version"
-
-      if [ -n "$url" ]; then
-        echo $version
-      fi
-    done
+  if [ -r "$CACHE_FILE" ] && [ $build != "true" ]; then
+    cat "$CACHE_FILE"
   else
     swiftenv-build --definitions
   fi
