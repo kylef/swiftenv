@@ -49,7 +49,7 @@ if command -v "mdfind" >/dev/null 2>&1; then
   XCODES="$(mdfind "kMDItemCFBundleIdentifier == 'com.apple.dt.Xcode'" 2>/dev/null)"
   for xcode in $XCODES; do
     if [ -d "$xcode" ]; then
-      version_line="$(env DEVELOPER_DIR="$xcode" xcrun swift --version | head -n1)"
+      version_line="$(env DEVELOPER_DIR="$xcode" xcrun swift --version 2>/dev/null | head -n1)"
       version="swift-$(echo "$version_line" | cut -d " " -f 4)"
       if [ "$version" == "$SWIFT_VERSION" ] || [ "$version" == "swift-$SWIFT_VERSION" ]; then
         echo "$xcode/Contents/Developer/Toolchains/XcodeDefault.xctoolchain"
