@@ -168,7 +168,7 @@ install_exe_binary() {
   local URL
   URL="$1"
 
-  # how? :D
+  #powershell -Command {Install-Binary -Url "$URL" -Name "installer.exe" -ArgumentList ("-q")}
 }
 
 # Install the given version from source
