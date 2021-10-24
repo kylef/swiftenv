@@ -85,6 +85,8 @@ install_binary() {
     install_pkg_binary "$URL"
   elif [[ "$URL" = *".tar.gz" ]]; then
     install_tar_binary "$VERSION" "$URL"
+  elif [[ "$URL" = *".exe" ]]; then
+    install_exe_binary "$URL"
   else
     echo "swiftenv does not know how to install $URL. Only tar.gz and pkg files are supported."
     exit 1
@@ -159,6 +161,13 @@ install_pkg_binary() {
   fi
 }
 
+install_exe_binary() {
+  local URL
+  URL="$1"
+
+  # how? :D
+}
+
 # Install the given version from source
 install_source() {
   VERSION="$1"
@@ -208,6 +217,11 @@ find_binary_url_from_api() {
     extension="pkg"
     platform_directory="xcode"
   fi
+
+  # windows
+  platform_directory=windows10
+  platform=windows10
+  extension=exe
 
   architecture=""
   if [ "$platform" != "osx" ]; then
