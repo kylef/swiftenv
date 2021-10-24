@@ -6,16 +6,16 @@
     skip
   fi
 
-  run swiftenv install 5.3
+  run swiftenv install 5.5
   echo "Installed"
   echo $lines
   [ "$status" -eq 0 ]
 
-  run env SWIFT_VERSION="5.3" swift --version
+  run env SWIFT_VERSION="5.5" swift --version
   echo "Version"
   echo $lines
   [ "$status" -eq 0 ]
-  [[ "${lines[0]}" = *"Swift version 5.3 (swift-5.3-RELEASE)" ]]
+  [[ "${lines[0]}" = *"Swift version 5.5 (swift-5.5-RELEASE)" ]]
 }
 
 @test "can install a binary Swift development snapshot" {
