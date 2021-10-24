@@ -64,6 +64,9 @@ get_platform() {
   'Darwin' )
     echo "osx"
     ;;
+  'MINGW64_NT_10.0'* )
+    echo "windows10"
+    ;;
   * )
     echo "unsupported-platform"
     ;;
@@ -216,16 +219,16 @@ find_binary_url_from_api() {
   if [ "$platform" == "osx" ]; then
     extension="pkg"
     platform_directory="xcode"
+  elif [ "$platform" == "windows10" ]; then
+    platform_directory=windows10
+    platform=windows10
+    extension=exe
   fi
 
-  # windows
-  platform_directory=windows10
-  platform=windows10
-  extension=exe
-
   architecture=""
-  if [ "$platform" != "osx" ]; then
+  if [ "$platform" != "osx" ] || [ "$platform" != "windows10" ]; then
     # macOS uses dual architecture binaries
+    # FIXME windows10 - no support just yet
 
     if command -v "lscpu" >/dev/null 2>&1; then
       cpu_arch=$(LC_ALL=C lscpu | grep Architecture | cut -d ":" -f2 | tr -d " ")
