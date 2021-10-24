@@ -27,6 +27,3 @@ swiftenv allows you to:
 - Integrations
     - [Heroku](https://swiftenv.fuller.li/en/latest/integrations/heroku.html)
     - [Travis CI](https://swiftenv.fuller.li/en/latest/integrations/travis-ci.html)
-    - [GitLab CI](https://swiftenv.fuller.li/en/latest/integrations/gitlab-ci.html)
-    - [CircleCI](https://swiftenv.fuller.li/en/latest/integrations/circle-ci.html)
-    - [Docker](https://swiftenv.fuller.li/en/latest/integrations/docker.html)

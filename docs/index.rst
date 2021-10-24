@@ -32,7 +32,4 @@ Integrations
 
    integrations/heroku
    integrations/travis-ci
-   integrations/gitlab-ci
-   integrations/circle-ci
-   integrations/docker
    integrations/cocoapods
