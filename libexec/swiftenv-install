@@ -224,11 +224,11 @@ find_binary_url_from_api() {
   case "$VERSION" in
     *'-DEVELOPMENT-SNAPSHOT'* )
       VERSION_NUMBER=$(echo "$VERSION" | cut -d "-" -f1)
-      url="https://swift.org/builds/swift-$VERSION_NUMBER-branch/$platform_directory/swift-$VERSION/swift-$VERSION-$platform$architecture.$extension" ;;
+      url="https://download.swift.org/swift-$VERSION_NUMBER-branch/$platform_directory/swift-$VERSION/swift-$VERSION-$platform$architecture.$extension" ;;
     "DEVELOPMENT-SNAPSHOT"* )
-      url="https://swift.org/builds/development/$platform_directory/swift-$VERSION/swift-$VERSION-$platform$architecture.$extension" ;;
+      url="https://download.swift.org/development/$platform_directory/swift-$VERSION/swift-$VERSION-$platform$architecture.$extension" ;;
     * )
-      url="https://swift.org/builds/swift-$VERSION-release/$platform_directory/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-$platform$architecture.$extension" ;;
+      url="https://download.swift.org/swift-$VERSION-release/$platform_directory/swift-$VERSION-RELEASE/swift-$VERSION-RELEASE-$platform$architecture.$extension" ;;
   esac
 
   vlog "Trying URL: $url"
