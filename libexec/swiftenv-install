@@ -64,6 +64,9 @@ get_platform() {
   'Darwin' )
     echo "osx"
     ;;
+  'MINGW64_NT-10.0'* )
+    echo "windows10"
+    ;;
   * )
     echo "unsupported-platform"
     ;;
@@ -85,6 +88,8 @@ install_binary() {
     install_pkg_binary "$URL"
   elif [[ "$URL" = *".tar.gz" ]]; then
     install_tar_binary "$VERSION" "$URL"
+  elif [[ "$URL" = *".exe" ]]; then
+    install_exe_binary "$URL"
   else
     echo "swiftenv does not know how to install $URL. Only tar.gz and pkg files are supported."
     exit 1
@@ -159,6 +164,15 @@ install_pkg_binary() {
   fi
 }
 
+install_exe_binary() {
+  local URL
+  URL="$1"
+
+  #powershell -Command {Install-Binary -Url "$URL" -Name "installer.exe" -ArgumentList ("-q")}
+  echo "swiftenv does not yet support installing on Windows"
+  exit 1
+}
+
 # Install the given version from source
 install_source() {
   VERSION="$1"
@@ -207,11 +221,16 @@ find_binary_url_from_api() {
   if [ "$platform" == "osx" ]; then
     extension="pkg"
     platform_directory="xcode"
+  elif [ "$platform" == "windows10" ]; then
+    platform_directory=windows10
+    platform=windows10
+    extension=exe
   fi
 
   architecture=""
-  if [ "$platform" != "osx" ]; then
+  if [ "$platform" != "osx" ] || [ "$platform" != "windows10" ]; then
     # macOS uses dual architecture binaries
+    # FIXME windows10 - no support just yet
 
     if command -v "lscpu" >/dev/null 2>&1; then
       cpu_arch=$(LC_ALL=C lscpu | grep Architecture | cut -d ":" -f2 | tr -d " ")
