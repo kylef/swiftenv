@@ -236,6 +236,7 @@ find_binary_url_from_api() {
       cpu_arch=$(LC_ALL=C lscpu | grep Architecture | cut -d ":" -f2 | tr -d " ")
       if [ "$cpu_arch" != "x86_64" ]; then
         architecture="-$cpu_arch"
+        platform_directory+="-$cpu_arch"
       fi
     fi
   fi
