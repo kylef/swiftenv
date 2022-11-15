@@ -41,6 +41,8 @@ get_os_release() {
 
   if [ "$ID" = "amzn" ]; then
     echo "amazonlinux$VERSION_ID"
+  elif [ "$ID" = "pop" ]; then
+    echo "ubuntu$VERSION_ID"
   else
     echo $ID$VERSION_ID
   fi
