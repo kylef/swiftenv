@@ -4,10 +4,14 @@
 set -e
 
 if [ -z "$SWIFTENV_ROOT" ]; then
-  SWIFTENV_ROOT=$HOME/.swiftenv
+  if [[ -n "${XDG_DATA_HOME}" ]] && [[ ! -d "${HOME}"/.swiftenv ]]; then
+    SWIFTENV_ROOT="${XDG_DATA_HOME}"/swiftenv
+  else
+    SWIFTENV_ROOT="${HOME}"/.swiftenv
+  fi
 fi
 if [ ! -d "$SWIFTENV_ROOT" ]; then
-  mkdir "$SWIFTENV_ROOT"
+  mkdir -p "${SWIFTENV_ROOT}"
 fi
 export SWIFTENV_ROOT
 
