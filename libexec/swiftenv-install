@@ -125,7 +125,7 @@ install_tar_binary() {
 
   if $verify; then
     curl -o "swift-$VERSION.sig" "$URL.sig"
-    gpg --verify "swift-$VERSION.sig"
+    gpg --verify "swift-$VERSION.sig" "swift-$VERSION.tar.gz"
   fi
 
   tar xzf "swift-$VERSION.tar.gz"
