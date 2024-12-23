@@ -7,3 +7,5 @@
 /docs/_build_html/
 
 share/swiftenv-install/*.json
+
+tmp/
